@@ -1,0 +1,29 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ru.spbau.mit.starlab.financialassistant.fragments.ExpensesFragment">
+
+    <TextView
+        android:id="@+id/txtMainHeader"
+        style="@style/FragmentHeader"
+        android:text="@string/main_header" />
+
+    <AnalogClock
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/analogClock"
+        android:layout_marginTop="42dp"
+        android:layout_below="@+id/txtAllInfo"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        style="@style/UsualTextStyle"
+        android:text="Для работы с основными функциями приложения воспользуйтесь меню слева"
+        android:id="@+id/txtAllInfo"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/txtMainHeader"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>

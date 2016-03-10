@@ -1,0 +1,121 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ru.spbau.mit.starlab.financialassistant.fragments.RegularIncomesFragment">
+
+    <Button
+        android:id="@+id/btnAddRegIncome"
+        style="@style/ButtonStyle"
+        android:onClick="addNewRegIncome"
+        android:text="@string/add" />
+
+
+    <TextView
+        android:id="@+id/txtRegularIncome"
+        style="@style/FragmentHeader"
+        android:text="@string/add_regular_inc" />
+
+
+    <TextView
+        android:id="@+id/txtRegIncPeriod"
+        style="@style/UsualTextStyle"
+        android:layout_below="@+id/txtRegularIncome"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/period" />
+
+    <TextView
+        android:id="@+id/txtRegIncName"
+        style="@style/UsualTextStyle"
+        android:layout_alignLeft="@id/txtRegIncPeriod"
+        android:layout_alignStart="@+id/txtRegIncPeriod"
+        android:layout_below="@+id/txtRegIncPeriod"
+        android:layout_marginTop="40dp"
+        android:text="@string/name" />
+
+    <TextView
+        android:id="@+id/txtRegIncSum"
+        style="@style/UsualTextStyle"
+        android:layout_alignLeft="@id/txtRegIncPeriod"
+        android:layout_alignStart="@+id/txtRegIncPeriod"
+        android:layout_below="@+id/txtRegIncPeriod"
+        android:layout_marginTop="105dp"
+        android:text="@string/sum" />
+
+    <TextView
+        android:id="@+id/eTxtRegIncStartPeriod"
+        style="@style/SmallTextBoxesStyle"
+        android:layout_below="@id/txtRegIncPeriod"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:onClick="showDatePickerDialog"
+        android:hint="@string/startDate"
+        android:layout_marginTop="5dp"
+        android:inputType="none" />
+
+    <TextView
+        android:id="@+id/eTxtRegIncEndPeriod"
+        style="@style/SmallTextBoxesStyle"
+        android:layout_below="@id/txtRegIncPeriod"
+        android:hint="@string/endDate"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        android:onClick="showDatePickerDialog"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="170dp"
+        android:layout_marginStart="170dp"
+        android:inputType="date" />
+
+    <EditText
+        android:id="@+id/eTxtRegIncName"
+        style="@style/TextBoxesStyle"
+        android:layout_alignLeft="@+id/txtRegIncPeriod"
+        android:layout_alignStart="@+id/txtRegIncPeriod"
+        android:layout_below="@id/txtRegIncName"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:inputType="text" />
+
+
+    <EditText
+        android:id="@+id/eTxtRegIncSum"
+        style="@style/TextBoxesStyle"
+        android:layout_alignLeft="@+id/txtRegIncPeriod"
+        android:layout_alignStart="@+id/txtRegIncPeriod"
+        android:layout_below="@id/txtRegIncSum"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/txtRegIncComment"
+        style="@style/UsualTextStyle"
+        android:layout_alignLeft="@id/txtRegIncPeriod"
+        android:layout_alignStart="@+id/txtRegIncPeriod"
+        android:layout_below="@+id/txtRegIncPeriod"
+        android:layout_marginTop="170dp"
+        android:text="@string/comment" />
+
+    <ScrollView
+        style="@style/ScrollViewStyle"
+        android:layout_alignLeft="@+id/txtRegIncPeriod"
+        android:layout_alignStart="@+id/txtRegIncPeriod"
+        android:layout_below="@+id/txtRegIncComment"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:id="@+id/regIncScrollView">
+
+        <EditText
+            android:id="@+id/eTxtRegIncComment"
+            style="@style/CommentBoxStyle"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp" />
+    </ScrollView>
+
+
+</RelativeLayout>

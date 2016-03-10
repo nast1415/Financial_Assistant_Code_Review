@@ -1,0 +1,136 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ru.spbau.mit.starlab.financialassistant.fragments.CreditsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <Button
+        android:id="@+id/btnAddCredit"
+        style="@style/ButtonStyle"
+        android:onClick="addNewCredit"
+        android:text="@string/add" />
+
+
+    <TextView
+        android:id="@+id/txtCredit"
+        style="@style/FragmentHeader"
+        android:text="@string/add_credit" />
+
+
+    <TextView
+        android:id="@+id/txtCreditPeriod"
+        style="@style/UsualTextStyle"
+        android:layout_below="@+id/txtCredit"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/period" />
+
+    <TextView
+        android:id="@+id/txtCreditName"
+        style="@style/UsualTextStyle"
+        android:layout_alignLeft="@id/txtCreditPeriod"
+        android:layout_alignStart="@+id/txtCreditPeriod"
+        android:layout_below="@+id/txtCreditPeriod"
+        android:layout_marginTop="40dp"
+        android:text="@string/name" />
+
+    <TextView
+        android:id="@+id/txtCreditPercent"
+        style="@style/UsualTextStyle"
+        android:layout_alignLeft="@id/txtCreditPeriod"
+        android:layout_alignStart="@+id/txtCreditPeriod"
+        android:layout_below="@+id/txtCreditPeriod"
+        android:layout_marginTop="105dp"
+        android:text="@string/percent" />
+
+    <TextView
+        android:id="@+id/txtCreditCategory"
+        style="@style/UsualTextStyle"
+        android:layout_alignLeft="@id/txtCreditPeriod"
+        android:layout_alignStart="@+id/txtCreditPeriod"
+        android:layout_below="@+id/txtCreditPeriod"
+        android:layout_marginTop="170dp"
+        android:text="@string/first" />
+
+    <TextView
+        android:id="@+id/txtCreditSum"
+        style="@style/UsualTextStyle"
+        android:layout_alignLeft="@id/txtCreditPeriod"
+        android:layout_alignStart="@+id/txtCreditPeriod"
+        android:layout_below="@+id/txtCreditPeriod"
+        android:layout_marginTop="235dp"
+        android:text="@string/sum" />
+
+    <TextView
+        android:id="@+id/eTxtCreditStartPeriod"
+        style="@style/SmallTextBoxesStyle"
+        android:layout_below="@id/txtCreditPeriod"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:clickable="true"
+        android:hint="@string/startDate"
+        android:inputType="text"
+        android:onClick="showDatePickerDialog" />
+
+    <TextView
+        android:id="@+id/eTxtCreditEndPeriod"
+        style="@style/SmallTextBoxesStyle"
+        android:layout_below="@id/txtCreditPeriod"
+        android:layout_marginEnd="5dp"
+        android:layout_marginLeft="180dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginStart="180dp"
+        android:layout_marginTop="5dp"
+        android:hint="@string/endDate"
+        android:inputType="date"
+        android:onClick="showDatePickerDialog" />
+
+    <EditText
+        android:id="@+id/eTxtCreditName"
+        style="@style/TextBoxesStyle"
+        android:layout_alignLeft="@+id/txtCreditPeriod"
+        android:layout_alignStart="@+id/txtCreditPeriod"
+        android:layout_below="@id/txtCreditName"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/eTxtCreditPercent"
+        style="@style/TextBoxesStyle"
+        android:layout_alignLeft="@+id/txtCreditPeriod"
+        android:layout_alignStart="@+id/txtCreditPeriod"
+        android:layout_below="@id/txtCreditPercent"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/eTxtCreditDeposit"
+        style="@style/TextBoxesStyle"
+        android:layout_alignLeft="@+id/txtCreditPeriod"
+        android:layout_alignStart="@+id/txtCreditPeriod"
+        android:layout_below="@id/txtCreditCategory"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/eTxtCreditSum"
+        style="@style/TextBoxesStyle"
+        android:layout_alignLeft="@+id/txtCreditPeriod"
+        android:layout_alignStart="@+id/txtCreditPeriod"
+        android:layout_below="@id/txtCreditSum"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:inputType="number" />
+
+</RelativeLayout>

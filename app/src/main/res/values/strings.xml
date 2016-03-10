@@ -1,0 +1,79 @@
+<resources>
+    <string name="app_name">FinancialAssistant</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- Strings related to fragments' names -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="expenses_fragment">Траты</string>
+    <string name="incomes_fragment">Доходы</string>
+    <string name="regular_expenses_fragment">Регулярные траты</string>
+    <string name="regular_incomes_fragment">Регулярные доходы</string>
+    <string name="wanted_expenses_fragment">Желаемые покупки</string>
+    <string name="recent_actions_fragment">Последние действия</string>
+    <string name="info_fragment">Информация</string>
+    <string name="credits_fragment">Кредиты</string>
+    <string name="statistics_fragment">Статистика</string>
+    <string name="help_fragment">Справка</string>
+    <string name="tools_fragment">Параметры</string>
+    <string name="title_activity_login">Следить за финансами легко!</string>
+
+
+    <!-- Headers for fragments -->
+    <string name="add_expense">Добавить трату</string>
+    <string name="edit_expense">Изменить трату</string>
+    <string name="add_income">Добавить доход</string>
+    <string name="add_regular_exp">Добавить регулярную трату</string>
+    <string name="add_regular_inc">Добавить регулярный доход</string>
+    <string name="add_wanted">Добавить желаемую покупку</string>
+    <string name="add_credit">Добавить кредит</string>
+    <string name="tools">Параметры</string>
+    <string name="main_header">Рады вас видеть!</string>
+    <string name="advices_header">Нет советов на сегодня</string>
+    <string name="statistics_header">Статистика и прогнозы</string>
+    <string name="show_statistics">Статистика</string>
+
+    <!-- Strings related to buttons -->
+    <string name="add">Записать</string>
+    <string name="show">Показать</string>
+    <string name="edit">Изменить</string>
+    <string name="delete">Удалить</string>
+
+
+    <!-- Strings related to fragments' content -->
+    <string name="date">Дата</string>
+    <string name="name">Название</string>
+    <string name="sum">Сумма</string>
+    <string name="comment">Комментарий</string>
+    <string name="period">Период</string>
+    <string name="startDate">Дата начала</string>
+    <string name="endDate">Дата окончания</string>
+    <string name="category">Категория</string>
+    <string name="percent">Ставка</string>
+    <string name="first">Первый взнос</string>
+    <string name="view">Вид</string>
+
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">Адрес электронной почты некорректен</string>
+    <string name="error_invalid_password">Пароль слишком короткий</string>
+    <string name="error_incorrect_password">Неверный пароль</string>
+    <string name="error_field_required">Поля не должны быть пустыми</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_sign_up">Зарегистрироваться</string>
+    <string name="title_activity_sign_in">Войти в систему</string>
+
+    <string name="title_activity_fullscreen_login">Financial Assistant</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_edit_action">edit</string>
+</resources>
