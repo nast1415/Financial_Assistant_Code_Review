@@ -1,9 +1,9 @@
 package ru.spbau.mit.starlab.financialassistant.fragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -85,44 +85,46 @@ public class RecentActionsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
         View ll = inflater.inflate(R.layout.fragment_recent_actions, container, false);
+        lv = (ListView) ll.findViewById(R.id.listView1);
+
+        Bundle arguments = getArguments();
+        String[] categories = arguments.getStringArray("categories");
+        String[] names = arguments.getStringArray("names");
+        double[] sums = arguments.getDoubleArray("sums");
+
+        if (categories == null || names == null || sums == null) {
+            Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+                    "Некорректные данные", Toast.LENGTH_SHORT);
+            toast.show();
+            return ll;
+        }
 
         list = new ArrayList<>();
 
-        lv = (ListView) ll.findViewById(R.id.listView1);
-        // Загружаем продукты в фоновом потоке
-        new LoadAllActions().execute();
+        for (int i = 0; i < categories.length; i++) {
+            HashMap<String, String> temp = new HashMap<>();
+            temp.put(FIRST_COLUMN, categories[i]);
+            temp.put(SECOND_COLUMN, names[i]);
+            temp.put(THIRD_COLUMN, String.valueOf(sums[i]));
+            list.add(temp);
+        }
 
         ListViewAdapter adapter = new ListViewAdapter(getActivity(), list);
         lv.setAdapter(adapter);
-
-        // получаем ListView
-        //ListViewAdapter adapter = new ListViewAdapter(getActivity(), list);
-        //lv.setAdapter(adapter);
-
-        // на выбор одного продукта
-        // запускается Edit Product Screen
-
-
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                // getting values from selected ListItem
                 String pid = ((TextView) view.findViewById(R.id.pid)).getText()
                         .toString();
 
                 if (((TextView) view.findViewById(R.id.category)).getText().toString().equals("Трата")) {
-                    // Запускаем новый intent который покажет нам Activity
                     Intent in = new Intent(getActivity().getApplicationContext(), EditActionActivity.class);
-                    // отправляем pid в следующий activity
                     in.putExtra("pid", pid);
 
-                    // запуская новый Activity ожидаем ответ обратно
                     startActivityForResult(in, 100);
                 } else {
                     Toast toast = Toast.makeText(getActivity().getApplicationContext(),
@@ -132,75 +134,7 @@ public class RecentActionsFragment extends Fragment {
             }
         });
 
-
         return ll;
-    }
-
-
-    class LoadAllActions extends AsyncTask<String, String, String> {
-
-        /**
-         * Перед началом фонового потока Show Progress Dialog
-         * */
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Загрузка продуктов. Подождите...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        /**
-         * Получаем все продукт из url
-         * */
-        protected String doInBackground(String... args) {
-            // Будет хранить параметры
-
-            Bundle arguments = getArguments();
-            String[] categories = arguments.getStringArray("categories");
-            String[] names = arguments.getStringArray("names");
-            double[] sums = arguments.getDoubleArray("sums");
-
-            for (int i = 0; i < categories.length; i++) {
-                HashMap<String, String> temp = new HashMap<>();
-                temp.put(FIRST_COLUMN, categories[i]);
-                temp.put(SECOND_COLUMN, names[i]);
-                temp.put(THIRD_COLUMN, String.valueOf(sums[i]));
-                list.add(temp);
-            }
-
-            return null;
-        }
-
-        /**
-         * После завершения фоновой задачи закрываем прогрес диалог
-         * **/
-        protected void onPostExecute(String file_url) {
-            // закрываем прогресс диалог после получение все продуктов
-            pDialog.dismiss();
-            // обновляем UI форму в фоновом потоке
-            getActivity().runOnUiThread(new Runnable() {
-                public void run() {
-                    /**
-                     * Обновляем распарсенные JSON данные в ListView
-                     * */
-                    ListViewAdapter adapter = new ListViewAdapter(getActivity(), list);
-                    lv.setAdapter(adapter);
-                }
-            });
-
-        }
-
-    }
-
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -209,16 +143,6 @@ public class RecentActionsFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
