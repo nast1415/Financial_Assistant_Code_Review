@@ -254,7 +254,8 @@ public class MainActivity extends AppCompatActivity
         newExp.setValue(expense);
 
         Toast toast = Toast.makeText(getApplicationContext(),
-                "Трата " + expenseName + " успешно добавлена", Toast.LENGTH_SHORT);
+                getString(R.string.expense) + " " + expenseName + " успешно добавлена",
+                Toast.LENGTH_SHORT);
         toast.show();
 
 
@@ -299,7 +300,8 @@ public class MainActivity extends AppCompatActivity
         newInc.setValue(income);
 
         Toast toast = Toast.makeText(getApplicationContext(),
-                "Доход " + incomeName + " успешно добавлен", Toast.LENGTH_SHORT);
+                getString(R.string.income) + " " + incomeName + "успешно добавлен",
+                Toast.LENGTH_SHORT);
         toast.show();
 
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();

@@ -16,7 +16,7 @@ public class EditActionActivity extends AppCompatActivity {
     }
     public void updateExpenses(View v) {
         Toast toast = Toast.makeText(getApplicationContext(),
-                "Сожалеем, функция на стадии разработки", Toast.LENGTH_SHORT);
+                getString(R.string.message_not_implemented), Toast.LENGTH_SHORT);
         toast.show();
     }
     @Override

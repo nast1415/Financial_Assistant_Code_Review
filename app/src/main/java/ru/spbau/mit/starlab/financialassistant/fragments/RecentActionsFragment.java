@@ -54,7 +54,7 @@ public class RecentActionsFragment extends Fragment {
 
         if (categories == null || names == null || sums == null) {
             Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-                    "@string/massage_incorrect_data", Toast.LENGTH_SHORT);
+                    getString(R.string.message_incorrect_data), Toast.LENGTH_SHORT);
             toast.show();
             return ll;
         }
@@ -80,14 +80,14 @@ public class RecentActionsFragment extends Fragment {
                         .toString();
 
                 if (((TextView) view.findViewById(R.id.category))
-                        .getText().toString().equals("Трата")) {
+                        .getText().toString().equals(getString(R.string.expense))) {
                     Intent in = new Intent(getActivity().getApplicationContext(),
                             EditActionActivity.class);
                     in.putExtra("pid", pid);
                     startActivityForResult(in, 100);
                 } else {
                     Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-                            "@string/massage_not_implemented", Toast.LENGTH_SHORT);
+                            getString(R.string.message_not_implemented), Toast.LENGTH_SHORT);
                     toast.show();
                 }
             }

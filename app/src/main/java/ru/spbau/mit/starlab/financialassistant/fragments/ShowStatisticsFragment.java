@@ -76,7 +76,7 @@ public class ShowStatisticsFragment extends DialogFragment {
         String lineChartName;
 
         if (args.getBoolean("isStatistics")) {  // Show statistics
-            getDialog().setTitle("Статистика");
+            getDialog().setTitle(getString(R.string.statistics));
 
             String begin = args.getString("dateBegin");
             String end = args.getString("dateEnd");
@@ -97,17 +97,17 @@ public class ShowStatisticsFragment extends DialogFragment {
                             beginCal.get(Calendar.DATE)) + 1;
 
             if (duration < 90) {    // Calculate statistics per day
-                lineChartName = "расходы по дням";
+                lineChartName = getString(R.string.expenses_by_days);
                 calcDaysStatisticsForLineChart(beginCal, endCal, dateList, sumList,
                         lineChartXValues, lineChartYValues);
             } else {    // Calculate statistics per month
-                lineChartName = "расходы по месяцам";
+                lineChartName = getString(R.string.expenses_by_months);
                 calcMonthsStatisticsForLineChart(beginCal, endCal, dateList, sumList,
                         lineChartXValues, lineChartYValues);
             }
         } else {    // Show predictions
-            getDialog().setTitle("Прогнозы");
-            lineChartName = "прогноз расходов по месяцам";
+            getDialog().setTitle(getString(R.string.predictions));
+            lineChartName = getString(R.string.expenses_predictions_by_months);
             calcPredictionsForLineChart(dateList, sumList, lineChartXValues, lineChartYValues);
             calcPredictionsForPieChart(categoryNameList, dateList, sumList,
                     pieChartXValues, pieChartYValues);
@@ -115,7 +115,7 @@ public class ShowStatisticsFragment extends DialogFragment {
 
         updateLineChart(chart, lineChartYValues, lineChartXValues, lineChartName);
         if (pieChartXValues.isEmpty()) {
-            pieChart.setNoDataText("Недостаточно данных для диаграммы");
+            pieChart.setNoDataText(getString(R.string.message_incorrect_data));
         } else {
             updatePieChart(pieChart, pieChartYValues, pieChartXValues, "");
         }
