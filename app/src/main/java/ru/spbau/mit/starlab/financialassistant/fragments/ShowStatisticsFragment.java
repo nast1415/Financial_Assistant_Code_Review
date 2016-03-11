@@ -18,15 +18,12 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import java.text.DateFormatSymbols;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import ru.spbau.mit.starlab.financialassistant.R;
@@ -40,8 +37,6 @@ import ru.spbau.mit.starlab.financialassistant.R;
  * create an instance of this fragment.
  */
 public class ShowStatisticsFragment extends DialogFragment {
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
-
     private OnFragmentInteractionListener mListener;
 
     public static ShowStatisticsFragment newInstance() {
@@ -88,8 +83,8 @@ public class ShowStatisticsFragment extends DialogFragment {
             Calendar beginCal = Calendar.getInstance();
             Calendar endCal = Calendar.getInstance();
             try {
-                beginCal.setTime(sdf.parse(begin));
-                endCal.setTime(sdf.parse(end));
+                beginCal.setTime(CalculationsForStatistics.sdf.parse(begin));
+                endCal.setTime(CalculationsForStatistics.sdf.parse(end));
             } catch (ParseException ignored) {
             }
 
@@ -138,7 +133,7 @@ public class ShowStatisticsFragment extends DialogFragment {
         }
         int i = 0;
         for (String category : categories) {
-            int sum = getSumCategoryOnPeriod(beginCal, endCal, category,
+            int sum = CalculationsForStatistics.getSumCategoryOnPeriod(beginCal, endCal, category,
                     categoryNameList, dateList, sumList);
             if (sum > 0) {
                 ys.add(new Entry(sum, i++));
@@ -153,8 +148,8 @@ public class ShowStatisticsFragment extends DialogFragment {
         Calendar curCal = Calendar.getInstance();
         curCal.setTime(beginCal.getTime());
         for (int i = 0; !endCal.before(curCal); i++) {
-            ys.add(new Entry(getSumOnDay(curCal, dateList, sumList), i));
-            xs.add(i, String.valueOf(getDayName(curCal)));
+            ys.add(new Entry(CalculationsForStatistics.getSumOnDay(curCal, dateList, sumList), i));
+            xs.add(i, String.valueOf(CalculationsForStatistics.getDayName(curCal)));
             curCal.add(Calendar.DATE, 1);
         }
     }
@@ -166,8 +161,10 @@ public class ShowStatisticsFragment extends DialogFragment {
         curCal.setTime(beginCal.getTime());
         curCal.set(Calendar.DATE, 1);
         for (int i = 0; !endCal.before(curCal); i++) {
-            ys.add(new Entry(getSumOnMonth(curCal, dateList, sumList), i));
-            xs.add(i, String.valueOf(getMonthName(curCal.get(Calendar.MONTH))));
+            ys.add(new Entry(CalculationsForStatistics.getSumOnMonth(
+                    curCal, dateList, sumList), i));
+            xs.add(i, String.valueOf(CalculationsForStatistics.getMonthName(
+                    curCal.get(Calendar.MONTH))));
             curCal.add(Calendar.MONTH, 1);
         }
     }
@@ -177,19 +174,20 @@ public class ShowStatisticsFragment extends DialogFragment {
         List<Double> prevExpenses = new ArrayList<>();
         prevExpenses.add(0.0);
 
-        Calendar curCal = findMinDate(dateList);
+        Calendar curCal = CalculationsForStatistics.findMinDate(dateList);
         curCal.set(Calendar.DATE, 1);
         Calendar todayCal = Calendar.getInstance();
         todayCal.set(Calendar.DATE, 1);
 
         while (!todayCal.before(curCal)) {
-            prevExpenses.add(Math.max(0.1, getSumOnMonth(curCal, dateList, sumList)));
+            prevExpenses.add(Math.max(0.1, CalculationsForStatistics.getSumOnMonth(
+                    curCal, dateList, sumList)));
             curCal.add(Calendar.MONTH, 1);
         }
 
         for (int i = 0; i < 12; i++) {
-            ys.add(new Entry(extrapolate(prevExpenses), i));
-            xs.add(i, getMonthName((curCal.get(Calendar.MONTH) + i) % 12));
+            ys.add(new Entry(CalculationsForStatistics.extrapolate(prevExpenses), i));
+            xs.add(i, CalculationsForStatistics.getMonthName((curCal.get(Calendar.MONTH) + i) % 12));
         }
     }
 
@@ -204,92 +202,24 @@ public class ShowStatisticsFragment extends DialogFragment {
             List<Double> prevExpensesForCategory = new ArrayList<>();
             prevExpensesForCategory.add(0.0);
 
-            Calendar curCal = findMinDate(dateList);
+            Calendar curCal = CalculationsForStatistics.findMinDate(dateList);
             curCal.set(Calendar.DATE, 1);
             Calendar todayCal = Calendar.getInstance();
             todayCal.set(Calendar.DATE, 1);
 
             while (!todayCal.before(curCal)) {
-                prevExpensesForCategory.add(Math.max(0.1, getSumCategoryOnMonth(curCal, category,
-                        categoryNameList, dateList, sumList)));
+                prevExpensesForCategory.add(Math.max(0.1,
+                        CalculationsForStatistics.getSumCategoryOnMonth(curCal, category,
+                                categoryNameList, dateList, sumList)));
                 curCal.add(Calendar.MONTH, 1);
             }
 
-            int sum = extrapolate(prevExpensesForCategory);
+            int sum = CalculationsForStatistics.extrapolate(prevExpensesForCategory);
             if (sum > 0) {
                 ys.add(new Entry(sum, i++));
                 xs.add(category);
             }
         }
-    }
-
-    Calendar findMinDate(String[] dates) {
-        Calendar res = Calendar.getInstance();
-        for (String date : dates) {
-            Calendar calDate = Calendar.getInstance();
-            try {
-                calDate.setTime(sdf.parse(date));
-            } catch (ParseException ignored) {
-            }
-            if (calDate.before(res)) {
-                res = calDate;
-            }
-        }
-        return res;
-    }
-
-    int getSumOnDay(Calendar cal, String[] dates, double[] sums) {
-        return getSumOnPeriod(cal, cal, dates, sums);
-    }
-
-    int getSumOnMonth(Calendar cal, String[] dates, double[] sums) {
-        Calendar endPeriodCal = Calendar.getInstance();
-        endPeriodCal.setTime(cal.getTime());
-        endPeriodCal.add(Calendar.MONTH, 1);
-        endPeriodCal.add(Calendar.DATE, -1);
-        return getSumOnPeriod(cal, endPeriodCal, dates, sums);
-    }
-
-    int getSumOnPeriod(Calendar beginCal, Calendar endCal, String[] dates, double[] sums) {
-        int res = 0;
-        for (int i = 0; i < dates.length; i++) {
-            Calendar curCal = Calendar.getInstance();
-            try {
-                curCal.setTime(sdf.parse(dates[i]));
-            } catch (ParseException ignored) {
-            }
-            if (!curCal.before(beginCal) && !endCal.before(curCal)) {
-                res += sums[i];
-            }
-        }
-        return res;
-    }
-
-    int getSumCategoryOnMonth(Calendar cal, String category,
-                              String[] categories, String[] dates, double[] sums) {
-        Calendar endPeriodCal = Calendar.getInstance();
-        endPeriodCal.setTime(cal.getTime());
-        endPeriodCal.add(Calendar.MONTH, 1);
-        endPeriodCal.add(Calendar.DATE, -1);
-        return getSumCategoryOnPeriod(cal, endPeriodCal, category, categories, dates, sums);
-    }
-
-    int getSumCategoryOnPeriod(Calendar beginCal, Calendar endCal, String category,
-                               String[] categories, String[] dates, double[] sums) {
-        int res = 0;
-        for (int i = 0; i < dates.length; i++) {
-            if (categories[i].equals(category)) {
-                Calendar curCal = Calendar.getInstance();
-                try {
-                    curCal.setTime(sdf.parse(dates[i]));
-                } catch (ParseException ignored) {
-                }
-                if (!curCal.before(beginCal) && !endCal.before(curCal)) {
-                    res += sums[i];
-                }
-            }
-        }
-        return res;
     }
 
     private void updateLineChart(LineChart chart, List<Entry> values, List<String> xValues,
@@ -320,43 +250,6 @@ public class ShowStatisticsFragment extends DialogFragment {
         chart.invalidate();
     }
 
-    int extrapolate(List<Double> list) {
-        if (list.size() > 26) {
-            list = list.subList(list.size() - 26, list.size());
-        }
-        int x = list.size();
-        double res;
-
-        List<Double> prefSums = new ArrayList<>();
-        prefSums.add(0.0);
-        for (int i = 1; i < x; i++) {
-            prefSums.add(prefSums.get(i - 1) + list.get(i));
-        }
-
-        if (x <= 1) {
-            res = 0;
-        } else {
-            if (x <= 13) {
-                res = (prefSums.get(x - 1)) / (x - 1);
-            } else {
-                res = (prefSums.get(x - 1) - prefSums.get(12)) * (list.get(x - 12)) /
-                        (prefSums.get(x - 13));
-            }
-        }
-
-        list.add(res);
-        return (int) res;
-    }
-
-    String getMonthName(int x) {
-        return new DateFormatSymbols().getMonths()[x].substring(0, 3);
-    }
-
-    String getDayName(Calendar calendar) {
-        return String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)) +
-                getMonthName(calendar.get(Calendar.MONTH));
-    }
-
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -382,7 +275,7 @@ public class ShowStatisticsFragment extends DialogFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 
 }
