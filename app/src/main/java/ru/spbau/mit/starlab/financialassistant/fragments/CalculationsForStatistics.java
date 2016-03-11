@@ -12,14 +12,11 @@ public class CalculationsForStatistics {
     static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
     static final int MONTHS_IN_YEAR = 12;
 
-    static Calendar findMinDate(String[] dates) {
+    static Calendar findMinDate(String[] dates) throws ParseException {
         Calendar res = Calendar.getInstance();
         for (String date : dates) {
             Calendar calDate = Calendar.getInstance();
-            try {
-                calDate.setTime(sdf.parse(date));
-            } catch (ParseException ignored) {
-            }
+            calDate.setTime(sdf.parse(date));
             if (calDate.before(res)) {
                 res = calDate;
             }
@@ -27,11 +24,11 @@ public class CalculationsForStatistics {
         return res;
     }
 
-    static int getSumOnDay(Calendar cal, String[] dates, double[] sums) {
+    static int getSumOnDay(Calendar cal, String[] dates, double[] sums) throws ParseException {
         return getSumOnPeriod(cal, cal, dates, sums);
     }
 
-    static int getSumOnMonth(Calendar cal, String[] dates, double[] sums) {
+    static int getSumOnMonth(Calendar cal, String[] dates, double[] sums) throws ParseException {
         Calendar endPeriodCal = Calendar.getInstance();
         endPeriodCal.setTime(cal.getTime());
         endPeriodCal.add(Calendar.MONTH, 1);
@@ -39,14 +36,12 @@ public class CalculationsForStatistics {
         return getSumOnPeriod(cal, endPeriodCal, dates, sums);
     }
 
-    static int getSumOnPeriod(Calendar beginCal, Calendar endCal, String[] dates, double[] sums) {
+    static int getSumOnPeriod(Calendar beginCal, Calendar endCal, String[] dates, double[] sums)
+            throws ParseException {
         int res = 0;
         for (int i = 0; i < dates.length; i++) {
             Calendar curCal = Calendar.getInstance();
-            try {
-                curCal.setTime(sdf.parse(dates[i]));
-            } catch (ParseException ignored) {
-            }
+            curCal.setTime(sdf.parse(dates[i]));
             if (!curCal.before(beginCal) && !endCal.before(curCal)) {
                 res += sums[i];
             }

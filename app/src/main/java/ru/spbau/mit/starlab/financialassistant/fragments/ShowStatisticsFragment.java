@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -85,7 +86,11 @@ public class ShowStatisticsFragment extends DialogFragment {
             try {
                 beginCal.setTime(CalculationsForStatistics.sdf.parse(begin));
                 endCal.setTime(CalculationsForStatistics.sdf.parse(end));
-            } catch (ParseException ignored) {
+            } catch (ParseException exception) {
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+                        getString(R.string.message_error), Toast.LENGTH_SHORT);
+                toast.show();
+                return ll;
             }
 
             calcStatisticsForPieChart(beginCal, endCal, categoryNameList, dateList, sumList,
@@ -98,19 +103,38 @@ public class ShowStatisticsFragment extends DialogFragment {
 
             if (duration < 90) {    // Calculate statistics per day
                 lineChartName = getString(R.string.expenses_by_days);
-                calcDaysStatisticsForLineChart(beginCal, endCal, dateList, sumList,
-                        lineChartXValues, lineChartYValues);
+                try {
+                    calcDaysStatisticsForLineChart(beginCal, endCal, dateList, sumList,
+                            lineChartXValues, lineChartYValues);
+                } catch (ParseException exception) {
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+                            getString(R.string.message_error), Toast.LENGTH_SHORT);
+                    toast.show();
+                    return ll;
+                }
             } else {    // Calculate statistics per month
                 lineChartName = getString(R.string.expenses_by_months);
-                calcMonthsStatisticsForLineChart(beginCal, endCal, dateList, sumList,
-                        lineChartXValues, lineChartYValues);
+                try {
+                    calcMonthsStatisticsForLineChart(beginCal, endCal, dateList, sumList,
+                            lineChartXValues, lineChartYValues);
+                } catch (ParseException exception) {
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+                            getString(R.string.message_error), Toast.LENGTH_SHORT);
+                    toast.show();
+                    return ll;
+                }
             }
         } else {    // Show predictions
             getDialog().setTitle(getString(R.string.predictions));
             lineChartName = getString(R.string.expenses_predictions_by_months);
-            calcPredictionsForLineChart(dateList, sumList, lineChartXValues, lineChartYValues);
-            calcPredictionsForPieChart(categoryNameList, dateList, sumList,
-                    pieChartXValues, pieChartYValues);
+            try {
+                calcPredictionsForLineChart(dateList, sumList, lineChartXValues, lineChartYValues);
+                calcPredictionsForPieChart(categoryNameList, dateList, sumList,
+                        pieChartXValues, pieChartYValues);
+            } catch (ParseException exception) {
+
+                return ll;
+            }
         }
 
         updateLineChart(chart, lineChartYValues, lineChartXValues, lineChartName);
@@ -144,7 +168,7 @@ public class ShowStatisticsFragment extends DialogFragment {
 
     void calcDaysStatisticsForLineChart(Calendar beginCal, Calendar endCal,
                                         String[] dateList, double[] sumList,
-                                        List<String> xs, List<Entry> ys) {
+                                        List<String> xs, List<Entry> ys) throws ParseException {
         Calendar curCal = Calendar.getInstance();
         curCal.setTime(beginCal.getTime());
         for (int i = 0; !endCal.before(curCal); i++) {
@@ -156,7 +180,7 @@ public class ShowStatisticsFragment extends DialogFragment {
 
     void calcMonthsStatisticsForLineChart(Calendar beginCal, Calendar endCal,
                                           String[] dateList, double[] sumList,
-                                          List<String> xs, List<Entry> ys) {
+                                          List<String> xs, List<Entry> ys) throws ParseException {
         Calendar curCal = Calendar.getInstance();
         curCal.setTime(beginCal.getTime());
         curCal.set(Calendar.DATE, 1);
@@ -170,7 +194,7 @@ public class ShowStatisticsFragment extends DialogFragment {
     }
 
     void calcPredictionsForLineChart(String[] dateList, double[] sumList,
-                                     List<String> xs, List<Entry> ys) {
+                                     List<String> xs, List<Entry> ys) throws ParseException {
         List<Double> prevExpenses = new ArrayList<>();
         prevExpenses.add(0.0);
 
@@ -194,7 +218,7 @@ public class ShowStatisticsFragment extends DialogFragment {
     }
 
     void calcPredictionsForPieChart(String[] categoryNameList, String[] dateList, double[] sumList,
-                                    List<String> xs, List<Entry> ys) {
+                                    List<String> xs, List<Entry> ys) throws ParseException {
         Set<String> categories = new HashSet<>();
         if (categoryNameList != null) {
             Collections.addAll(categories, categoryNameList);

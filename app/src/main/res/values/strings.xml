@@ -9,6 +9,7 @@
     <!-- Strings related to error messages -->
     <string name="message_not_implemented">Сожалеем, функция пока в разработке</string>
     <string name="message_incorrect_data">Некорректные данные</string>
+    <string name="message_error">Произошла ошибка</string>
 
     <!-- Strings related to fragments' names -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -87,5 +88,4 @@
     <string name="expenses_predictions_by_months">прогноз расходов по месяцам</string>
     <string name="expense">Трата</string>
     <string name="income">Доход</string>
-    <string name="added_successful">успешно добавлен</string>
 </resources>
