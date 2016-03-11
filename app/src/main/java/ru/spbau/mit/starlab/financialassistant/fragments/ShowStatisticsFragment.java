@@ -186,7 +186,9 @@ public class ShowStatisticsFragment extends DialogFragment {
         }
 
         for (int i = 0; i < 12; i++) {
-            ys.add(new Entry(CalculationsForStatistics.extrapolate(prevExpenses), i));
+            double extrapolatedValue = CalculationsForStatistics.extrapolate(prevExpenses);
+            ys.add(new Entry((int) extrapolatedValue, i));
+            prevExpenses.add(extrapolatedValue);
             xs.add(i, CalculationsForStatistics.getMonthName((curCal.get(Calendar.MONTH) + i) % 12));
         }
     }
@@ -214,9 +216,10 @@ public class ShowStatisticsFragment extends DialogFragment {
                 curCal.add(Calendar.MONTH, 1);
             }
 
-            int sum = CalculationsForStatistics.extrapolate(prevExpensesForCategory);
-            if (sum > 0) {
-                ys.add(new Entry(sum, i++));
+            int extrapolatedValue =
+                    (int) CalculationsForStatistics.extrapolate(prevExpensesForCategory);
+            if (extrapolatedValue > 0) {
+                ys.add(new Entry(extrapolatedValue, i++));
                 xs.add(category);
             }
         }

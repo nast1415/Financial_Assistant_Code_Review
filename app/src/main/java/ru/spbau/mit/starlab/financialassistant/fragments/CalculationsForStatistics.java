@@ -10,6 +10,7 @@ import java.util.Locale;
 
 public class CalculationsForStatistics {
     static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
+    static final int MONTHS_IN_YEAR = 12;
 
     static Calendar findMinDate(String[] dates) {
         Calendar res = Calendar.getInstance();
@@ -80,36 +81,29 @@ public class CalculationsForStatistics {
         return res;
     }
 
-    static int extrapolate(List<Double> list) {
-        if (list.size() > 26) {
-            list = list.subList(list.size() - 26, list.size());
-        }
-        int x = list.size();
-        double res;
-
-        List<Double> prefSums = new ArrayList<>();
-        prefSums.add(0.0);
-        for (int i = 1; i < x; i++) {
-            prefSums.add(prefSums.get(i - 1) + list.get(i));
+    static double extrapolate(List<Double> list) {
+        List<Double> prefixSums = new ArrayList<>();
+        prefixSums.add(0.0);
+        for (int i = 1; i < list.size(); i++) {
+            prefixSums.add(prefixSums.get(i - 1) + list.get(i));
         }
 
-        if (x <= 1) {
-            res = 0;
+        if (list.size() <= 1) {
+            return 0;
         } else {
-            if (x <= 13) {
-                res = (prefSums.get(x - 1)) / (x - 1);
+            if (list.size() <= MONTHS_IN_YEAR + 1) {
+                return (prefixSums.get(list.size() - 1)) / (list.size() - 1);
             } else {
-                res = (prefSums.get(x - 1) - prefSums.get(12)) * (list.get(x - 12)) /
-                        (prefSums.get(x - 13));
+                return (prefixSums.get(list.size() - 1) - prefixSums.get(
+                        MONTHS_IN_YEAR * ((list.size() - 1) / MONTHS_IN_YEAR))) *
+                        (list.get(list.size() - MONTHS_IN_YEAR)) /
+                        (prefixSums.get(list.size() - MONTHS_IN_YEAR - 1));
             }
         }
-
-        list.add(res);
-        return (int) res;
     }
 
-    static String getMonthName(int x) {
-        return new DateFormatSymbols().getMonths()[x].substring(0, 3);
+    static String getMonthName(int numberOfMonth) {
+        return new DateFormatSymbols().getMonths()[numberOfMonth].substring(0, 3);
     }
 
     static String getDayName(Calendar calendar) {
