@@ -7,9 +7,7 @@ import org.junit.Test;
 import java.lang.String;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 import static org.junit.Assert.*;
@@ -29,7 +27,7 @@ public class ShowStatisticsTest {
         for (int i = 5; i < 10; i++) {
             dates[i] = "0" + (i - 4) + ".01.2016";
         }
-        Calendar resCal = fragment.findMinDate(dates);
+        Calendar resCal = CalculationsForStatistics.findMinDate(dates);
         assertEquals(2016, resCal.get(Calendar.YEAR));
         assertEquals(0, resCal.get(Calendar.MONTH));
         assertEquals(1, resCal.get(Calendar.DATE));
@@ -42,7 +40,7 @@ public class ShowStatisticsTest {
         cal.set(Calendar.MILLISECOND, 0);
         String[] dates = {"01.01.2016", "02.02.2016", "01.01.2016", "01.02.2016", "02.01.2016"};
         double[] sums = {1, 2, 3, 4, 5};
-        assertEquals(4, fragment.getSumOnDay(cal, dates, sums));
+        assertEquals(4, CalculationsForStatistics.getSumOnDay(cal, dates, sums));
     }
 
     @Test
@@ -52,7 +50,7 @@ public class ShowStatisticsTest {
         cal.set(Calendar.MILLISECOND, 0);
         String[] dates = {"01.01.2016", "02.02.2016", "01.01.2016", "01.02.2016", "02.01.2016"};
         double[] sums = {1, 2, 3, 4, 5};
-        assertEquals(9, fragment.getSumOnMonth(cal, dates, sums));
+        assertEquals(9, CalculationsForStatistics.getSumOnMonth(cal, dates, sums));
     }
 
     @Test
@@ -63,7 +61,7 @@ public class ShowStatisticsTest {
         String[] dates = {"01.01.2016", "02.02.2016", "01.01.2016", "01.02.2016", "02.01.2016"};
         double[] sums = {1, 2, 3, 4, 5};
         String[] categories = {"cat1", "cat2", "cat3", "cat1", "cat1"};
-        assertEquals(6, fragment.getSumCategoryOnMonth(cal, "cat1", categories, dates, sums));
+        assertEquals(6, CalculationsForStatistics.getSumCategoryOnMonth(cal, "cat1", categories, dates, sums));
     }
 
     @Test
@@ -72,7 +70,7 @@ public class ShowStatisticsTest {
         for (int i = 0; i <= 23; i++) {
             list.add(i * 1000.0);
         }
-        assertTrue(fragment.extrapolate(list) > 23000);
+        assertTrue(CalculationsForStatistics.extrapolate(list) > 23000);
     }
 
     @Test
@@ -82,14 +80,14 @@ public class ShowStatisticsTest {
         for (int i = 0; i < 12 * 10 - 1; i++) {
             list.add((12 - i % 12) * 1000.0);
         }
-        assertTrue(fragment.extrapolate(list) < 2000);
+        assertTrue(CalculationsForStatistics.extrapolate(list) < 2000);
     }
 
     @Test
     public void testGetDayName() throws Exception {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, 11, 10);
-        assertEquals("10дек", fragment.getDayName(cal));
+        assertEquals("10дек", CalculationsForStatistics.getDayName(cal));
     }
 
     @Test
