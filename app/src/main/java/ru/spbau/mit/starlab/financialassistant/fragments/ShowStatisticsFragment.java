@@ -18,6 +18,7 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -374,9 +375,7 @@ public class ShowStatisticsFragment extends DialogFragment {
     }
 
     String getMonthName(int x) {
-        String[] months = {"янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт",
-                "ноя", "дек"};
-        return months[x];
+        return new DateFormatSymbols().getMonths()[x].substring(0, 3);
     }
 
     String getDayName(Calendar calendar) {
