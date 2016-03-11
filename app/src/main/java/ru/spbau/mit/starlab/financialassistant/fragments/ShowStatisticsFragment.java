@@ -321,6 +321,9 @@ public class ShowStatisticsFragment extends DialogFragment {
     }
 
     int extrapolate(List<Double> list) {
+        if (list.size() > 26) {
+            list = list.subList(list.size() - 26, list.size());
+        }
         int x = list.size();
         double res;
 
@@ -336,37 +339,8 @@ public class ShowStatisticsFragment extends DialogFragment {
             if (x <= 13) {
                 res = (prefSums.get(x - 1)) / (x - 1);
             } else {
-                if (x <= 26) {
-                    res = (prefSums.get(x - 1) - prefSums.get(12)) * (list.get(x - 12)) / (prefSums.get(x - 13));
-                } else {
-                    if (x <= 39) {
-                        res = (prefSums.get(x - 1) - prefSums.get(24)) *
-                                ((list.get(x - 24)) / (prefSums.get(x - 25)) +
-                                        (list.get(x - 12)) / (prefSums.get(x - 13) - prefSums.get(12))) / 2;
-                    } else {
-                        if (x <= 52) {
-                            res = (prefSums.get(x - 1) - prefSums.get(36)) *
-                                    ((list.get(x - 36)) / (prefSums.get(x - 37)) +
-                                            (list.get(x - 24)) / (prefSums.get(x - 25) - prefSums.get(12)) +
-                                            (list.get(x - 12)) / (prefSums.get(x - 13) - prefSums.get(24))) / 3;
-                        } else {
-                            if (x <= 65) {
-                                res = (prefSums.get(x - 1) - prefSums.get(48)) *
-                                        ((list.get(x - 48)) / (prefSums.get(x - 49)) +
-                                                (list.get(x - 36)) / (prefSums.get(x - 37) - prefSums.get(12)) +
-                                                (list.get(x - 24)) / (prefSums.get(x - 25) - prefSums.get(24)) +
-                                                (list.get(x - 12)) / (prefSums.get(x - 13) - prefSums.get(36))) / 4;
-                            } else {
-                                res = (prefSums.get(x - 1) - prefSums.get(60)) *
-                                        ((list.get(x - 60)) / (prefSums.get(x - 61)) +
-                                                (list.get(x - 48)) / (prefSums.get(x - 49) - prefSums.get(12)) +
-                                                (list.get(x - 36)) / (prefSums.get(x - 37) - prefSums.get(24)) +
-                                                (list.get(x - 24)) / (prefSums.get(x - 25) - prefSums.get(36)) +
-                                                (list.get(x - 12)) / (prefSums.get(x - 13) - prefSums.get(48))) / 5;
-                            }
-                        }
-                    }
-                }
+                res = (prefSums.get(x - 1) - prefSums.get(12)) * (list.get(x - 12)) /
+                        (prefSums.get(x - 13));
             }
         }
 
@@ -401,7 +375,7 @@ public class ShowStatisticsFragment extends DialogFragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
