@@ -1,8 +1,6 @@
 package ru.spbau.mit.starlab.financialassistant.fragments;
 
-import android.app.Activity;
 import android.app.DialogFragment;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -25,11 +23,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.Set;
 
 import ru.spbau.mit.starlab.financialassistant.R;
@@ -43,32 +39,13 @@ import ru.spbau.mit.starlab.financialassistant.R;
  * create an instance of this fragment.
  */
 public class ShowStatisticsFragment extends DialogFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ShowStatisticsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ShowStatisticsFragment newInstance(String param1, String param2) {
+    public static ShowStatisticsFragment newInstance() {
         ShowStatisticsFragment fragment = new ShowStatisticsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -80,10 +57,6 @@ public class ShowStatisticsFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -116,15 +89,16 @@ public class ShowStatisticsFragment extends DialogFragment {
             try {
                 beginCal.setTime(sdf.parse(begin));
                 endCal.setTime(sdf.parse(end));
-            } catch (ParseException e) {
-                e.printStackTrace();
+            } catch (ParseException ignored) {
             }
 
             calcStatisticsForPieChart(beginCal, endCal, categoryNameList, dateList, sumList,
                     pieChartXValues, pieChartYValues);
 
-            int duration = endCal.get(Calendar.YEAR) * 12 * 30 + endCal.get(Calendar.MONTH) * 30 + endCal.get(Calendar.DATE) -
-                    (beginCal.get(Calendar.YEAR) * 12 * 30 + beginCal.get(Calendar.MONTH) * 30 + beginCal.get(Calendar.DATE)) + 1;
+            int duration = endCal.get(Calendar.YEAR) * 12 * 30 +
+                    endCal.get(Calendar.MONTH) * 30 + endCal.get(Calendar.DATE) -
+                    (beginCal.get(Calendar.YEAR) * 12 * 30 + beginCal.get(Calendar.MONTH) * 30 +
+                            beginCal.get(Calendar.DATE)) + 1;
 
             if (duration < 90) {    // Calculate statistics per day
                 lineChartName = "расходы по дням";
@@ -139,14 +113,15 @@ public class ShowStatisticsFragment extends DialogFragment {
             getDialog().setTitle("Прогнозы");
             lineChartName = "прогноз расходов по месяцам";
             calcPredictionsForLineChart(dateList, sumList, lineChartXValues, lineChartYValues);
-            calcPredictionsForPieChart(categoryNameList, dateList, sumList, pieChartXValues, pieChartYValues);
+            calcPredictionsForPieChart(categoryNameList, dateList, sumList,
+                    pieChartXValues, pieChartYValues);
         }
 
         updateLineChart(chart, lineChartYValues, lineChartXValues, lineChartName);
-        if (!pieChartXValues.isEmpty()) {
-            updatePieChart(pieChart, pieChartYValues, pieChartXValues, "");
-        } else {
+        if (pieChartXValues.isEmpty()) {
             pieChart.setNoDataText("Недостаточно данных для диаграммы");
+        } else {
+            updatePieChart(pieChart, pieChartYValues, pieChartXValues, "");
         }
 
         // Inflate the layout for this fragment
@@ -162,7 +137,8 @@ public class ShowStatisticsFragment extends DialogFragment {
         }
         int i = 0;
         for (String category : categories) {
-            int sum = getSumCategoryOnPeriod(beginCal, endCal, category, categoryNameList, dateList, sumList);
+            int sum = getSumCategoryOnPeriod(beginCal, endCal, category,
+                    categoryNameList, dateList, sumList);
             if (sum > 0) {
                 ys.add(new Entry(sum, i++));
                 xs.add(category);
@@ -170,7 +146,8 @@ public class ShowStatisticsFragment extends DialogFragment {
         }
     }
 
-    void calcDaysStatisticsForLineChart(Calendar beginCal, Calendar endCal, String[] dateList, double[] sumList,
+    void calcDaysStatisticsForLineChart(Calendar beginCal, Calendar endCal,
+                                        String[] dateList, double[] sumList,
                                         List<String> xs, List<Entry> ys) {
         Calendar curCal = Calendar.getInstance();
         curCal.setTime(beginCal.getTime());
@@ -181,7 +158,8 @@ public class ShowStatisticsFragment extends DialogFragment {
         }
     }
 
-    void calcMonthsStatisticsForLineChart(Calendar beginCal, Calendar endCal, String[] dateList, double[] sumList,
+    void calcMonthsStatisticsForLineChart(Calendar beginCal, Calendar endCal,
+                                          String[] dateList, double[] sumList,
                                           List<String> xs, List<Entry> ys) {
         Calendar curCal = Calendar.getInstance();
         curCal.setTime(beginCal.getTime());
@@ -193,7 +171,8 @@ public class ShowStatisticsFragment extends DialogFragment {
         }
     }
 
-    void calcPredictionsForLineChart(String[] dateList, double[] sumList, List<String> xs, List<Entry> ys) {
+    void calcPredictionsForLineChart(String[] dateList, double[] sumList,
+                                     List<String> xs, List<Entry> ys) {
         List<Double> prevExpenses = new ArrayList<>();
         prevExpenses.add(0.0);
 
@@ -209,7 +188,7 @@ public class ShowStatisticsFragment extends DialogFragment {
 
         for (int i = 0; i < 12; i++) {
             ys.add(new Entry(extrapolate(prevExpenses), i));
-            xs.add(i, getMonthName(curCal.get(Calendar.MONTH) + i));
+            xs.add(i, getMonthName((curCal.get(Calendar.MONTH) + i) % 12));
         }
     }
 
@@ -230,7 +209,8 @@ public class ShowStatisticsFragment extends DialogFragment {
             todayCal.set(Calendar.DATE, 1);
 
             while (!todayCal.before(curCal)) {
-                prevExpensesForCategory.add(Math.max(0.1, getSumCategoryOnMonth(curCal, category, categoryNameList, dateList, sumList)));
+                prevExpensesForCategory.add(Math.max(0.1, getSumCategoryOnMonth(curCal, category,
+                        categoryNameList, dateList, sumList)));
                 curCal.add(Calendar.MONTH, 1);
             }
 
@@ -248,8 +228,7 @@ public class ShowStatisticsFragment extends DialogFragment {
             Calendar calDate = Calendar.getInstance();
             try {
                 calDate.setTime(sdf.parse(date));
-            } catch (ParseException e) {
-                e.printStackTrace();
+            } catch (ParseException ignored) {
             }
             if (calDate.before(res)) {
                 res = calDate;
@@ -276,8 +255,7 @@ public class ShowStatisticsFragment extends DialogFragment {
             Calendar curCal = Calendar.getInstance();
             try {
                 curCal.setTime(sdf.parse(dates[i]));
-            } catch (ParseException e) {
-                e.printStackTrace();
+            } catch (ParseException ignored) {
             }
             if (!curCal.before(beginCal) && !endCal.before(curCal)) {
                 res += sums[i];
@@ -286,7 +264,8 @@ public class ShowStatisticsFragment extends DialogFragment {
         return res;
     }
 
-    int getSumCategoryOnMonth(Calendar cal, String category, String[] categories, String[] dates, double[] sums) {
+    int getSumCategoryOnMonth(Calendar cal, String category,
+                              String[] categories, String[] dates, double[] sums) {
         Calendar endPeriodCal = Calendar.getInstance();
         endPeriodCal.setTime(cal.getTime());
         endPeriodCal.add(Calendar.MONTH, 1);
@@ -294,15 +273,15 @@ public class ShowStatisticsFragment extends DialogFragment {
         return getSumCategoryOnPeriod(cal, endPeriodCal, category, categories, dates, sums);
     }
 
-    int getSumCategoryOnPeriod(Calendar beginCal, Calendar endCal, String category, String[] categories, String[] dates, double[] sums) {
+    int getSumCategoryOnPeriod(Calendar beginCal, Calendar endCal, String category,
+                               String[] categories, String[] dates, double[] sums) {
         int res = 0;
         for (int i = 0; i < dates.length; i++) {
             if (categories[i].equals(category)) {
                 Calendar curCal = Calendar.getInstance();
                 try {
                     curCal.setTime(sdf.parse(dates[i]));
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                } catch (ParseException ignored) {
                 }
                 if (!curCal.before(beginCal) && !endCal.before(curCal)) {
                     res += sums[i];
@@ -312,7 +291,8 @@ public class ShowStatisticsFragment extends DialogFragment {
         return res;
     }
 
-    private void updateLineChart(LineChart chart, List<Entry> values, List<String> xValues, String name) {
+    private void updateLineChart(LineChart chart, List<Entry> values, List<String> xValues,
+                                 String name) {
         LineDataSet dataSet = new LineDataSet(values, name);
         dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 
@@ -326,7 +306,8 @@ public class ShowStatisticsFragment extends DialogFragment {
         chart.invalidate();
     }
 
-    private void updatePieChart(PieChart chart, List<Entry> values, List<String> xValues, String name) {
+    private void updatePieChart(PieChart chart, List<Entry> values, List<String> xValues,
+                                String name) {
         PieDataSet pieDataSet = new PieDataSet(values, "");
         pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         PieData pieData = new PieData(xValues, pieDataSet);
@@ -393,12 +374,14 @@ public class ShowStatisticsFragment extends DialogFragment {
     }
 
     String getMonthName(int x) {
-        String[] months = {"янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"};
-        return months[x % 12];
+        String[] months = {"янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт",
+                "ноя", "дек"};
+        return months[x];
     }
 
     String getDayName(Calendar calendar) {
-        return String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)) + getMonthName(calendar.get(Calendar.MONTH));
+        return String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)) +
+                getMonthName(calendar.get(Calendar.MONTH));
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -419,7 +402,7 @@ public class ShowStatisticsFragment extends DialogFragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
+     * <p>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
