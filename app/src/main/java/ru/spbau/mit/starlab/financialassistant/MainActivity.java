@@ -22,7 +22,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -91,9 +96,56 @@ public class MainActivity extends AppCompatActivity
         fragment.setArguments(args);
         fragment.show(getFragmentManager(), "showStatistics");
     }
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class LastAction {
+        private String category;
+        private String name;
+        private String sum;
+
+        public LastAction() {
+        }
+
+        ;
+
+        public String getCategory() {
+            return category;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getSum() {
+            return sum;
+        }
+
+        @JsonIgnore
+        public String getDisplayName() {
+            return getName();
+        }
+
+    }
 
     //Function to show last actions
     public void getLastActions(List<String> categoryList, List<String> nameList, List<Double> sumList) {
+        // Get a reference to our posts
+        Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/LastActions");
+
+        // Attach an listener to read the data at our posts reference
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                System.out.println("There are " + snapshot.getChildrenCount() + " last actions");
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    LastAction action = postSnapshot.getValue(LastAction.class);
+                    System.out.println("And now I print category: " + action.getCategory() + " and name: " + action.getName());
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
         //This function will be changed soon
         /*String query = "SELECT " + DatabaseHelper._ID + ", "
                 + DatabaseHelper.LAST_ACTIONS_CATEGORY_COLUMN + ", "
@@ -242,7 +294,7 @@ public class MainActivity extends AppCompatActivity
         String expenseAddTime = curDate.toString();
 
         // Add this data to the Firebase DB to the "Expenses" location, using push (to create unique id)
-        Firebase expRef = finRef.child("Expenses");
+        Firebase expRef = finRef.child("Expenses").child(category);
         Firebase newExp = expRef.push();
 
         Map<String, String> expense = new HashMap<String, String>();
