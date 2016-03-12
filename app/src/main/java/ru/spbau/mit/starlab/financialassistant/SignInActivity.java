@@ -275,6 +275,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
                 Thread.sleep(1000);
             } catch (InterruptedException ignored) {
             }
+            System.err.println("IsAuthorize: " + isAuthorize);
             return isAuthorize;
         }
 

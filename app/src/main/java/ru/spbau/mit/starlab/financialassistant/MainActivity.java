@@ -260,17 +260,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     //Function, that add data from the DB to the RecentActionsFragment
-    public void addDataToLastActions(int id, String category, String name, String sum) {
-        //This function will be changed soon
-        /*ContentValues newValues = new ContentValues();
+    public void addDataToLastActions(String category, String name, String sum) {
+        Firebase lastActionsRef = finRef.child("LastActions");
+        Firebase newAction = lastActionsRef.push();
 
-        newValues.put(DatabaseHelper.LAST_ACTIONS_ID_COLUMN, id);
-        newValues.put(DatabaseHelper.LAST_ACTIONS_CATEGORY_COLUMN, category);
-        newValues.put(DatabaseHelper.LAST_ACTIONS_NAME_COLUMN, name);
-        newValues.put(DatabaseHelper.LAST_ACTIONS_SUM_COLUMN, sum);
-
-        mSqLiteDatabase.insert("last_actions", null, newValues);
-        Log.i("LOG_TAG", "New last_action added");*/
+        Map<String, String> action = new HashMap<String, String>();
+        action.put("categoryLA", category);
+        action.put("nameLA", name);
+        action.put("sumLA", sum);
+        newAction.setValue(action);
     }
 
     //Function, that add data from the ExpensesFragment to the Firebase DB
@@ -304,6 +302,8 @@ public class MainActivity extends AppCompatActivity
         expense.put("dateExp", expenseDate);
         expense.put("addTimeExp", expenseAddTime);
         newExp.setValue(expense);
+
+        addDataToLastActions("Трата", expenseName, expenseSum);
 
         Toast toast = Toast.makeText(getApplicationContext(),
                 getString(R.string.expense) + " " + expenseName + " успешно добавлена",
@@ -350,6 +350,8 @@ public class MainActivity extends AppCompatActivity
         income.put("dateInc", incomeDate);
         income.put("addTimeInc", incomeAddTime);
         newInc.setValue(income);
+
+        addDataToLastActions("Доход", incomeName, incomeSum);
 
         Toast toast = Toast.makeText(getApplicationContext(),
                 getString(R.string.income) + " " + incomeName + "успешно добавлен",
