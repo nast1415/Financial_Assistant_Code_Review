@@ -25,20 +25,10 @@ import static ru.spbau.mit.starlab.financialassistant.multicolumnlistview.Consta
 
 public class RecentActionsFragment extends Fragment {
     public ArrayList<HashMap<String, String>> recentActionsList;
-
     public ListView lv;
-
-    public static RecentActionsFragment newInstance() {
-        return new RecentActionsFragment();
-    }
 
     public RecentActionsFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -95,10 +85,4 @@ public class RecentActionsFragment extends Fragment {
 
         return ll;
     }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
 }
