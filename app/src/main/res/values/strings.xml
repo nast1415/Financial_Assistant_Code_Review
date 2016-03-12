@@ -72,6 +72,8 @@
     <string name="error_invalid_email">Адрес электронной почты некорректен</string>
     <string name="error_invalid_password">Пароль слишком короткий</string>
     <string name="error_incorrect_password">Неверный пароль</string>
+    <string name="error_incorrect_registration">Пользователь с таким e-mail уже зарегистрирован</string>
+    <string name="error_incorrect_authorization">Проверьте правильность вводимых данных</string>
     <string name="error_field_required">Поля не должны быть пустыми</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."

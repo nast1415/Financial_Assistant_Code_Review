@@ -276,19 +276,14 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
                 public void onAuthenticationError(FirebaseError firebaseError) {
                     System.err.println("There was an error");
                     isAuthorize = false;
-                    // there was an error
                 }
             });
-            System.err.println("IsAuthorize value: " + isAuthorize);
-/*            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignored) {
             }
-*/
-            return true;
+            return isAuthorize;
         }
 
         @Override
@@ -302,7 +297,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
                 Intent myIntent = new Intent(SignInActivity.this, MainActivity.class);
                 SignInActivity.this.startActivity(myIntent);
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.setError(getString(R.string.error_incorrect_authorization));
                 mPasswordView.requestFocus();
             }
 

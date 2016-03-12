@@ -253,6 +253,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
         private final String mEmail;
         private final String mPassword;
+        private boolean isRegister = true;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -271,20 +272,15 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                 }
                 @Override
                 public void onError(FirebaseError firebaseError) {
-                    // there was an error
+                    isRegister = false;
                 }
             });
 
-            /*for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }*/
-
-            // TODO: register the new account here.
-            return true;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignored) {
+            }
+            return isRegister;
         }
 
         @Override
@@ -295,8 +291,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             if (success) {
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                mEmailView.setError(getString(R.string.error_incorrect_registration));
+                mEmailView.requestFocus();
             }
         }
 
