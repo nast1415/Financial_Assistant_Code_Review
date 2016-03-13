@@ -228,6 +228,172 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    //Function, that add data from the RegularExpensesFragment to the Firebase DB
+    public void addNewRegExpense(View v) {
+        boolean cancel = false;
+
+        //Get data from the view fields
+        TextView startPeriod = (TextView) findViewById(R.id.eTxtRegExpStartPeriod);
+        String regExpStartPeriod = startPeriod.getText().toString();
+
+        TextView endPeriod = (TextView) findViewById(R.id.eTxtRegExpEndPeriod);
+        String regExpEndPeriod = endPeriod.getText().toString();
+
+        TextView category = (TextView) findViewById(R.id.eTxtRegExpCategory);
+        String regExpCategory = category.getText().toString();
+
+        TextView name = (TextView) findViewById(R.id.eTxtRegExpName);
+        String regExpName = name.getText().toString();
+
+        TextView sum = (TextView) findViewById(R.id.eTxtRegExpSum);
+        String regExpSum = sum.getText().toString();
+
+        TextView comment = (TextView) findViewById(R.id.eTxtRegExpComment);
+        String regExpComment = comment.getText().toString();
+
+        Date curDate = new Date();
+        String regExpAddTime = curDate.toString();
+
+        if (regExpName.equals("") || regExpCategory.equals("") || regExpSum.equals("")
+                || regExpStartPeriod.equals("") || regExpEndPeriod.equals("")) {
+            cancel = true;
+        }
+        if (cancel) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getString(R.string.empty_data_error),
+                    Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            DataBaseHelper.addDataToRegularExpenses(finRef, regExpStartPeriod, regExpEndPeriod,
+                    regExpCategory, regExpName, regExpSum,
+                    regExpComment, regExpAddTime);
+            DataBaseHelper.addDataToLastActions(finRef, getString(R.string.regExpense), regExpName,
+                    regExpSum);
+
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getString(R.string.regExpense) + " " + regExpName + " "
+                            + getString(R.string.successful_added) ,
+                    Toast.LENGTH_SHORT);
+            toast.show();
+
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.container, informationFragment);
+            fragmentTransaction.commit();
+
+            DrawerLayout drawer1 = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer1.closeDrawer(GravityCompat.START);
+        }
+    }
+
+    public void addNewRegIncome(View v) {
+        boolean cancel = false;
+
+        //Get data from the view fields
+        TextView startPeriod = (TextView) findViewById(R.id.eTxtRegIncStartPeriod);
+        String regIncStartPeriod = startPeriod.getText().toString();
+
+        TextView endPeriod = (TextView) findViewById(R.id.eTxtRegIncEndPeriod);
+        String regIncEndPeriod = endPeriod.getText().toString();
+
+        TextView name = (TextView) findViewById(R.id.eTxtRegIncName);
+        String regIncName = name.getText().toString();
+
+        TextView sum = (TextView) findViewById(R.id.eTxtRegIncSum);
+        String regIncSum = sum.getText().toString();
+
+        TextView comment = (TextView) findViewById(R.id.eTxtRegIncComment);
+        String regIncComment = comment.getText().toString();
+
+        Date curDate = new Date();
+        String regIncAddTime = curDate.toString();
+
+        if (regIncName.equals("") || regIncSum.equals("")
+                || regIncStartPeriod.equals("") || regIncEndPeriod.equals("")) {
+            cancel = true;
+        }
+        if (cancel) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getString(R.string.empty_data_error),
+                    Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            DataBaseHelper.addDataToRegularIncome(finRef, regIncStartPeriod, regIncEndPeriod,
+                    regIncName, regIncSum,
+                    regIncComment, regIncAddTime);
+            DataBaseHelper.addDataToLastActions(finRef, getString(R.string.regIncome), regIncName,
+                    regIncSum);
+
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getString(R.string.regIncome) + " " + regIncName + " "
+                            + getString(R.string.successful_added) ,
+                    Toast.LENGTH_SHORT);
+            toast.show();
+
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.container, informationFragment);
+            fragmentTransaction.commit();
+
+            DrawerLayout drawer1 = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer1.closeDrawer(GravityCompat.START);
+        }
+    }
+
+    public void addNewCredit(View v) {
+        boolean cancel = false;
+
+        //Get data from the view fields
+        TextView startPeriod = (TextView) findViewById(R.id.eTxtCreditStartPeriod);
+        String creditStartPeriod = startPeriod.getText().toString();
+
+        TextView endPeriod = (TextView) findViewById(R.id.eTxtCreditEndPeriod);
+        String creditEndPeriod = endPeriod.getText().toString();
+
+        TextView name = (TextView) findViewById(R.id.eTxtCreditName);
+        String creditName = name.getText().toString();
+
+        TextView percent = (TextView) findViewById(R.id.eTxtCreditPercent);
+        String creditPercent = percent.getText().toString();
+
+        TextView deposit = (TextView) findViewById(R.id.eTxtCreditDeposit);
+        String creditDeposit = deposit.getText().toString();
+
+        TextView sum = (TextView) findViewById(R.id.eTxtCreditSum);
+        String creditSum = sum.getText().toString();
+
+        Date curDate = new Date();
+        String creditAddTime = curDate.toString();
+
+        if (creditName.equals("") || creditPercent.equals("") || creditDeposit.equals("")
+                || creditSum.equals("") || creditStartPeriod.equals("")
+                || creditEndPeriod.equals("")) {
+            cancel = true;
+        }
+        if (cancel) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getString(R.string.empty_data_error),
+                    Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            DataBaseHelper.addDataToCredits(finRef, creditStartPeriod, creditEndPeriod,
+                    creditName, creditPercent, creditDeposit, creditSum, creditAddTime);
+            DataBaseHelper.addDataToLastActions(finRef, getString(R.string.credit), creditName,
+                    creditSum);
+
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getString(R.string.credit) + " " + creditName + " "
+                            + getString(R.string.successful_added) ,
+                    Toast.LENGTH_SHORT);
+            toast.show();
+
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.container, informationFragment);
+            fragmentTransaction.commit();
+
+            DrawerLayout drawer1 = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer1.closeDrawer(GravityCompat.START);
+        }
+    }
+
     //Function, that add data from the IncomesFragment to the Firebase DB
     public void addNewIncome(View v) {
         boolean cancel = false;

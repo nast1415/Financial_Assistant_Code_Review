@@ -99,7 +99,11 @@
     <string name="expenses_by_months">расходы по месяцам</string>
     <string name="expenses_predictions_by_months">прогноз расходов по месяцам</string>
     <string name="expense">Трата</string>
+    <string name="regExpense">Регулярная трата</string>
+    <string name="regIncome">Регулярный доход</string>
+    <string name="credit">Кредит</string>
     <string name="income">Доход</string>
+    <string name="successful_added">успешно добавлена</string>
     <string name="loading_actions">Подождите…</string>
     <string name="error_not_all_filled">Все поля, кроме комментария, обязательны для заполнения</string>
 </resources>
