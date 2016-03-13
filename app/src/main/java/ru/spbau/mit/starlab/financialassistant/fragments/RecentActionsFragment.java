@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import ru.spbau.mit.starlab.financialassistant.DataBaseHelper;
 import ru.spbau.mit.starlab.financialassistant.EditActionActivity;
@@ -111,14 +112,15 @@ public class RecentActionsFragment extends Fragment {
 
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
-                    error = firebaseError;
                     done.countDown();
                 }
             });
 
             recentActionsList = new ArrayList<>();
             try {
-                done.await();
+                if (!done.await(2, TimeUnit.SECONDS)) {
+                    return false;
+                }
             } catch (InterruptedException e) {
                 return false;
             }
@@ -143,20 +145,8 @@ public class RecentActionsFragment extends Fragment {
                 }
             });
             if (!success) {
-                if (error == null) {
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            getString(R.string.message_error), Toast.LENGTH_SHORT).show();
-                } else {
-                    switch (error.getCode()) {
-                        case FirebaseError.NETWORK_ERROR:
-                            Toast.makeText(getActivity().getApplicationContext(),
-                                    getString(R.string.error_network), Toast.LENGTH_SHORT).show();
-                            break;
-                        default:
-                            Toast.makeText(getActivity().getApplicationContext(),
-                                    getString(R.string.message_error), Toast.LENGTH_SHORT).show();
-                    }
-                }
+                Toast.makeText(getActivity().getApplicationContext(),
+                        R.string.message_error, Toast.LENGTH_SHORT).show();
             }
         }
 

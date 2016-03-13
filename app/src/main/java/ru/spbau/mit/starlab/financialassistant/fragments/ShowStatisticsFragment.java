@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import ru.spbau.mit.starlab.financialassistant.DataBaseHelper;
 import ru.spbau.mit.starlab.financialassistant.R;
@@ -277,7 +278,9 @@ public class ShowStatisticsFragment extends DialogFragment {
             });
 
             try {
-                done.await();
+                if (!done.await(2, TimeUnit.SECONDS)) {
+                    return false;
+                }
             } catch (InterruptedException e) {
                 return false;
             }
