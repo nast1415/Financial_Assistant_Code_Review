@@ -17,6 +17,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 
 import java.text.ParseException;
@@ -47,7 +48,12 @@ public class MainActivity extends AppCompatActivity
     private CreditsFragment creditsFragment;
 
     //The data for our app will be stored at this Firebase reference
-    Firebase finRef = new Firebase("https://luminous-heat-4027.firebaseio.com/");
+    Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/");
+    AuthData authData = ref.getAuth();
+    String uid = authData.getUid();
+
+    Firebase finRef = new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
+
 
     //Function for our datePickerDialog
     public void showDatePickerDialog(View v) {
@@ -57,6 +63,50 @@ public class MainActivity extends AppCompatActivity
         args.putInt("txtDateId", v.getId());
         newFragment.setArguments(args);
         newFragment.show(getFragmentManager(), "datePicker");
+    }
+
+    public Date parseDate(String date) {
+        SimpleDateFormat format = new SimpleDateFormat();
+        format.applyPattern("dd.MM.yyyy");
+        Date myDate = new Date();
+        try {
+            myDate = format.parse(date);
+        } catch (ParseException e) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getString(R.string.format_error),
+                    Toast.LENGTH_SHORT);
+            toast.show();
+            return null;
+        }
+        return myDate;
+    }
+
+    public void checkPeriods(Date start, Date end) {
+        Date curDate = new Date();
+
+        if (end.compareTo(start) < 0) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getString(R.string.order_of_periods_error),
+                    Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+
+        if (start.equals(null) || end.equals(null)) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getString(R.string.empty_fields_error),
+                    Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+
+        if (end.compareTo(curDate) > 0) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getString(R.string.end_after_current_date_error),
+                    Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
     }
 
     //Function for statistics
@@ -74,62 +124,19 @@ public class MainActivity extends AppCompatActivity
         TextView dateEnd = (TextView) findViewById(R.id.eTxtStatisticsEndPeriod);
         String endPeriod = dateEnd.getText().toString();
 
-        SimpleDateFormat format = new SimpleDateFormat();
-        format.applyPattern("dd.MM.yyyy");
-
-        Date start = new Date();
-        Date end = new Date();
-
+        Date start = parseDate(startPeriod);
+        Date end = parseDate(endPeriod);
         Date curDate = new Date();
 
         args.putBoolean("isStatistics", radioButton.isChecked());
+        if (start.equals(null) || end.equals(null)) {
+            return;
+        }
         if (radioButton.isChecked()) {
             args.putString("dateBegin", startPeriod);
             args.putString("dateEnd", endPeriod);
 
-            try {
-                start = format.parse(startPeriod);
-            } catch (ParseException e) {
-                Toast toast2 = Toast.makeText(getApplicationContext(),
-                        getString(R.string.start_period_error),
-                        Toast.LENGTH_SHORT);
-                toast2.show();
-                return;
-            }
-
-            try {
-                end = format.parse(endPeriod);
-            } catch (ParseException e) {
-                Toast toast3 = Toast.makeText(getApplicationContext(),
-                        getString(R.string.end_period_error),
-                        Toast.LENGTH_SHORT);
-                toast3.show();
-                return;
-            }
-
-            if (end.compareTo(start) < 0) {
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        getString(R.string.order_of_periods_error),
-                        Toast.LENGTH_SHORT);
-                toast.show();
-                return;
-            }
-
-            if (startPeriod.equals("") || endPeriod.equals("")) {
-                Toast toast4 = Toast.makeText(getApplicationContext(),
-                        getString(R.string.empty_fields_error),
-                        Toast.LENGTH_SHORT);
-                toast4.show();
-                return;
-            }
-
-            if (end.compareTo(curDate) > 0) {
-                Toast toast5 = Toast.makeText(getApplicationContext(),
-                        getString(R.string.end_after_current_date_error),
-                        Toast.LENGTH_SHORT);
-                toast5.show();
-                return;
-            }
+            checkPeriods(start, end);
         }
         fragment.setArguments(args);
         fragment.show(getFragmentManager(), "showStatistics");
@@ -199,6 +206,18 @@ public class MainActivity extends AppCompatActivity
         Date curDate = new Date();
         String expenseAddTime = curDate.toString();
 
+        Date expDate = parseDate(expenseDate);
+        if (expDate.equals(null)) {
+            return;
+        }
+
+        if (expDate.compareTo(curDate) < 0) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getString(R.string.order_of_periods_error),
+                    Toast.LENGTH_SHORT);
+            toast.show();
+        }
+
         if (expenseName.equals("") || expenseCategory.equals("") || expenseSum.equals("")
                 || expenseDate.equals("")) {
             cancel = true;
@@ -254,6 +273,14 @@ public class MainActivity extends AppCompatActivity
         Date curDate = new Date();
         String regExpAddTime = curDate.toString();
 
+        Date start = parseDate(regExpStartPeriod);
+        Date end = parseDate(regExpEndPeriod);
+        if (start.equals(null) || end.equals(null)) {
+            return;
+        }
+
+        checkPeriods(start, end);
+
         if (regExpName.equals("") || regExpCategory.equals("") || regExpSum.equals("")
                 || regExpStartPeriod.equals("") || regExpEndPeriod.equals("")) {
             cancel = true;
@@ -272,7 +299,7 @@ public class MainActivity extends AppCompatActivity
 
             Toast toast = Toast.makeText(getApplicationContext(),
                     getString(R.string.regExpense) + " " + regExpName + " "
-                            + getString(R.string.successful_added) ,
+                            + getString(R.string.successful_added),
                     Toast.LENGTH_SHORT);
             toast.show();
 
@@ -307,6 +334,15 @@ public class MainActivity extends AppCompatActivity
         Date curDate = new Date();
         String regIncAddTime = curDate.toString();
 
+        Date start = parseDate(regIncStartPeriod);
+        Date end = parseDate(regIncEndPeriod);
+        if (start.equals(null) || end.equals(null)) {
+            return;
+        }
+
+        checkPeriods(start, end);
+
+
         if (regIncName.equals("") || regIncSum.equals("")
                 || regIncStartPeriod.equals("") || regIncEndPeriod.equals("")) {
             cancel = true;
@@ -325,7 +361,7 @@ public class MainActivity extends AppCompatActivity
 
             Toast toast = Toast.makeText(getApplicationContext(),
                     getString(R.string.regIncome) + " " + regIncName + " "
-                            + getString(R.string.successful_added) ,
+                            + getString(R.string.successful_added),
                     Toast.LENGTH_SHORT);
             toast.show();
 
@@ -363,6 +399,15 @@ public class MainActivity extends AppCompatActivity
         Date curDate = new Date();
         String creditAddTime = curDate.toString();
 
+        Date start = parseDate(creditStartPeriod);
+        Date end = parseDate(creditEndPeriod);
+        if (start.equals(null) || end.equals(null)) {
+            return;
+        }
+
+        checkPeriods(start, end);
+
+
         if (creditName.equals("") || creditPercent.equals("") || creditDeposit.equals("")
                 || creditSum.equals("") || creditStartPeriod.equals("")
                 || creditEndPeriod.equals("")) {
@@ -381,7 +426,7 @@ public class MainActivity extends AppCompatActivity
 
             Toast toast = Toast.makeText(getApplicationContext(),
                     getString(R.string.credit) + " " + creditName + " "
-                            + getString(R.string.successful_added) ,
+                            + getString(R.string.successful_added),
                     Toast.LENGTH_SHORT);
             toast.show();
 

@@ -67,6 +67,7 @@
     <!-- Strings related to errors -->
     <string name="field_err">Это поле должно быть заполнено</string>
     <string name="order_of_periods_error">Дата начала периода должна идти раньше даты окончания</string>
+    <string name="format_error">Формат даты некорректен</string>
     <string name="start_period_error">Формат даты в поле "Начало периода" некорректен</string>
     <string name="end_period_error">Формат даты в поле "Конец периода" некорректен</string>
     <string name="empty_fields_error">Заполните поля начала и окончания периода статистики</string>

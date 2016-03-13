@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -255,7 +256,12 @@ public class ShowStatisticsFragment extends DialogFragment {
         }
 
         protected Boolean doInBackground(Void... args) {
-            Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/Expenses");
+            Firebase finRef = new Firebase("https://luminous-heat-4027.firebaseio.com/");
+            AuthData authData = finRef.getAuth();
+            String uid = authData.getUid();
+
+            Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid
+                    + "/Expenses");
             final CountDownLatch done = new CountDownLatch(1);
             // Attach an listener to read the data at our last actions
             ref.addListenerForSingleValueEvent(new ValueEventListener() {

@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -94,7 +95,12 @@ public class RecentActionsFragment extends Fragment {
         }
 
         protected Boolean doInBackground(Void... args) {
-            Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/LastActions");
+            Firebase finRef = new Firebase("https://luminous-heat-4027.firebaseio.com/");
+            AuthData authData = finRef.getAuth();
+            String uid = authData.getUid();
+
+            Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid
+                    + "/LastActions");
             final CountDownLatch done = new CountDownLatch(1);
             // Attach an listener to read the data at our last actions
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
