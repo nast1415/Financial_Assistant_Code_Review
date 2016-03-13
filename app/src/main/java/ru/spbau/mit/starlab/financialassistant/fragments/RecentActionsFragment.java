@@ -41,10 +41,6 @@ public class RecentActionsFragment extends Fragment {
 
     private ProgressDialog pDialog;
 
-    final List<String> categoryList = new ArrayList<>();
-    final List<String> nameList = new ArrayList<>();
-    final List<Double> sumList = new ArrayList<>();
-
     public RecentActionsFragment() {
         // Required empty public constructor
     }
@@ -103,12 +99,10 @@ public class RecentActionsFragment extends Fragment {
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
+                    recentActionsList = new ArrayList<>();
                     for (DataSnapshot actionSnapshot : snapshot.getChildren()) {
                         DataBaseHelper.LastActions action = actionSnapshot.getValue(
                                 DataBaseHelper.LastActions.class);
-                        categoryList.add(action.getCategoryLA());
-                        nameList.add(action.getNameLA());
-                        sumList.add(action.getSumLA());
 
                         HashMap<String, String> temp = new HashMap<>();
                         temp.put(FIRST_COLUMN, action.getCategoryLA());

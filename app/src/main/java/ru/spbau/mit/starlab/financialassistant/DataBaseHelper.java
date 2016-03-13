@@ -21,8 +21,6 @@ public class DataBaseHelper {
         public Expense() {
         }
 
-        ;
-
         public String getAddTimeExp() {
             return addTimeExp;
         }
@@ -80,7 +78,7 @@ public class DataBaseHelper {
         Firebase expRef = ref.child("Expenses");
         Firebase newExp = expRef.push();
 
-        Map<String, String> expense = new HashMap<String, String>();
+        Map<String, String> expense = new HashMap<>();
         expense.put("categoryExp", category);
         expense.put("nameExp", expenseName);
         expense.put("sumExp", expenseSum);
@@ -97,7 +95,7 @@ public class DataBaseHelper {
         Firebase incRef = ref.child("Incomes");
         Firebase newInc = incRef.push();
 
-        Map<String, String> income = new HashMap<String, String>();
+        Map<String, String> income = new HashMap<>();
         income.put("nameInc", incomeName);
         income.put("sumInc", incomeSum);
         income.put("commentInc", incomeComment);
@@ -112,7 +110,7 @@ public class DataBaseHelper {
         Firebase regExpRef = ref.child("RegularExpenses");
         Firebase newRegExp = regExpRef.push();
 
-        Map<String, String> regExpense = new HashMap<String, String>();
+        Map<String, String> regExpense = new HashMap<>();
         regExpense.put("startPeriodRegExp", startPeriod);
         regExpense.put("endPeriodRegExp", endPeriod);
         regExpense.put("categoryRegExp", category);
@@ -129,7 +127,7 @@ public class DataBaseHelper {
         Firebase regIncRef = ref.child("RegularIncomes");
         Firebase newRegInc = regIncRef.push();
 
-        Map<String, String> regIncome = new HashMap<String, String>();
+        Map<String, String> regIncome = new HashMap<>();
         regIncome.put("startPeriodRegInc", startPeriod);
         regIncome.put("endPeriodRegInc", endPeriod);
         regIncome.put("nameRegInc", name);
@@ -145,7 +143,7 @@ public class DataBaseHelper {
         Firebase creditRef = ref.child("Credits");
         Firebase newCreditRef = creditRef.push();
 
-        Map<String, String> credit = new HashMap<String, String>();
+        Map<String, String> credit = new HashMap<>();
         credit.put("startPeriodCredit", startPeriod);
         credit.put("endPeriodCredit", endPeriod);
         credit.put("nameCredit", name);
@@ -160,7 +158,7 @@ public class DataBaseHelper {
         Firebase lastActionsRef = ref.child("LastActions");
         Firebase newAction = lastActionsRef.push();
 
-        Map<String, String> action = new HashMap<String, String>();
+        Map<String, String> action = new HashMap<>();
         action.put("categoryLA", category);
         action.put("nameLA", name);
         action.put("sumLA", sum);
