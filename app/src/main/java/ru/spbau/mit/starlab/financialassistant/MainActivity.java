@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -96,81 +97,55 @@ public class MainActivity extends AppCompatActivity
         fragment.setArguments(args);
         fragment.show(getFragmentManager(), "showStatistics");
     }
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class LastAction {
-        private String category;
-        private String name;
-        private String sum;
 
-        public LastAction() {
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class LastActions {
+        private String sumLA;
+        private String nameLA;
+        private String categoryLA;
+
+        public LastActions() {
         }
 
         ;
 
-        public String getCategory() {
-            return category;
+        public String getSumLA() {
+            return sumLA;
         }
 
-        public String getName() {
-            return name;
+        public String getNameLA() {
+            return nameLA;
         }
 
-        public String getSum() {
-            return sum;
-        }
-
-        @JsonIgnore
-        public String getDisplayName() {
-            return getName();
+        public String getCategoryLA() {
+            return categoryLA;
         }
 
     }
 
     //Function to show last actions
-    public void getLastActions(List<String> categoryList, List<String> nameList, List<Double> sumList) {
-        // Get a reference to our posts
+    public void getLastActions(final List<String> categoryList, final List<String> nameList, final List<String> sumList) {
         Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/LastActions");
 
-        // Attach an listener to read the data at our posts reference
+        // Attach an listener to read the data at our last actions
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 System.out.println("There are " + snapshot.getChildrenCount() + " last actions");
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    LastAction action = postSnapshot.getValue(LastAction.class);
-                    System.out.println("And now I print category: " + action.getCategory() + " and name: " + action.getName());
+                for (DataSnapshot actionSnapshot : snapshot.getChildren()) {
+                    LastActions action = actionSnapshot.getValue(LastActions.class);
+                    categoryList.add(action.getCategoryLA());
+                    nameList.add(action.getNameLA());
+                    sumList.add(action.getSumLA());
+                    System.out.println(action.getSumLA() + " - " + action.getNameLA());
                 }
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
-        //This function will be changed soon
-        /*String query = "SELECT " + DatabaseHelper._ID + ", "
-                + DatabaseHelper.LAST_ACTIONS_CATEGORY_COLUMN + ", "
-                + DatabaseHelper.LAST_ACTIONS_NAME_COLUMN + ", "
-                + DatabaseHelper.LAST_ACTIONS_SUM_COLUMN + " FROM last_actions";
-        Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
-
-        while (cursor.moveToNext()) {
-            int id = cursor.getInt(cursor
-                    .getColumnIndex(DatabaseHelper._ID));
-            String category = cursor.getString(cursor
-                    .getColumnIndex(DatabaseHelper.LAST_ACTIONS_CATEGORY_COLUMN));
-            String name = cursor.getString(cursor
-                    .getColumnIndex(DatabaseHelper.LAST_ACTIONS_NAME_COLUMN));
-            Double sum = cursor.getDouble(cursor
-                    .getColumnIndex(DatabaseHelper.LAST_ACTIONS_SUM_COLUMN));
-
-            categoryList.add(category);
-            nameList.add(name);
-            sumList.add(sum);
-
-            Log.i("LOG_TAG", "New last_action added: category: " + category + " name: " + name
-                    + " sum: " + sum);
-        }
-        cursor.close();*/
     }
 
     //Function, that get data for statistics from DB
@@ -418,13 +393,13 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_recent_actions) {
             Bundle args = new Bundle();
             List<String> categoryList = new ArrayList<>();
-            ArrayList<String> nameList = new ArrayList<>();
-            List<Double> sumList = new ArrayList<>();
+            List<String> nameList = new ArrayList<>();
+            List<String> sumList = new ArrayList<>();
 
             getLastActions(categoryList, nameList, sumList);
             String[] categories = new String[sumList.size()];
             String[] names = new String[sumList.size()];
-            double[] sums = new double[sumList.size()];
+            String[] sums = new String[sumList.size()];
             for (int i = 0; i < sumList.size(); i++) {
                 categories[i] = categoryList.get(i);
                 names[i] = nameList.get(i);
@@ -432,7 +407,7 @@ public class MainActivity extends AppCompatActivity
             }
             args.putStringArray("categories", categories);
             args.putStringArray("names", names);
-            args.putDoubleArray("sums", sums);
+            args.putStringArray("sums", sums);
             RecentActionsFragment recentActionsFragment = new RecentActionsFragment();
             recentActionsFragment.setArguments(args);
             fragmentTransaction.replace(R.id.container, recentActionsFragment);
