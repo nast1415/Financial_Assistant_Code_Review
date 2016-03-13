@@ -78,28 +78,27 @@ public class RecentActionsFragment extends Fragment {
         return ll;
     }
 
-
-    class ActionsLoader extends AsyncTask<String, String, String> {
+    class ActionsLoader extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Загрузка продуктов. Подождите...");
+            pDialog.setMessage(getString(R.string.loading_actions));
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
             pDialog.show();
         }
 
-        protected String doInBackground(String... args) {
+        protected Boolean doInBackground(Void... args) {
             Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/LastActions");
             final CountDownLatch done = new CountDownLatch(1);
             // Attach an listener to read the data at our last actions
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    System.out.println("There are " + snapshot.getChildrenCount() + " last actions");
                     for (DataSnapshot actionSnapshot : snapshot.getChildren()) {
-                        MainActivity.LastActions action = actionSnapshot.getValue(MainActivity.LastActions.class);
+                        MainActivity.LastActions action = actionSnapshot.getValue(
+                                MainActivity.LastActions.class);
                         categoryList.add(action.getCategoryLA());
                         nameList.add(action.getNameLA());
                         sumList.add(action.getSumLA());
@@ -110,18 +109,18 @@ public class RecentActionsFragment extends Fragment {
 
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
-                    System.out.println("The read failed: " + firebaseError.getMessage());
+                    System.err.println("The read failed: " + firebaseError.getMessage());
                     done.countDown();
                 }
             });
 
+            recentActionsList = new ArrayList<>();
             try {
                 done.await();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                return false;
             }
 
-            recentActionsList = new ArrayList<>();
             for (int i = 0; i < categoryList.size(); i++) {
                 HashMap<String, String> temp = new HashMap<>();
                 temp.put(FIRST_COLUMN, categoryList.get(i));
@@ -130,10 +129,10 @@ public class RecentActionsFragment extends Fragment {
                 recentActionsList.add(temp);
             }
 
-            return null;
+            return true;
         }
 
-        protected void onPostExecute(String file_url) {
+        protected void onPostExecute(final Boolean success) {
             pDialog.dismiss();
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
@@ -141,7 +140,11 @@ public class RecentActionsFragment extends Fragment {
                     lv.setAdapter(adapter);
                 }
             });
-
+            if (!success) {
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+                        getString(R.string.message_error), Toast.LENGTH_SHORT);
+                toast.show();
+            }
         }
 
     }

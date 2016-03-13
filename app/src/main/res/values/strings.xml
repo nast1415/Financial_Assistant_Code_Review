@@ -90,4 +90,5 @@
     <string name="expenses_predictions_by_months">прогноз расходов по месяцам</string>
     <string name="expense">Трата</string>
     <string name="income">Доход</string>
+    <string name="loading_actions">Подождите…</string>
 </resources>
