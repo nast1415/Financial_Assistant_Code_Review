@@ -46,13 +46,6 @@ import java.util.concurrent.CountDownLatch;
 import ru.spbau.mit.starlab.financialassistant.fragments.ExpensesFragment;
 
 public class SignInActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-
-    ExpensesFragment expensesFragment;
-
     private UserLoginTask mAuthTask = null;
 
     // UI references.
@@ -66,15 +59,11 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        expensesFragment = new ExpensesFragment();
-
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
-
-
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -101,8 +90,6 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
     private void populateAutoComplete() {
         getLoaderManager().initLoader(0, null, this);
     }
-
-
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
@@ -231,7 +218,6 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         };
 
         int ADDRESS = 0;
-        int IS_PRIMARY = 1;
     }
 
 

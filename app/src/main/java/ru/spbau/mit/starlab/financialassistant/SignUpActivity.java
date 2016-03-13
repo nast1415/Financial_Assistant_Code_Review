@@ -39,17 +39,6 @@ import java.util.concurrent.CountDownLatch;
  * A login screen that offers login via email/password.
  */
 public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
     private UserLoginTask mAuthTask = null;
 
     // UI references.
@@ -224,7 +213,6 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         };
 
         int ADDRESS = 0;
-        int IS_PRIMARY = 1;
     }
 
 
@@ -240,7 +228,6 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
         private final String mEmail;
         private final String mPassword;
