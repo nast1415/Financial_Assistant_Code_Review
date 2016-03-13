@@ -27,7 +27,6 @@ import java.util.concurrent.TimeUnit;
 
 import ru.spbau.mit.starlab.financialassistant.DataBaseHelper;
 import ru.spbau.mit.starlab.financialassistant.EditActionActivity;
-import ru.spbau.mit.starlab.financialassistant.MainActivity;
 import ru.spbau.mit.starlab.financialassistant.R;
 import ru.spbau.mit.starlab.financialassistant.multicolumnlistview.ListViewAdapter;
 
@@ -82,8 +81,6 @@ public class RecentActionsFragment extends Fragment {
     }
 
     class ActionsLoader extends AsyncTask<Void, Void, Boolean> {
-        private FirebaseError error = null;
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -112,6 +109,12 @@ public class RecentActionsFragment extends Fragment {
                         categoryList.add(action.getCategoryLA());
                         nameList.add(action.getNameLA());
                         sumList.add(action.getSumLA());
+
+                        HashMap<String, String> temp = new HashMap<>();
+                        temp.put(FIRST_COLUMN, action.getCategoryLA());
+                        temp.put(SECOND_COLUMN, action.getNameLA());
+                        temp.put(THIRD_COLUMN, String.valueOf(action.getSumLA()));
+                        recentActionsList.add(temp);
                     }
                     done.countDown();
                 }
@@ -122,21 +125,12 @@ public class RecentActionsFragment extends Fragment {
                 }
             });
 
-            recentActionsList = new ArrayList<>();
             try {
                 if (!done.await(2, TimeUnit.SECONDS)) {
                     return false;
                 }
             } catch (InterruptedException e) {
                 return false;
-            }
-
-            for (int i = 0; i < categoryList.size(); i++) {
-                HashMap<String, String> temp = new HashMap<>();
-                temp.put(FIRST_COLUMN, categoryList.get(i));
-                temp.put(SECOND_COLUMN, nameList.get(i));
-                temp.put(THIRD_COLUMN, String.valueOf(sumList.get(i)));
-                recentActionsList.add(temp);
             }
 
             return true;
