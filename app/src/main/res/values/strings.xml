@@ -64,8 +64,15 @@
     <string name="statistics">Статистика</string>
     <string name="predictions">Прогнозы</string>
 
-    <!-- Strings related to errors in expenses and incomes -->
+    <!-- Strings related to errors -->
     <string name="field_err">Это поле должно быть заполнено</string>
+    <string name="order_of_periods_error">Дата начала периода должна идти раньше даты окончания</string>
+    <string name="start_period_error">Формат даты в поле "Начало периода" некорректен</string>
+    <string name="end_period_error">Формат даты в поле "Конец периода" некорректен</string>
+    <string name="empty_fields_error">Заполните поля начала и окончания периода статистики</string>
+    <string name="end_after_current_date_error">Дата окончания периода не может быть позже текущей</string>
+    <string name="empty_data_error">Все поля, кроме комментария, обязательны для заполнения</string>
+
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
