@@ -26,6 +26,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -281,7 +282,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                 finish();
             } else {
                 if (error == null) {
-                    mEmailView.setError(getString(R.string.message_error));
+                    Toast.makeText(getApplicationContext(),
+                            getString(R.string.message_error), Toast.LENGTH_SHORT).show();
                 } else {
                     switch (error.getCode()) {
                         case FirebaseError.EMAIL_TAKEN:
@@ -289,10 +291,12 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                                     R.string.error_incorrect_registration));
                             break;
                         case FirebaseError.NETWORK_ERROR:
-                            mEmailView.setError(getString(R.string.error_network));
+                            Toast.makeText(getApplicationContext(),
+                                    getString(R.string.error_network), Toast.LENGTH_SHORT).show();
                             break;
                         default:
-                            mEmailView.setError(getString(R.string.message_error));
+                            Toast.makeText(getApplicationContext(),
+                                    getString(R.string.message_error), Toast.LENGTH_SHORT).show();
                     }
                 }
                 mEmailView.requestFocus();
