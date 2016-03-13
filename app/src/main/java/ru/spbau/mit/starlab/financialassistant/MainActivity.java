@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import ru.spbau.mit.starlab.financialassistant.fragments.CreditsFragment;
@@ -59,19 +61,90 @@ public class MainActivity extends AppCompatActivity
 
     //Function for statistics
     public void onShowStatisticsBtnClick(View v) {
+        int canceled = 0;
+
         DialogFragment fragment = new ShowStatisticsFragment();
         Bundle args = new Bundle();
+
         RadioButton radioButton = (RadioButton) findViewById(R.id.rBtnStatistics);
+
         TextView dateBegin = (TextView) findViewById(R.id.eTxtStatisticsStartPeriod);
+        String startPeriod = dateBegin.getText().toString();
+
         TextView dateEnd = (TextView) findViewById(R.id.eTxtStatisticsEndPeriod);
-        args.putBoolean("isStatistics", radioButton.isChecked());
-        if (radioButton.isChecked()) {
-            args.putString("dateBegin", dateBegin.getText().toString());
-            args.putString("dateEnd", dateEnd.getText().toString());
+        String endPeriod = dateEnd.getText().toString();
+
+        SimpleDateFormat format = new SimpleDateFormat();
+        format.applyPattern("dd.MM.yyyy");
+        Date start = new Date();
+        Date end = new Date();
+        Date curDate = new Date();
+        try {
+            start = format.parse(startPeriod);
+        } catch (ParseException e) {
+            canceled = 2;
         }
 
-        fragment.setArguments(args);
-        fragment.show(getFragmentManager(), "showStatistics");
+        try {
+            end = format.parse(endPeriod);
+        } catch (ParseException e) {
+            canceled = 3;
+        }
+
+        if (end.compareTo(start) < 0) {
+            canceled = 1;
+        }
+
+        if (startPeriod.equals("") || endPeriod.equals("")) {
+            canceled = 4;
+        }
+
+        if (end.compareTo(curDate) > 0) {
+            canceled = 5;
+        }
+
+        args.putBoolean("isStatistics", radioButton.isChecked());
+        if (radioButton.isChecked()) {
+            args.putString("dateBegin", startPeriod);
+            args.putString("dateEnd", endPeriod);
+        }
+
+        switch (canceled) {
+            case 1:
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Дата начала периода должна идти раньше даты окончания",
+                        Toast.LENGTH_SHORT);
+                toast.show();
+                break;
+            case 2:
+                Toast toast2 = Toast.makeText(getApplicationContext(),
+                        "Формат даты в поле \"Начало периода\" некорректен",
+                        Toast.LENGTH_SHORT);
+                toast2.show();
+                break;
+            case 3:
+                Toast toast3 = Toast.makeText(getApplicationContext(),
+                        "Формат даты в поле \"Конец периода\" некорректен",
+                        Toast.LENGTH_SHORT);
+                toast3.show();
+                break;
+            case 4:
+                Toast toast4 = Toast.makeText(getApplicationContext(),
+                        "Заполните поля начала и окончания периода статистики",
+                        Toast.LENGTH_SHORT);
+                toast4.show();
+                break;
+            case 5:
+                Toast toast5 = Toast.makeText(getApplicationContext(),
+                        "Дата окончания периода не может быть позже текущей",
+                        Toast.LENGTH_SHORT);
+                toast5.show();
+                break;
+            default:
+                fragment.setArguments(args);
+                fragment.show(getFragmentManager(), "showStatistics");
+                break;
+        }
     }
 
     @Override
