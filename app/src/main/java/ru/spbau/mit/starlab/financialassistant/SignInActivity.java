@@ -35,11 +35,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.firebase.client.AuthData;
+import com.firebase.client.Config;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import ru.spbau.mit.starlab.financialassistant.fragments.ExpensesFragment;
 
@@ -258,24 +260,28 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         @Override
         protected Boolean doInBackground(Void... params) {
             Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com");
+            final CountDownLatch done = new CountDownLatch(1);
             ref.authWithPassword(mEmail, mPassword, new Firebase.AuthResultHandler() {
                 @Override
                 public void onAuthenticated(AuthData authData) {
-                    System.out.println("User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
+                    System.out.println("User ID: " + authData.getUid() + ", Provider: "
+                            + authData.getProvider());
+                    done.countDown();
                 }
 
                 @Override
                 public void onAuthenticationError(FirebaseError firebaseError) {
                     System.err.println("There was an error");
                     isAuthorize = false;
+                    done.countDown();
                 }
             });
 
             try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ignored) {
+                done.await();
+            } catch (InterruptedException e) {
+                return false;
             }
-            System.err.println("IsAuthorize: " + isAuthorize);
             return isAuthorize;
         }
 

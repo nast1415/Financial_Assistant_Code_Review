@@ -33,6 +33,7 @@ import com.firebase.client.FirebaseError;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * A login screen that offers login via email/password.
@@ -161,20 +162,20 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
             mLoginFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1).setListener(
                     new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                        }
+                    });
 
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mProgressView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0).setListener(
                     new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                        }
+                    });
         } else {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
@@ -252,23 +253,28 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
             Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com");
-            ref.createUser(mEmail, mPassword, new Firebase.ValueResultHandler<Map<String, Object>>() {
-                @Override
-                public void onSuccess(Map<String, Object> result) {
-                    System.out.println("Successfully created user account with uid: " + result.get("uid"));
-                }
-                @Override
-                public void onError(FirebaseError firebaseError) {
-                    isRegister = false;
-                }
-            });
+            final CountDownLatch done = new CountDownLatch(1);
+            ref.createUser(mEmail, mPassword,
+                    new Firebase.ValueResultHandler<Map<String, Object>>() {
+                        @Override
+                        public void onSuccess(Map<String, Object> result) {
+                            System.out.println("Successfully created user account with uid: " +
+                                    result.get("uid"));
+                            done.countDown();
+                        }
+
+                        @Override
+                        public void onError(FirebaseError firebaseError) {
+                            isRegister = false;
+                            done.countDown();
+                        }
+                    });
 
             try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ignored) {
+                done.await();
+            } catch (InterruptedException e) {
+                return false;
             }
             return isRegister;
         }
