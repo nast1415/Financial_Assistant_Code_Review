@@ -21,7 +21,6 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -80,6 +79,7 @@ public class RecentActionsFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            recentActionsList = new ArrayList<>();
             pDialog = new ProgressDialog(getActivity());
             pDialog.setMessage(getString(R.string.loading_actions));
             pDialog.setIndeterminate(false);
@@ -99,7 +99,6 @@ public class RecentActionsFragment extends Fragment {
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    recentActionsList = new ArrayList<>();
                     for (DataSnapshot actionSnapshot : snapshot.getChildren()) {
                         DataBaseHelper.LastActions action = actionSnapshot.getValue(
                                 DataBaseHelper.LastActions.class);
