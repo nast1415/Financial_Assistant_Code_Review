@@ -35,7 +35,6 @@
                 android:layout_height="wrap_content"
                 android:hint="Электронная почта"
                 android:inputType="textEmailAddress"
-                android:text="foo@example.com"
                 android:maxLines="1"
                 android:singleLine="true" />
 
@@ -45,7 +44,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:hint="Пароль"
-                android:text="hello"
                 android:imeActionId="@+id/login"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified"

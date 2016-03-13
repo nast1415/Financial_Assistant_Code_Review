@@ -17,6 +17,7 @@ import android.view.MenuItem;
 
 import android.app.DialogFragment;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -210,25 +211,16 @@ public class MainActivity extends AppCompatActivity
         Firebase.setAndroidContext(this);
     }
 
-    //Function, that add data from the DB to the RecentActionsFragment
-    public void addDataToLastActions(String category, String name, String sum) {
-        Firebase lastActionsRef = finRef.child("LastActions");
-        Firebase newAction = lastActionsRef.push();
-
-        Map<String, String> action = new HashMap<String, String>();
-        action.put("categoryLA", category);
-        action.put("nameLA", name);
-        action.put("sumLA", sum);
-        newAction.setValue(action);
-    }
-
     //Function, that add data from the ExpensesFragment to the Firebase DB
     public void addNewExpense(View v) {
+        boolean cancel = false;
+
+        //Get data from the view fields
+        TextView category = (TextView) findViewById(R.id.eTxtExpCategory);
+        String expenseCategory = category.getText().toString();
+
         TextView name = (TextView) findViewById(R.id.eTxtExpName);
         String expenseName = name.getText().toString();
-
-        TextView categoryTextView = (TextView) findViewById(R.id.eTxtExpCategory);
-        String category = categoryTextView.getText().toString();
 
         TextView sum = (TextView) findViewById(R.id.eTxtExpSum);
         String expenseSum = sum.getText().toString();
@@ -242,37 +234,38 @@ public class MainActivity extends AppCompatActivity
         Date curDate = new Date();
         String expenseAddTime = curDate.toString();
 
-        // Add this data to the Firebase DB to the "Expenses" location, using push (to create unique id)
-        Firebase expRef = finRef.child("Expenses").child(category);
-        Firebase newExp = expRef.push();
+        if (expenseName.equals("") || expenseCategory.equals("") || expenseSum.equals("")
+                || expenseDate.equals("")) {
+            cancel = true;
+        }
+        if (cancel) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "Все поля, кроме комментария, обязательны для заполнения",
+                    Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            DataBaseHelper.addDataToExpenses(finRef, expenseCategory, expenseName, expenseSum, expenseComment,
+                    expenseDate, expenseAddTime);
+            DataBaseHelper.addDataToLastActions(finRef, "Трата", expenseName, expenseSum);
 
-        Map<String, String> expense = new HashMap<String, String>();
-        expense.put("nameExp", expenseName);
-        expense.put("sumExp", expenseSum);
-        expense.put("commentExp", expenseComment);
-        expense.put("dateExp", expenseDate);
-        expense.put("addTimeExp", expenseAddTime);
-        newExp.setValue(expense);
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getString(R.string.expense) + " " + expenseName + " успешно добавлена",
+                    Toast.LENGTH_SHORT);
+            toast.show();
 
-        addDataToLastActions("Трата", expenseName, expenseSum);
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.container, informationFragment);
+            fragmentTransaction.commit();
 
-        Toast toast = Toast.makeText(getApplicationContext(),
-                getString(R.string.expense) + " " + expenseName + " успешно добавлена",
-                Toast.LENGTH_SHORT);
-        toast.show();
-
-
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.container, informationFragment);
-        fragmentTransaction.commit();
-
-        DrawerLayout drawer1 = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer1.closeDrawer(GravityCompat.START);
+            DrawerLayout drawer1 = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer1.closeDrawer(GravityCompat.START);
+        }
 
     }
 
     //Function, that add data from the IncomesFragment to the Firebase DB
     public void addNewIncome(View v) {
+        boolean cancel = false;
 
         //Get data from the view fields
         TextView name = (TextView) findViewById(R.id.eTxtIncName);
@@ -290,31 +283,32 @@ public class MainActivity extends AppCompatActivity
         Date curDate = new Date();
         String incomeAddTime = curDate.toString();
 
-        // Add this data to the Firebase DB to the "Incomes" location, using push (to create unique id)
-        Firebase incRef = finRef.child("Incomes");
-        Firebase newInc = incRef.push();
+        if (incomeDate.equals("") || incomeName.equals("") || incomeSum.equals("")) {
+            cancel = true;
+        }
 
-        Map<String, String> income = new HashMap<String, String>();
-        income.put("nameInc", incomeName);
-        income.put("sumInc", incomeSum);
-        income.put("commentInc", incomeComment);
-        income.put("dateInc", incomeDate);
-        income.put("addTimeInc", incomeAddTime);
-        newInc.setValue(income);
+        if (cancel) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "Все поля, кроме комментария, обязательны для заполнения",
+                    Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            DataBaseHelper.addDataToIncomes(finRef, incomeName, incomeSum, incomeComment,
+                    incomeDate, incomeAddTime);
+            DataBaseHelper.addDataToLastActions(finRef, "Доход ", incomeName, incomeSum);
 
-        addDataToLastActions("Доход", incomeName, incomeSum);
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getString(R.string.income) + incomeName + " успешно добавлен",
+                    Toast.LENGTH_SHORT);
+            toast.show();
 
-        Toast toast = Toast.makeText(getApplicationContext(),
-                getString(R.string.income) + " " + incomeName + "успешно добавлен",
-                Toast.LENGTH_SHORT);
-        toast.show();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.container, informationFragment);
+            fragmentTransaction.commit();
 
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.container, informationFragment);
-        fragmentTransaction.commit();
-
-        DrawerLayout drawer1 = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer1.closeDrawer(GravityCompat.START);
+            DrawerLayout drawer1 = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer1.closeDrawer(GravityCompat.START);
+        }
     }
 
     @Override

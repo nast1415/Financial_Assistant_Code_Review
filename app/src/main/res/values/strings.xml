@@ -64,6 +64,8 @@
     <string name="statistics">Статистика</string>
     <string name="predictions">Прогнозы</string>
 
+    <!-- Strings related to errors in expenses and incomes -->
+    <string name="field_err">Это поле должно быть заполнено</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
