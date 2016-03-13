@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import ru.spbau.mit.starlab.financialassistant.fragments.ExpensesFragment;
 import ru.spbau.mit.starlab.financialassistant.fragments.IncomesFragment;
@@ -121,31 +122,6 @@ public class MainActivity extends AppCompatActivity
             return categoryLA;
         }
 
-    }
-
-    //Function to show last actions
-    public void getLastActions(final List<String> categoryList, final List<String> nameList, final List<Double> sumList) {
-        Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/LastActions");
-
-        // Attach an listener to read the data at our last actions
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                System.out.println("There are " + snapshot.getChildrenCount() + " last actions");
-                for (DataSnapshot actionSnapshot : snapshot.getChildren()) {
-                    LastActions action = actionSnapshot.getValue(LastActions.class);
-                    categoryList.add(action.getCategoryLA());
-                    nameList.add(action.getNameLA());
-                    sumList.add(action.getSumLA());
-                    System.out.println(action.getSumLA() + " - " + action.getNameLA());
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("The read failed: " + firebaseError.getMessage());
-            }
-        });
     }
 
     //Function, that get data for statistics from DB
@@ -391,26 +367,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_incomes) {
             fragmentTransaction.replace(R.id.container, incomesFragment);
         } else if (id == R.id.nav_recent_actions) {
-            Bundle args = new Bundle();
-            List<String> categoryList = new ArrayList<>();
-            List<String> nameList = new ArrayList<>();
-            List<Double> sumList = new ArrayList<>();
-
-            getLastActions(categoryList, nameList, sumList);
-            String[] categories = new String[sumList.size()];
-            String[] names = new String[sumList.size()];
-            double[] sums = new double[sumList.size()];
-            for (int i = 0; i < sumList.size(); i++) {
-                categories[i] = categoryList.get(i);
-                names[i] = nameList.get(i);
-                sums[i] = sumList.get(i);
-            }
-            args.putStringArray("categories", categories);
-            args.putStringArray("names", names);
-            args.putDoubleArray("sums", sums);
-            RecentActionsFragment recentActionsFragment = new RecentActionsFragment();
-            recentActionsFragment.setArguments(args);
-            fragmentTransaction.replace(R.id.container, recentActionsFragment);
+            fragmentTransaction.replace(R.id.container, new RecentActionsFragment());
         } else if (id == R.id.nav_statistics) {
             fragmentTransaction.replace(R.id.container, statisticsFragment);
         } else if (id == R.id.nav_tools) {
