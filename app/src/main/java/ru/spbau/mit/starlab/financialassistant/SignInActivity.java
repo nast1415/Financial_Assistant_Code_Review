@@ -33,6 +33,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.AuthData;
 import com.firebase.client.Config;
@@ -289,8 +290,8 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
                 SignInActivity.this.startActivity(myIntent);
             } else {
                 if (error == null) {
-                    mEmailView.setError(getString(R.string.message_error));
-                    mEmailView.requestFocus();
+                    Toast.makeText(getApplicationContext(),
+                            getString(R.string.message_error), Toast.LENGTH_SHORT).show();
                 } else {
                     switch (error.getCode()) {
                         case FirebaseError.USER_DOES_NOT_EXIST:
@@ -303,12 +304,12 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
                             mPasswordView.requestFocus();
                             break;
                         case FirebaseError.NETWORK_ERROR:
-                            mEmailView.setError(getString(R.string.error_network));
-                            mEmailView.requestFocus();
+                            Toast.makeText(getApplicationContext(),
+                                    getString(R.string.error_network), Toast.LENGTH_SHORT).show();
                             break;
                         default:
-                            mEmailView.setError(getString(R.string.message_error));
-                            mEmailView.requestFocus();
+                            Toast.makeText(getApplicationContext(),
+                                    getString(R.string.message_error), Toast.LENGTH_SHORT).show();
                     }
                 }
             }

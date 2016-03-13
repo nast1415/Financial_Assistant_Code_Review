@@ -79,6 +79,8 @@ public class RecentActionsFragment extends Fragment {
     }
 
     class ActionsLoader extends AsyncTask<Void, Void, Boolean> {
+        private FirebaseError error = null;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -102,14 +104,13 @@ public class RecentActionsFragment extends Fragment {
                         categoryList.add(action.getCategoryLA());
                         nameList.add(action.getNameLA());
                         sumList.add(action.getSumLA());
-                        System.out.println(action.getSumLA() + " - " + action.getNameLA());
                     }
                     done.countDown();
                 }
 
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
-                    System.err.println("The read failed: " + firebaseError.getMessage());
+                    error = firebaseError;
                     done.countDown();
                 }
             });
@@ -141,9 +142,20 @@ public class RecentActionsFragment extends Fragment {
                 }
             });
             if (!success) {
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-                        getString(R.string.message_error), Toast.LENGTH_SHORT);
-                toast.show();
+                if (error == null) {
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            getString(R.string.message_error), Toast.LENGTH_SHORT).show();
+                } else {
+                    switch (error.getCode()) {
+                        case FirebaseError.NETWORK_ERROR:
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    getString(R.string.error_network), Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    getString(R.string.message_error), Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         }
 
