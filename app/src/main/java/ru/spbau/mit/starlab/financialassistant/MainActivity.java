@@ -100,31 +100,6 @@ public class MainActivity extends AppCompatActivity
         fragment.show(getFragmentManager(), "showStatistics");
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class LastActions {
-        private double sumLA;
-        private String nameLA;
-        private String categoryLA;
-
-        public LastActions() {
-        }
-
-        ;
-
-        public double getSumLA() {
-            return sumLA;
-        }
-
-        public String getNameLA() {
-            return nameLA;
-        }
-
-        public String getCategoryLA() {
-            return categoryLA;
-        }
-
-    }
-
     //Function, that get data for statistics from DB
     public void getDataForStatistics(List<String> dateList, List<String> categoryNameList, List<Double> sumList) {
         //This function will be changed soon

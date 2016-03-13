@@ -1,5 +1,6 @@
 package ru.spbau.mit.starlab.financialassistant;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.firebase.client.Firebase;
 
 import java.util.HashMap;
@@ -7,6 +8,28 @@ import java.util.Map;
 
 //Class for creating queries to DB
 public class DataBaseHelper {
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class LastActions {
+        private double sumLA;
+        private String nameLA;
+        private String categoryLA;
+
+        public LastActions() {
+        }
+
+        public double getSumLA() {
+            return sumLA;
+        }
+
+        public String getNameLA() {
+            return nameLA;
+        }
+
+        public String getCategoryLA() {
+            return categoryLA;
+        }
+    }
+    
     public static void addDataToExpenses(Firebase ref, String category, String expenseName,
                                   String expenseSum, String expenseComment, String expenseDate,
                                   String expenseAddTime) {
