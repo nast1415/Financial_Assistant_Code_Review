@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import ru.spbau.mit.starlab.financialassistant.DataBaseHelper;
 import ru.spbau.mit.starlab.financialassistant.EditActionActivity;
 import ru.spbau.mit.starlab.financialassistant.MainActivity;
 import ru.spbau.mit.starlab.financialassistant.R;
@@ -99,8 +100,8 @@ public class RecentActionsFragment extends Fragment {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     for (DataSnapshot actionSnapshot : snapshot.getChildren()) {
-                        MainActivity.LastActions action = actionSnapshot.getValue(
-                                MainActivity.LastActions.class);
+                        DataBaseHelper.LastActions action = actionSnapshot.getValue(
+                                DataBaseHelper.LastActions.class);
                         categoryList.add(action.getCategoryLA());
                         nameList.add(action.getNameLA());
                         sumList.add(action.getSumLA());

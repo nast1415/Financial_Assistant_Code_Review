@@ -38,10 +38,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+import ru.spbau.mit.starlab.financialassistant.fragments.CreditsFragment;
 import ru.spbau.mit.starlab.financialassistant.fragments.ExpensesFragment;
 import ru.spbau.mit.starlab.financialassistant.fragments.IncomesFragment;
 import ru.spbau.mit.starlab.financialassistant.fragments.InformationFragment;
 import ru.spbau.mit.starlab.financialassistant.fragments.RecentActionsFragment;
+import ru.spbau.mit.starlab.financialassistant.fragments.RegularExpensesFragment;
+import ru.spbau.mit.starlab.financialassistant.fragments.RegularIncomesFragment;
 import ru.spbau.mit.starlab.financialassistant.fragments.ShowStatisticsFragment;
 import ru.spbau.mit.starlab.financialassistant.fragments.StatisticsFragment;
 import ru.spbau.mit.starlab.financialassistant.fragments.ToolsFragment;
@@ -54,6 +57,9 @@ public class MainActivity extends AppCompatActivity
     private StatisticsFragment statisticsFragment;
     private ToolsFragment toolsFragment;
     private InformationFragment informationFragment;
+    private RegularExpensesFragment regularExpensesFragment;
+    private RegularIncomesFragment regularIncomesFragment;
+    private CreditsFragment creditsFragment;
 
     //The data for our app will be stored at this Firebase reference
     Firebase finRef = new Firebase("https://luminous-heat-4027.firebaseio.com/");
@@ -100,79 +106,32 @@ public class MainActivity extends AppCompatActivity
         fragment.show(getFragmentManager(), "showStatistics");
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class LastActions {
-        private double sumLA;
-        private String nameLA;
-        private String categoryLA;
 
-        public LastActions() {
-        }
 
-        ;
-
-        public double getSumLA() {
-            return sumLA;
-        }
-
-        public String getNameLA() {
-            return nameLA;
-        }
-
-        public String getCategoryLA() {
-            return categoryLA;
-        }
-
-    }
 
     //Function, that get data for statistics from DB
-    public void getDataForStatistics(List<String> dateList, List<String> categoryNameList, List<Double> sumList) {
-        //This function will be changed soon
-       /* List<Integer> categoryIdList = new ArrayList<>();
-        String query = "SELECT " + DatabaseHelper._ID + ", "
-                + DatabaseHelper.EXPENSE_DATE_COLUMN + ", "
-                + DatabaseHelper.EXPENSE_CATEGORY_COLUMN + ", "
-                + DatabaseHelper.EXPENSE_SUM_COLUMN + " FROM expenses";
-        Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
+    public void getDataForStatistics(final List<String> dateList, final List<String> categoryNameList, final List<Double> sumList) {
 
-        while (cursor.moveToNext()) {
-            int id = cursor.getInt(cursor
-                    .getColumnIndex(DatabaseHelper._ID));
-            int categoryId = cursor.getInt(cursor
-                    .getColumnIndex(DatabaseHelper.EXPENSE_CATEGORY_COLUMN));
-            String date = cursor.getString(cursor
-                    .getColumnIndex(DatabaseHelper.EXPENSE_DATE_COLUMN));
-            Double sum = cursor.getDouble(cursor
-                    .getColumnIndex(DatabaseHelper.EXPENSE_SUM_COLUMN));
-
-            categoryIdList.add(categoryId);
-            dateList.add(date);
-            sumList.add(sum);
-
-            Log.i("LOG_TAG", "New data added: categoryId: " + categoryId + " date: " + date
-                    + " sum: " + sum);
-        }
-        cursor.close();
-
-        for (int i = 0; i < categoryIdList.size(); i++) {
-            String queryForCategory = "SELECT " + DatabaseHelper._ID + ", "
-                    + DatabaseHelper.CATEGORY_NAME_COLUMN + " FROM categories WHERE "
-                    + DatabaseHelper._ID + " = " + categoryIdList.get(i);
-            Cursor cursor2 = mSqLiteDatabase.rawQuery(queryForCategory, null);
-
-            while (cursor2.moveToNext()) {
-                int id = cursor2.getInt(cursor2
-                        .getColumnIndex(DatabaseHelper._ID));
-                String categoryName = cursor2.getString(cursor2
-                        .getColumnIndex(DatabaseHelper.CATEGORY_NAME_COLUMN));
-
-                categoryNameList.add(categoryName);
-
-                Log.i("LOG_TAG", "New data added: categoryName: " + categoryName + " id: " + id);
-
+        // Get a reference to our posts
+        Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/Expenses");
+        // Attach an listener to read the data at our posts reference
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                System.out.println("There are " + snapshot.getChildrenCount() + " expenses");
+                for (DataSnapshot expSnapshot : snapshot.getChildren()) {
+                    DataBaseHelper.Expense category = expSnapshot.getValue(DataBaseHelper.Expense.class);
+                    dateList.add(category.getDateExp());
+                    categoryNameList.add(category.getCategoryExp());
+                    sumList.add(category.getSumExp());
+                }
             }
-            cursor2.close();
-        }*/
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
     }
 
     @Override
@@ -197,6 +156,9 @@ public class MainActivity extends AppCompatActivity
         statisticsFragment = new StatisticsFragment();
         toolsFragment = new ToolsFragment();
         informationFragment = new InformationFragment();
+        regularExpensesFragment = new RegularExpensesFragment();
+        regularIncomesFragment = new RegularIncomesFragment();
+        creditsFragment = new CreditsFragment();
 
 
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -368,6 +330,12 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.container, toolsFragment);
         } else if (id == R.id.nav_info) {
             fragmentTransaction.replace(R.id.container, informationFragment);
+        } else if (id == R.id.nav_reg_expenses) {
+            fragmentTransaction.replace(R.id.container, regularExpensesFragment);
+        } else if (id == R.id.nav_reg_incomes) {
+            fragmentTransaction.replace(R.id.container, regularIncomesFragment);
+        } else if (id == R.id.nav_credits) {
+            fragmentTransaction.replace(R.id.container, creditsFragment);
         }
         fragmentTransaction.commit();
 
