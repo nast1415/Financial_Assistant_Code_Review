@@ -21,9 +21,9 @@ import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import ru.spbau.mit.starlab.financialassistant.fragments.CalculationsForStatistics;
 import ru.spbau.mit.starlab.financialassistant.fragments.CreditsFragment;
 import ru.spbau.mit.starlab.financialassistant.fragments.ExpensesFragment;
 import ru.spbau.mit.starlab.financialassistant.fragments.IncomesFragment;
@@ -66,11 +66,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     public Date parseDate(String date) {
-        SimpleDateFormat format = new SimpleDateFormat();
-        format.applyPattern("dd.MM.yyyy");
-        Date myDate = new Date();
+        Date myDate;
         try {
-            myDate = format.parse(date);
+            myDate = CalculationsForStatistics.sdf.parse(date);
         } catch (ParseException e) {
             Toast toast = Toast.makeText(getApplicationContext(),
                     getString(R.string.format_error),
@@ -84,17 +82,17 @@ public class MainActivity extends AppCompatActivity
     public void checkPeriods(Date start, Date end) {
         Date curDate = new Date();
 
-        if (end.compareTo(start) < 0) {
+        if (start == null || end == null) {
             Toast toast = Toast.makeText(getApplicationContext(),
-                    getString(R.string.order_of_periods_error),
+                    getString(R.string.empty_fields_error),
                     Toast.LENGTH_SHORT);
             toast.show();
             return;
         }
 
-        if (start.equals(null) || end.equals(null)) {
+        if (end.compareTo(start) < 0) {
             Toast toast = Toast.makeText(getApplicationContext(),
-                    getString(R.string.empty_fields_error),
+                    getString(R.string.order_of_periods_error),
                     Toast.LENGTH_SHORT);
             toast.show();
             return;
@@ -105,14 +103,11 @@ public class MainActivity extends AppCompatActivity
                     getString(R.string.end_after_current_date_error),
                     Toast.LENGTH_SHORT);
             toast.show();
-            return;
         }
     }
 
     //Function for statistics
     public void onShowStatisticsBtnClick(View v) {
-        int canceled = 0;
-
         DialogFragment fragment = new ShowStatisticsFragment();
         Bundle args = new Bundle();
 
@@ -126,10 +121,9 @@ public class MainActivity extends AppCompatActivity
 
         Date start = parseDate(startPeriod);
         Date end = parseDate(endPeriod);
-        Date curDate = new Date();
 
         args.putBoolean("isStatistics", radioButton.isChecked());
-        if (start.equals(null) || end.equals(null)) {
+        if (start == null || end == null) {
             return;
         }
         if (radioButton.isChecked()) {
@@ -207,7 +201,7 @@ public class MainActivity extends AppCompatActivity
         String expenseAddTime = curDate.toString();
 
         Date expDate = parseDate(expenseDate);
-        if (expDate.equals(null)) {
+        if (expDate == null) {
             return;
         }
 
@@ -275,7 +269,7 @@ public class MainActivity extends AppCompatActivity
 
         Date start = parseDate(regExpStartPeriod);
         Date end = parseDate(regExpEndPeriod);
-        if (start.equals(null) || end.equals(null)) {
+        if (start == null || end == null) {
             return;
         }
 
@@ -336,7 +330,7 @@ public class MainActivity extends AppCompatActivity
 
         Date start = parseDate(regIncStartPeriod);
         Date end = parseDate(regIncEndPeriod);
-        if (start.equals(null) || end.equals(null)) {
+        if (start == null || end == null) {
             return;
         }
 
@@ -401,7 +395,7 @@ public class MainActivity extends AppCompatActivity
 
         Date start = parseDate(creditStartPeriod);
         Date end = parseDate(creditEndPeriod);
-        if (start.equals(null) || end.equals(null)) {
+        if (start == null || end == null) {
             return;
         }
 
