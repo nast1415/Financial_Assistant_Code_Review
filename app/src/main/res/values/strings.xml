@@ -94,4 +94,5 @@
     <string name="expense">Трата</string>
     <string name="income">Доход</string>
     <string name="loading_actions">Подождите…</string>
+    <string name="error_not_all_filled">Все поля, кроме комментария, обязательны для заполнения</string>
 </resources>

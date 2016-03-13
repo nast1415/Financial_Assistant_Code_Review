@@ -49,7 +49,8 @@ public class MainActivity extends AppCompatActivity
 
     //Function for our datePickerDialog
     public void showDatePickerDialog(View v) {
-        DialogFragment newFragment = new ru.spbau.mit.starlab.financialassistant.fragments.DatePicker();
+        DialogFragment newFragment =
+                new ru.spbau.mit.starlab.financialassistant.fragments.DatePicker();
         Bundle args = new Bundle();
         args.putInt("txtDateId", v.getId());
         newFragment.setArguments(args);
@@ -191,7 +192,7 @@ public class MainActivity extends AppCompatActivity
 
         if (cancel) {
             Toast toast = Toast.makeText(getApplicationContext(),
-                    "Все поля, кроме комментария, обязательны для заполнения",
+                    R.string.error_not_all_filled,
                     Toast.LENGTH_SHORT);
             toast.show();
         } else {
