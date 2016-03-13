@@ -72,12 +72,10 @@ public class ShowStatisticsFragment extends DialogFragment {
             calcStatisticsForPieChart(beginCal, endCal, categoryNameList, dateList, sumList,
                     pieChartXValues, pieChartYValues);
 
-            int duration = endCal.get(Calendar.YEAR) * 12 * 30 +
-                    endCal.get(Calendar.MONTH) * 30 + endCal.get(Calendar.DATE) -
-                    (beginCal.get(Calendar.YEAR) * 12 * 30 + beginCal.get(Calendar.MONTH) * 30 +
-                            beginCal.get(Calendar.DATE)) + 1;
-
-            if (duration < 90) {    // Calculate statistics per day
+            if ((endCal.getTimeInMillis() - beginCal.getTimeInMillis()) /
+                    CalculationsForStatistics.MILLIS_IN_DAY <
+                    CalculationsForStatistics.MIN_DAYS_FOR_MONTH_STATISTICS) {
+                // Calculate statistics per day
                 lineChartName = getString(R.string.expenses_by_days);
                 try {
                     calcDaysStatisticsForLineChart(beginCal, endCal, dateList, sumList,
@@ -108,7 +106,9 @@ public class ShowStatisticsFragment extends DialogFragment {
                 calcPredictionsForPieChart(categoryNameList, dateList, sumList,
                         pieChartXValues, pieChartYValues);
             } catch (ParseException exception) {
-
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+                        getString(R.string.message_error), Toast.LENGTH_SHORT);
+                toast.show();
                 return ll;
             }
         }

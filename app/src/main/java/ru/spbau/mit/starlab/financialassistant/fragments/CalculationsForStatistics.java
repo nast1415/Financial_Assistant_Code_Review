@@ -11,6 +11,8 @@ import java.util.Locale;
 public class CalculationsForStatistics {
     static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
     static final int MONTHS_IN_YEAR = 12;
+    static final int MILLIS_IN_DAY = 86400000;
+    static final int MIN_DAYS_FOR_MONTH_STATISTICS = 90;
 
     static Calendar findMinDate(String[] dates) throws ParseException {
         Calendar res = Calendar.getInstance();
