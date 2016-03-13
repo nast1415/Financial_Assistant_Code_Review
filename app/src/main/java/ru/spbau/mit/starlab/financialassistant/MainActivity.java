@@ -20,9 +20,9 @@ import android.widget.Toast;
 import com.firebase.client.Firebase;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import ru.spbau.mit.starlab.financialassistant.fragments.CalculationsForStatistics;
 import ru.spbau.mit.starlab.financialassistant.fragments.CreditsFragment;
 import ru.spbau.mit.starlab.financialassistant.fragments.ExpensesFragment;
 import ru.spbau.mit.starlab.financialassistant.fragments.IncomesFragment;
@@ -61,8 +61,6 @@ public class MainActivity extends AppCompatActivity
 
     //Function for statistics
     public void onShowStatisticsBtnClick(View v) {
-        int canceled = 0;
-
         DialogFragment fragment = new ShowStatisticsFragment();
         Bundle args = new Bundle();
 
@@ -74,12 +72,8 @@ public class MainActivity extends AppCompatActivity
         TextView dateEnd = (TextView) findViewById(R.id.eTxtStatisticsEndPeriod);
         String endPeriod = dateEnd.getText().toString();
 
-        SimpleDateFormat format = new SimpleDateFormat();
-        format.applyPattern("dd.MM.yyyy");
-
-        Date start = new Date();
-        Date end = new Date();
-
+        Date start;
+        Date end;
         Date curDate = new Date();
 
         args.putBoolean("isStatistics", radioButton.isChecked());
@@ -88,46 +82,41 @@ public class MainActivity extends AppCompatActivity
             args.putString("dateEnd", endPeriod);
 
             try {
-                start = format.parse(startPeriod);
+                start = CalculationsForStatistics.sdf.parse(startPeriod);
             } catch (ParseException e) {
-                Toast toast2 = Toast.makeText(getApplicationContext(),
-                        getString(R.string.start_period_error),
-                        Toast.LENGTH_SHORT);
-                toast2.show();
+                Toast.makeText(getApplicationContext(),
+                        R.string.start_period_error,
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
 
             try {
-                end = format.parse(endPeriod);
+                end = CalculationsForStatistics.sdf.parse(endPeriod);
             } catch (ParseException e) {
-                Toast toast3 = Toast.makeText(getApplicationContext(),
-                        getString(R.string.end_period_error),
-                        Toast.LENGTH_SHORT);
-                toast3.show();
+                Toast.makeText(getApplicationContext(),
+                        R.string.end_period_error,
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
 
             if (end.compareTo(start) < 0) {
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        getString(R.string.order_of_periods_error),
-                        Toast.LENGTH_SHORT);
-                toast.show();
+                Toast.makeText(getApplicationContext(),
+                        R.string.order_of_periods_error,
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
 
             if (startPeriod.equals("") || endPeriod.equals("")) {
-                Toast toast4 = Toast.makeText(getApplicationContext(),
-                        getString(R.string.empty_fields_error),
-                        Toast.LENGTH_SHORT);
-                toast4.show();
+                Toast.makeText(getApplicationContext(),
+                        R.string.empty_fields_error,
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
 
             if (end.compareTo(curDate) > 0) {
-                Toast toast5 = Toast.makeText(getApplicationContext(),
-                        getString(R.string.end_after_current_date_error),
-                        Toast.LENGTH_SHORT);
-                toast5.show();
+                Toast.makeText(getApplicationContext(),
+                        R.string.end_after_current_date_error,
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
         }
@@ -204,19 +193,17 @@ public class MainActivity extends AppCompatActivity
             cancel = true;
         }
         if (cancel) {
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    getString(R.string.empty_data_error),
-                    Toast.LENGTH_SHORT);
-            toast.show();
+            Toast.makeText(getApplicationContext(),
+                    R.string.empty_data_error,
+                    Toast.LENGTH_SHORT).show();
         } else {
             DataBaseHelper.addDataToExpenses(finRef, expenseCategory, expenseName, expenseSum,
                     expenseComment, expenseDate, expenseAddTime);
             DataBaseHelper.addDataToLastActions(finRef, "Трата", expenseName, expenseSum);
 
-            Toast toast = Toast.makeText(getApplicationContext(),
+            Toast.makeText(getApplicationContext(),
                     getString(R.string.expense) + " " + expenseName + " успешно добавлена",
-                    Toast.LENGTH_SHORT);
-            toast.show();
+                    Toast.LENGTH_SHORT).show();
 
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.container, informationFragment);
@@ -259,10 +246,9 @@ public class MainActivity extends AppCompatActivity
             cancel = true;
         }
         if (cancel) {
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    getString(R.string.empty_data_error),
-                    Toast.LENGTH_SHORT);
-            toast.show();
+            Toast.makeText(getApplicationContext(),
+                    R.string.empty_data_error,
+                    Toast.LENGTH_SHORT).show();
         } else {
             DataBaseHelper.addDataToRegularExpenses(finRef, regExpStartPeriod, regExpEndPeriod,
                     regExpCategory, regExpName, regExpSum,
@@ -270,11 +256,10 @@ public class MainActivity extends AppCompatActivity
             DataBaseHelper.addDataToLastActions(finRef, getString(R.string.regExpense), regExpName,
                     regExpSum);
 
-            Toast toast = Toast.makeText(getApplicationContext(),
+            Toast.makeText(getApplicationContext(),
                     getString(R.string.regExpense) + " " + regExpName + " "
-                            + getString(R.string.successful_added) ,
-                    Toast.LENGTH_SHORT);
-            toast.show();
+                            + getString(R.string.successful_added),
+                    Toast.LENGTH_SHORT).show();
 
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.container, informationFragment);
@@ -312,10 +297,9 @@ public class MainActivity extends AppCompatActivity
             cancel = true;
         }
         if (cancel) {
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    getString(R.string.empty_data_error),
-                    Toast.LENGTH_SHORT);
-            toast.show();
+            Toast.makeText(getApplicationContext(),
+                    R.string.empty_data_error,
+                    Toast.LENGTH_SHORT).show();
         } else {
             DataBaseHelper.addDataToRegularIncome(finRef, regIncStartPeriod, regIncEndPeriod,
                     regIncName, regIncSum,
@@ -323,11 +307,10 @@ public class MainActivity extends AppCompatActivity
             DataBaseHelper.addDataToLastActions(finRef, getString(R.string.regIncome), regIncName,
                     regIncSum);
 
-            Toast toast = Toast.makeText(getApplicationContext(),
+            Toast.makeText(getApplicationContext(),
                     getString(R.string.regIncome) + " " + regIncName + " "
-                            + getString(R.string.successful_added) ,
-                    Toast.LENGTH_SHORT);
-            toast.show();
+                            + getString(R.string.successful_added),
+                    Toast.LENGTH_SHORT).show();
 
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.container, informationFragment);
@@ -369,21 +352,19 @@ public class MainActivity extends AppCompatActivity
             cancel = true;
         }
         if (cancel) {
-            Toast toast = Toast.makeText(getApplicationContext(),
+            Toast.makeText(getApplicationContext(),
                     getString(R.string.empty_data_error),
-                    Toast.LENGTH_SHORT);
-            toast.show();
+                    Toast.LENGTH_SHORT).show();
         } else {
             DataBaseHelper.addDataToCredits(finRef, creditStartPeriod, creditEndPeriod,
                     creditName, creditPercent, creditDeposit, creditSum, creditAddTime);
             DataBaseHelper.addDataToLastActions(finRef, getString(R.string.credit), creditName,
                     creditSum);
 
-            Toast toast = Toast.makeText(getApplicationContext(),
+            Toast.makeText(getApplicationContext(),
                     getString(R.string.credit) + " " + creditName + " "
-                            + getString(R.string.successful_added) ,
-                    Toast.LENGTH_SHORT);
-            toast.show();
+                            + getString(R.string.successful_added),
+                    Toast.LENGTH_SHORT).show();
 
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.container, informationFragment);
@@ -419,19 +400,17 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (cancel) {
-            Toast toast = Toast.makeText(getApplicationContext(),
+            Toast.makeText(getApplicationContext(),
                     R.string.error_not_all_filled,
-                    Toast.LENGTH_SHORT);
-            toast.show();
+                    Toast.LENGTH_SHORT).show();
         } else {
             DataBaseHelper.addDataToIncomes(finRef, incomeName, incomeSum, incomeComment,
                     incomeDate, incomeAddTime);
             DataBaseHelper.addDataToLastActions(finRef, "Доход ", incomeName, incomeSum);
 
-            Toast toast = Toast.makeText(getApplicationContext(),
+            Toast.makeText(getApplicationContext(),
                     getString(R.string.income) + incomeName + " успешно добавлен",
-                    Toast.LENGTH_SHORT);
-            toast.show();
+                    Toast.LENGTH_SHORT).show();
 
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.container, informationFragment);
