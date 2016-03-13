@@ -1,9 +1,6 @@
 package ru.spbau.mit.starlab.financialassistant;
 
 import android.app.FragmentTransaction;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,32 +8,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import android.app.DialogFragment;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 
 import ru.spbau.mit.starlab.financialassistant.fragments.CreditsFragment;
 import ru.spbau.mit.starlab.financialassistant.fragments.ExpensesFragment;
@@ -85,53 +68,9 @@ public class MainActivity extends AppCompatActivity
             args.putString("dateBegin", dateBegin.getText().toString());
             args.putString("dateEnd", dateEnd.getText().toString());
         }
-        ArrayList<String> dateList = new ArrayList<>();
-        List<String> categoryNameList = new ArrayList<>();
-        List<Double> sumList = new ArrayList<>();
-        getDataForStatistics(dateList, categoryNameList, sumList);
-
-        String[] dates = new String[sumList.size()];
-        String[] categories = new String[sumList.size()];
-        double[] sums = new double[sumList.size()];
-        for (int i = 0; i < sumList.size(); i++) {
-            dates[i] = dateList.get(i);
-            categories[i] = categoryNameList.get(i);
-            sums[i] = sumList.get(i);
-        }
-        args.putStringArray("dateList", dates);
-        args.putStringArray("categoryNameList", categories);
-        args.putDoubleArray("sumList", sums);
 
         fragment.setArguments(args);
         fragment.show(getFragmentManager(), "showStatistics");
-    }
-
-
-
-
-    //Function, that get data for statistics from DB
-    public void getDataForStatistics(final List<String> dateList, final List<String> categoryNameList, final List<Double> sumList) {
-
-        // Get a reference to our posts
-        Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/Expenses");
-        // Attach an listener to read the data at our posts reference
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                System.out.println("There are " + snapshot.getChildrenCount() + " expenses");
-                for (DataSnapshot expSnapshot : snapshot.getChildren()) {
-                    DataBaseHelper.Expense category = expSnapshot.getValue(DataBaseHelper.Expense.class);
-                    dateList.add(category.getDateExp());
-                    categoryNameList.add(category.getCategoryExp());
-                    sumList.add(category.getSumExp());
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("The read failed: " + firebaseError.getMessage());
-            }
-        });
     }
 
     @Override
@@ -142,8 +81,9 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle =
+                new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open,
+                        R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -206,8 +146,8 @@ public class MainActivity extends AppCompatActivity
                     Toast.LENGTH_SHORT);
             toast.show();
         } else {
-            DataBaseHelper.addDataToExpenses(finRef, expenseCategory, expenseName, expenseSum, expenseComment,
-                    expenseDate, expenseAddTime);
+            DataBaseHelper.addDataToExpenses(finRef, expenseCategory, expenseName, expenseSum,
+                    expenseComment, expenseDate, expenseAddTime);
             DataBaseHelper.addDataToLastActions(finRef, "Трата", expenseName, expenseSum);
 
             Toast toast = Toast.makeText(getApplicationContext(),
@@ -293,7 +233,6 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

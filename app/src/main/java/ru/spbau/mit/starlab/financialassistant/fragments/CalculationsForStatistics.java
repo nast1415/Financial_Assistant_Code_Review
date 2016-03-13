@@ -14,7 +14,7 @@ public class CalculationsForStatistics {
     static final int MILLIS_IN_DAY = 86400000;
     static final int MIN_DAYS_FOR_MONTH_STATISTICS = 90;
 
-    static Calendar findMinDate(String[] dates) throws ParseException {
+    static Calendar findMinDate(List<String> dates) throws ParseException {
         Calendar res = Calendar.getInstance();
         for (String date : dates) {
             Calendar calDate = Calendar.getInstance();
@@ -26,11 +26,13 @@ public class CalculationsForStatistics {
         return res;
     }
 
-    static int getSumOnDay(Calendar cal, String[] dates, double[] sums) throws ParseException {
+    static int getSumOnDay(Calendar cal, List<String> dates, List<Double> sums)
+            throws ParseException {
         return getSumOnPeriod(cal, cal, dates, sums);
     }
 
-    static int getSumOnMonth(Calendar cal, String[] dates, double[] sums) throws ParseException {
+    static int getSumOnMonth(Calendar cal, List<String> dates,
+                             List<Double> sums) throws ParseException {
         Calendar endPeriodCal = Calendar.getInstance();
         endPeriodCal.setTime(cal.getTime());
         endPeriodCal.add(Calendar.MONTH, 1);
@@ -38,21 +40,23 @@ public class CalculationsForStatistics {
         return getSumOnPeriod(cal, endPeriodCal, dates, sums);
     }
 
-    static int getSumOnPeriod(Calendar beginCal, Calendar endCal, String[] dates, double[] sums)
+    static int getSumOnPeriod(Calendar beginCal, Calendar endCal, List<String> dates,
+                              List<Double> sums)
             throws ParseException {
         int res = 0;
-        for (int i = 0; i < dates.length; i++) {
+        for (int i = 0; i < dates.size(); i++) {
             Calendar curCal = Calendar.getInstance();
-            curCal.setTime(sdf.parse(dates[i]));
+            curCal.setTime(sdf.parse(dates.get(i)));
             if (!curCal.before(beginCal) && !endCal.before(curCal)) {
-                res += sums[i];
+                res += sums.get(i);
             }
         }
         return res;
     }
 
     static int getSumCategoryOnMonth(Calendar cal, String category,
-                                     String[] categories, String[] dates, double[] sums) {
+                                     List<String> categories, List<String> dates,
+                                     List<Double> sums) {
         Calendar endPeriodCal = Calendar.getInstance();
         endPeriodCal.setTime(cal.getTime());
         endPeriodCal.add(Calendar.MONTH, 1);
@@ -61,17 +65,18 @@ public class CalculationsForStatistics {
     }
 
     static int getSumCategoryOnPeriod(Calendar beginCal, Calendar endCal, String category,
-                                      String[] categories, String[] dates, double[] sums) {
+                                      List<String> categories, List<String> dates,
+                                      List<Double> sums) {
         int res = 0;
-        for (int i = 0; i < dates.length; i++) {
-            if (categories[i].equals(category)) {
+        for (int i = 0; i < dates.size(); i++) {
+            if (categories.get(i).equals(category)) {
                 Calendar curCal = Calendar.getInstance();
                 try {
-                    curCal.setTime(sdf.parse(dates[i]));
+                    curCal.setTime(sdf.parse(dates.get(i)));
                 } catch (ParseException ignored) {
                 }
                 if (!curCal.before(beginCal) && !endCal.before(curCal)) {
-                    res += sums[i];
+                    res += sums.get(i);
                 }
             }
         }

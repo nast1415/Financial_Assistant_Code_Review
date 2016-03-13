@@ -1,12 +1,18 @@
 package ru.spbau.mit.starlab.financialassistant.fragments;
 
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.YAxis;
@@ -20,14 +26,24 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 
+import ru.spbau.mit.starlab.financialassistant.DataBaseHelper;
 import ru.spbau.mit.starlab.financialassistant.R;
 
+
 public class ShowStatisticsFragment extends DialogFragment {
+    final List<String> dateList = new ArrayList<>();
+    final List<String> categoryNameList = new ArrayList<>();
+    final List<Double> sumList = new ArrayList<>();
+    LineChart chart;
+    PieChart pieChart;
+
+    private ProgressDialog pDialog;
+
     public ShowStatisticsFragment() {
         // Required empty public constructor
     }
@@ -37,21 +53,25 @@ public class ShowStatisticsFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         View ll = inflater.inflate(R.layout.fragment_show_statistics, container, false);
 
-        Bundle args = getArguments();
+        chart = (LineChart) ll.findViewById(R.id.chart);
+        pieChart = (PieChart) ll.findViewById(R.id.pie_chart);
 
-        LineChart chart = (LineChart) ll.findViewById(R.id.chart);
+        new DataForStatisticsLoader().execute();
+
+        // Inflate the layout for this fragment
+        return ll;
+    }
+
+    void showStatistics() throws ParseException {
         List<Entry> lineChartYValues = new ArrayList<>();
         List<String> lineChartXValues = new ArrayList<>();
 
-        PieChart pieChart = (PieChart) ll.findViewById(R.id.pie_chart);
         List<Entry> pieChartYValues = new ArrayList<>();
         List<String> pieChartXValues = new ArrayList<>();
 
-        String[] dateList = args.getStringArray("dateList");
-        String[] categoryNameList = args.getStringArray("categoryNameList");
-        double[] sumList = args.getDoubleArray("sumList");
         String lineChartName;
 
+        Bundle args = getArguments();
         if (args.getBoolean("isStatistics")) {  // Show statistics
             getDialog().setTitle(getString(R.string.statistics));
 
@@ -59,15 +79,9 @@ public class ShowStatisticsFragment extends DialogFragment {
             String end = args.getString("dateEnd");
             Calendar beginCal = Calendar.getInstance();
             Calendar endCal = Calendar.getInstance();
-            try {
-                beginCal.setTime(CalculationsForStatistics.sdf.parse(begin));
-                endCal.setTime(CalculationsForStatistics.sdf.parse(end));
-            } catch (ParseException exception) {
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-                        getString(R.string.message_error), Toast.LENGTH_SHORT);
-                toast.show();
-                return ll;
-            }
+            beginCal.setTime(CalculationsForStatistics.sdf.parse(begin));
+            endCal.setTime(CalculationsForStatistics.sdf.parse(end));
+
 
             calcStatisticsForPieChart(beginCal, endCal, categoryNameList, dateList, sumList,
                     pieChartXValues, pieChartYValues);
@@ -77,40 +91,23 @@ public class ShowStatisticsFragment extends DialogFragment {
                     CalculationsForStatistics.MIN_DAYS_FOR_MONTH_STATISTICS) {
                 // Calculate statistics per day
                 lineChartName = getString(R.string.expenses_by_days);
-                try {
-                    calcDaysStatisticsForLineChart(beginCal, endCal, dateList, sumList,
-                            lineChartXValues, lineChartYValues);
-                } catch (ParseException exception) {
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-                            getString(R.string.message_error), Toast.LENGTH_SHORT);
-                    toast.show();
-                    return ll;
-                }
+
+                calcDaysStatisticsForLineChart(beginCal, endCal, dateList, sumList,
+                        lineChartXValues, lineChartYValues);
+
             } else {    // Calculate statistics per month
                 lineChartName = getString(R.string.expenses_by_months);
-                try {
-                    calcMonthsStatisticsForLineChart(beginCal, endCal, dateList, sumList,
-                            lineChartXValues, lineChartYValues);
-                } catch (ParseException exception) {
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-                            getString(R.string.message_error), Toast.LENGTH_SHORT);
-                    toast.show();
-                    return ll;
-                }
+
+                calcMonthsStatisticsForLineChart(beginCal, endCal, dateList, sumList,
+                        lineChartXValues, lineChartYValues);
+
             }
         } else {    // Show predictions
             getDialog().setTitle(getString(R.string.predictions));
             lineChartName = getString(R.string.expenses_predictions_by_months);
-            try {
-                calcPredictionsForLineChart(dateList, sumList, lineChartXValues, lineChartYValues);
-                calcPredictionsForPieChart(categoryNameList, dateList, sumList,
-                        pieChartXValues, pieChartYValues);
-            } catch (ParseException exception) {
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-                        getString(R.string.message_error), Toast.LENGTH_SHORT);
-                toast.show();
-                return ll;
-            }
+            calcPredictionsForLineChart(dateList, sumList, lineChartXValues, lineChartYValues);
+            calcPredictionsForPieChart(categoryNameList, dateList, sumList,
+                    pieChartXValues, pieChartYValues);
         }
 
         updateLineChart(chart, lineChartYValues, lineChartXValues, lineChartName);
@@ -119,18 +116,12 @@ public class ShowStatisticsFragment extends DialogFragment {
         } else {
             updatePieChart(pieChart, pieChartYValues, pieChartXValues, "");
         }
-
-        // Inflate the layout for this fragment
-        return ll;
     }
 
     void calcStatisticsForPieChart(Calendar beginCal, Calendar endCal,
-                                   String[] categoryNameList, String[] dateList, double[] sumList,
-                                   List<String> xs, List<Entry> ys) {
-        Set<String> categories = new HashSet<>();
-        if (categoryNameList != null) {
-            Collections.addAll(categories, categoryNameList);
-        }
+                                   List<String> categoryNameList, List<String> dateList,
+                                   List<Double> sumList, List<String> xs, List<Entry> ys) {
+        Set<String> categories = new HashSet<>(categoryNameList);
         int i = 0;
         for (String category : categories) {
             int sum = CalculationsForStatistics.getSumCategoryOnPeriod(beginCal, endCal, category,
@@ -143,7 +134,7 @@ public class ShowStatisticsFragment extends DialogFragment {
     }
 
     void calcDaysStatisticsForLineChart(Calendar beginCal, Calendar endCal,
-                                        String[] dateList, double[] sumList,
+                                        List<String> dateList, List<Double> sumList,
                                         List<String> xs, List<Entry> ys) throws ParseException {
         Calendar curCal = Calendar.getInstance();
         curCal.setTime(beginCal.getTime());
@@ -155,7 +146,7 @@ public class ShowStatisticsFragment extends DialogFragment {
     }
 
     void calcMonthsStatisticsForLineChart(Calendar beginCal, Calendar endCal,
-                                          String[] dateList, double[] sumList,
+                                          List<String> dateList, List<Double> sumList,
                                           List<String> xs, List<Entry> ys) throws ParseException {
         Calendar curCal = Calendar.getInstance();
         curCal.setTime(beginCal.getTime());
@@ -169,7 +160,7 @@ public class ShowStatisticsFragment extends DialogFragment {
         }
     }
 
-    void calcPredictionsForLineChart(String[] dateList, double[] sumList,
+    void calcPredictionsForLineChart(List<String> dateList, List<Double> sumList,
                                      List<String> xs, List<Entry> ys) throws ParseException {
         List<Double> prevExpenses = new ArrayList<>();
         prevExpenses.add(0.0);
@@ -193,12 +184,10 @@ public class ShowStatisticsFragment extends DialogFragment {
         }
     }
 
-    void calcPredictionsForPieChart(String[] categoryNameList, String[] dateList, double[] sumList,
+    void calcPredictionsForPieChart(List<String> categoryNameList, List<String> dateList,
+                                    List<Double> sumList,
                                     List<String> xs, List<Entry> ys) throws ParseException {
-        Set<String> categories = new HashSet<>();
-        if (categoryNameList != null) {
-            Collections.addAll(categories, categoryNameList);
-        }
+        Set<String> categories = new HashSet<>(categoryNameList);
         int i = 0;
         for (String category : categories) {
             List<Double> prevExpensesForCategory = new ArrayList<>();
@@ -251,5 +240,65 @@ public class ShowStatisticsFragment extends DialogFragment {
         chart.setData(pieData);
 
         chart.invalidate();
+    }
+
+    public class DataForStatisticsLoader extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage(getString(R.string.loading_actions));
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        protected Boolean doInBackground(Void... args) {
+            Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/Expenses");
+            final CountDownLatch done = new CountDownLatch(1);
+            // Attach an listener to read the data at our last actions
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    for (DataSnapshot expSnapshot : snapshot.getChildren()) {
+                        DataBaseHelper.Expense category =
+                                expSnapshot.getValue(DataBaseHelper.Expense.class);
+                        dateList.add(category.getDateExp());
+                        categoryNameList.add(category.getCategoryExp());
+                        sumList.add(category.getSumExp());
+                    }
+                    done.countDown();
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    done.countDown();
+                }
+            });
+
+            try {
+                done.await();
+            } catch (InterruptedException e) {
+                return false;
+            }
+
+            return true;
+        }
+
+        protected void onPostExecute(final Boolean success) {
+            pDialog.dismiss();
+            if (!success) {
+                Toast.makeText(getActivity().getApplicationContext(),
+                        getString(R.string.message_error), Toast.LENGTH_SHORT).show();
+            } else {
+                try {
+                    showStatistics();
+                } catch (ParseException e) {
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            getString(R.string.message_error), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
     }
 }
