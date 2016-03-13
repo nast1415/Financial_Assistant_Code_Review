@@ -90,6 +90,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
     private void populateAutoComplete() {
         getLoaderManager().initLoader(0, null, this);
     }
+
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
@@ -112,10 +113,16 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !UserValidation.isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+        if (TextUtils.isEmpty(password)) {
+            mEmailView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
+        } else {
+            if (!UserValidation.isPasswordValid(password)) {
+                mPasswordView.setError(getString(R.string.error_invalid_password));
+                focusView = mPasswordView;
+                cancel = true;
+            }
         }
 
         // Check for a valid email address.
@@ -237,6 +244,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         private final String mEmail;
         private final String mPassword;
         private boolean isAuthorize = true;
+        private FirebaseError error = null;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -250,14 +258,12 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
             ref.authWithPassword(mEmail, mPassword, new Firebase.AuthResultHandler() {
                 @Override
                 public void onAuthenticated(AuthData authData) {
-                    System.out.println("User ID: " + authData.getUid() + ", Provider: "
-                            + authData.getProvider());
                     done.countDown();
                 }
 
                 @Override
                 public void onAuthenticationError(FirebaseError firebaseError) {
-                    System.err.println("There was an error");
+                    error = firebaseError;
                     isAuthorize = false;
                     done.countDown();
                 }
@@ -282,8 +288,29 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
                 Intent myIntent = new Intent(SignInActivity.this, MainActivity.class);
                 SignInActivity.this.startActivity(myIntent);
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_authorization));
-                mPasswordView.requestFocus();
+                if (error == null) {
+                    mEmailView.setError(getString(R.string.message_error));
+                    mEmailView.requestFocus();
+                } else {
+                    switch (error.getCode()) {
+                        case FirebaseError.USER_DOES_NOT_EXIST:
+                            mEmailView.setError(getString(
+                                    R.string.error_incorrect_authorization));
+                            mEmailView.requestFocus();
+                            break;
+                        case FirebaseError.INVALID_PASSWORD:
+                            mPasswordView.setError(getString(R.string.error_incorrect_password));
+                            mPasswordView.requestFocus();
+                            break;
+                        case FirebaseError.NETWORK_ERROR:
+                            mEmailView.setError(getString(R.string.error_network));
+                            mEmailView.requestFocus();
+                            break;
+                        default:
+                            mEmailView.setError(getString(R.string.message_error));
+                            mEmailView.requestFocus();
+                    }
+                }
             }
 
         }

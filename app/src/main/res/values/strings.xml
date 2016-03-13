@@ -10,6 +10,7 @@
     <string name="message_not_implemented">Сожалеем, функция пока в разработке</string>
     <string name="message_incorrect_data">Некорректные данные</string>
     <string name="message_error">Произошла ошибка</string>
+    <string name="error_network">Проверьте подключение к сети</string>
 
     <!-- Strings related to fragments' names -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -107,10 +107,16 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !UserValidation.isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+        if (TextUtils.isEmpty(password)) {
+            mEmailView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
+        } else {
+            if (!UserValidation.isPasswordValid(password)) {
+                mPasswordView.setError(getString(R.string.error_invalid_password));
+                focusView = mPasswordView;
+                cancel = true;
+            }
         }
 
         // Check for a valid email address.
@@ -232,6 +238,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         private final String mEmail;
         private final String mPassword;
         private boolean isRegister = true;
+        private FirebaseError error = null;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -246,13 +253,12 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                     new Firebase.ValueResultHandler<Map<String, Object>>() {
                         @Override
                         public void onSuccess(Map<String, Object> result) {
-                            System.out.println("Successfully created user account with uid: " +
-                                    result.get("uid"));
                             done.countDown();
                         }
 
                         @Override
                         public void onError(FirebaseError firebaseError) {
+                            error = firebaseError;
                             isRegister = false;
                             done.countDown();
                         }
@@ -274,7 +280,21 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             if (success) {
                 finish();
             } else {
-                mEmailView.setError(getString(R.string.error_incorrect_registration));
+                if (error == null) {
+                    mEmailView.setError(getString(R.string.message_error));
+                } else {
+                    switch (error.getCode()) {
+                        case FirebaseError.EMAIL_TAKEN:
+                            mEmailView.setError(getString(
+                                    R.string.error_incorrect_registration));
+                            break;
+                        case FirebaseError.NETWORK_ERROR:
+                            mEmailView.setError(getString(R.string.error_network));
+                            break;
+                        default:
+                            mEmailView.setError(getString(R.string.message_error));
+                    }
+                }
                 mEmailView.requestFocus();
             }
         }
