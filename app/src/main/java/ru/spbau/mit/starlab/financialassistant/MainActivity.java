@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class LastActions {
-        private String sumLA;
+        private double sumLA;
         private String nameLA;
         private String categoryLA;
 
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity
 
         ;
 
-        public String getSumLA() {
+        public double getSumLA() {
             return sumLA;
         }
 
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     //Function to show last actions
-    public void getLastActions(final List<String> categoryList, final List<String> nameList, final List<String> sumList) {
+    public void getLastActions(final List<String> categoryList, final List<String> nameList, final List<Double> sumList) {
         Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/LastActions");
 
         // Attach an listener to read the data at our last actions
@@ -394,12 +394,12 @@ public class MainActivity extends AppCompatActivity
             Bundle args = new Bundle();
             List<String> categoryList = new ArrayList<>();
             List<String> nameList = new ArrayList<>();
-            List<String> sumList = new ArrayList<>();
+            List<Double> sumList = new ArrayList<>();
 
             getLastActions(categoryList, nameList, sumList);
             String[] categories = new String[sumList.size()];
             String[] names = new String[sumList.size()];
-            String[] sums = new String[sumList.size()];
+            double[] sums = new double[sumList.size()];
             for (int i = 0; i < sumList.size(); i++) {
                 categories[i] = categoryList.get(i);
                 names[i] = nameList.get(i);
@@ -407,7 +407,7 @@ public class MainActivity extends AppCompatActivity
             }
             args.putStringArray("categories", categories);
             args.putStringArray("names", names);
-            args.putStringArray("sums", sums);
+            args.putDoubleArray("sums", sums);
             RecentActionsFragment recentActionsFragment = new RecentActionsFragment();
             recentActionsFragment.setArguments(args);
             fragmentTransaction.replace(R.id.container, recentActionsFragment);
