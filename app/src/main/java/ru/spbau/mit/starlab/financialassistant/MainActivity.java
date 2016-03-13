@@ -76,75 +76,64 @@ public class MainActivity extends AppCompatActivity
 
         SimpleDateFormat format = new SimpleDateFormat();
         format.applyPattern("dd.MM.yyyy");
+
         Date start = new Date();
         Date end = new Date();
+
         Date curDate = new Date();
-        try {
-            start = format.parse(startPeriod);
-        } catch (ParseException e) {
-            canceled = 2;
-        }
-
-        try {
-            end = format.parse(endPeriod);
-        } catch (ParseException e) {
-            canceled = 3;
-        }
-
-        if (end.compareTo(start) < 0) {
-            canceled = 1;
-        }
-
-        if (startPeriod.equals("") || endPeriod.equals("")) {
-            canceled = 4;
-        }
-
-        if (end.compareTo(curDate) > 0) {
-            canceled = 5;
-        }
 
         args.putBoolean("isStatistics", radioButton.isChecked());
         if (radioButton.isChecked()) {
             args.putString("dateBegin", startPeriod);
             args.putString("dateEnd", endPeriod);
-        }
 
-        switch (canceled) {
-            case 1:
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        "Дата начала периода должна идти раньше даты окончания",
-                        Toast.LENGTH_SHORT);
-                toast.show();
-                break;
-            case 2:
+            try {
+                start = format.parse(startPeriod);
+            } catch (ParseException e) {
                 Toast toast2 = Toast.makeText(getApplicationContext(),
-                        "Формат даты в поле \"Начало периода\" некорректен",
+                        getString(R.string.start_period_error),
                         Toast.LENGTH_SHORT);
                 toast2.show();
-                break;
-            case 3:
+                return;
+            }
+
+            try {
+                end = format.parse(endPeriod);
+            } catch (ParseException e) {
                 Toast toast3 = Toast.makeText(getApplicationContext(),
-                        "Формат даты в поле \"Конец периода\" некорректен",
+                        getString(R.string.end_period_error),
                         Toast.LENGTH_SHORT);
                 toast3.show();
-                break;
-            case 4:
+                return;
+            }
+
+            if (end.compareTo(start) < 0) {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        getString(R.string.order_of_periods_error),
+                        Toast.LENGTH_SHORT);
+                toast.show();
+                return;
+            }
+
+            if (startPeriod.equals("") || endPeriod.equals("")) {
                 Toast toast4 = Toast.makeText(getApplicationContext(),
-                        "Заполните поля начала и окончания периода статистики",
+                        getString(R.string.empty_fields_error),
                         Toast.LENGTH_SHORT);
                 toast4.show();
-                break;
-            case 5:
+                return;
+            }
+
+            if (end.compareTo(curDate) > 0) {
                 Toast toast5 = Toast.makeText(getApplicationContext(),
-                        "Дата окончания периода не может быть позже текущей",
+                        getString(R.string.end_after_current_date_error),
                         Toast.LENGTH_SHORT);
                 toast5.show();
-                break;
-            default:
-                fragment.setArguments(args);
-                fragment.show(getFragmentManager(), "showStatistics");
-                break;
+                return;
+            }
         }
+        fragment.setArguments(args);
+        fragment.show(getFragmentManager(), "showStatistics");
+
     }
 
     @Override
@@ -216,7 +205,7 @@ public class MainActivity extends AppCompatActivity
         }
         if (cancel) {
             Toast toast = Toast.makeText(getApplicationContext(),
-                    "Все поля, кроме комментария, обязательны для заполнения",
+                    getString(R.string.empty_data_error),
                     Toast.LENGTH_SHORT);
             toast.show();
         } else {
