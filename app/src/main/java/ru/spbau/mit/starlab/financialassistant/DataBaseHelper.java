@@ -73,8 +73,8 @@ public class DataBaseHelper {
                                          String expenseSum, String expenseComment,
                                          String expenseDate, String expenseAddTime) {
 
-        Firebase expRef = ref.child("Expenses");
-        Firebase newExp = expRef.push();
+        Firebase expensesReference = ref.child("Expenses");
+        Firebase reference = expensesReference.push();
 
         Map<String, String> expense = new HashMap<>();
         expense.put("categoryExp", category);
@@ -83,7 +83,7 @@ public class DataBaseHelper {
         expense.put("commentExp", expenseComment);
         expense.put("dateExp", expenseDate);
         expense.put("addTimeExp", expenseAddTime);
-        newExp.setValue(expense);
+        reference.setValue(expense);
 
     }
 
@@ -91,8 +91,8 @@ public class DataBaseHelper {
                                         String incomeComment, String incomeDate,
                                         String incomeAddTime) {
 
-        Firebase incRef = ref.child("Incomes");
-        Firebase newInc = incRef.push();
+        Firebase incomesReference = ref.child("Incomes");
+        Firebase reference = incomesReference.push();
 
         Map<String, String> income = new HashMap<>();
         income.put("nameInc", incomeName);
@@ -100,47 +100,47 @@ public class DataBaseHelper {
         income.put("commentInc", incomeComment);
         income.put("dateInc", incomeDate);
         income.put("addTimeInc", incomeAddTime);
-        newInc.setValue(income);
+        reference.setValue(income);
     }
 
     public static void addDataToRegularExpenses(Firebase ref, String startPeriod, String endPeriod,
                                                 String name, String category, String sum,
                                                 String comment, String addTime) {
-        Firebase regExpRef = ref.child("RegularExpenses");
-        Firebase newRegExp = regExpRef.push();
+        Firebase regularExpensesReference = ref.child("RegularExpenses");
+        Firebase reference = regularExpensesReference.push();
 
-        Map<String, String> regExpense = new HashMap<>();
-        regExpense.put("startPeriodRegExp", startPeriod);
-        regExpense.put("endPeriodRegExp", endPeriod);
-        regExpense.put("categoryRegExp", category);
-        regExpense.put("nameRegExp", name);
-        regExpense.put("sumRegExp", sum);
-        regExpense.put("commentRegExp", comment);
-        regExpense.put("addTimeRegExp", addTime);
-        newRegExp.setValue(regExpense);
+        Map<String, String> regularExpense = new HashMap<>();
+        regularExpense.put("startPeriodRegExp", startPeriod);
+        regularExpense.put("endPeriodRegExp", endPeriod);
+        regularExpense.put("categoryRegExp", category);
+        regularExpense.put("nameRegExp", name);
+        regularExpense.put("sumRegExp", sum);
+        regularExpense.put("commentRegExp", comment);
+        regularExpense.put("addTimeRegExp", addTime);
+        reference.setValue(regularExpense);
     }
 
     public static void addDataToRegularIncome(Firebase ref, String startPeriod, String endPeriod,
                                               String name, String sum,
                                               String comment, String addTime) {
-        Firebase regIncRef = ref.child("RegularIncomes");
-        Firebase newRegInc = regIncRef.push();
+        Firebase regularIncomesReference = ref.child("RegularIncomes");
+        Firebase reference = regularIncomesReference.push();
 
-        Map<String, String> regIncome = new HashMap<>();
-        regIncome.put("startPeriodRegInc", startPeriod);
-        regIncome.put("endPeriodRegInc", endPeriod);
-        regIncome.put("nameRegInc", name);
-        regIncome.put("sumRegInc", sum);
-        regIncome.put("commentRegInc", comment);
-        regIncome.put("addTimeRegInc", addTime);
-        newRegInc.setValue(regIncome);
+        Map<String, String> regularIncome = new HashMap<>();
+        regularIncome.put("startPeriodRegInc", startPeriod);
+        regularIncome.put("endPeriodRegInc", endPeriod);
+        regularIncome.put("nameRegInc", name);
+        regularIncome.put("sumRegInc", sum);
+        regularIncome.put("commentRegInc", comment);
+        regularIncome.put("addTimeRegInc", addTime);
+        reference.setValue(regularIncome);
     }
 
     public static void addDataToCredits(Firebase ref, String startPeriod, String endPeriod,
                                         String name, String percent, String deposit,
                                         String sum, String addTime) {
-        Firebase creditRef = ref.child("Credits");
-        Firebase newCreditRef = creditRef.push();
+        Firebase creditReference = ref.child("Credits");
+        Firebase reference = creditReference.push();
 
         Map<String, String> credit = new HashMap<>();
         credit.put("startPeriodCredit", startPeriod);
@@ -150,18 +150,18 @@ public class DataBaseHelper {
         credit.put("depositCredit", deposit);
         credit.put("sumCredit", sum);
         credit.put("addTimeCredit", addTime);
-        newCreditRef.setValue(credit);
+        reference.setValue(credit);
     }
 
     public static void addDataToLastActions(Firebase ref, String category, String name,
                                             String sum) {
-        Firebase lastActionsRef = ref.child("LastActions");
-        Firebase newAction = lastActionsRef.push();
+        Firebase lastActionsReference = ref.child("LastActions");
+        Firebase reference = lastActionsReference.push();
 
         Map<String, String> action = new HashMap<>();
         action.put("categoryLA", category);
         action.put("nameLA", name);
         action.put("sumLA", sum);
-        newAction.setValue(action);
+        reference.setValue(action);
     }
 }
