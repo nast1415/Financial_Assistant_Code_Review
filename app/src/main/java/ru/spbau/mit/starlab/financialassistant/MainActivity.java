@@ -121,12 +121,11 @@ public class MainActivity extends AppCompatActivity
         TextView dateEnd = (TextView) findViewById(R.id.eTxtStatisticsEndPeriod);
         String endPeriod = dateEnd.getText().toString();
 
-        Date start = parseDate(startPeriod);
-        Date end = parseDate(endPeriod);
-
         args.putBoolean("isStatistics", radioButton.isChecked());
 
         if (radioButton.isChecked()) {
+            Date start = parseDate(startPeriod);
+            Date end = parseDate(endPeriod);
             if (start == null || end == null) {
                 return;
             }
@@ -210,10 +209,11 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        if (expDate.compareTo(curDate) < 0) {
+        if (expDate.compareTo(curDate) > 0) {
             Toast.makeText(getApplicationContext(),
-                    getString(R.string.order_of_periods_error),
+                    R.string.end_after_current_date_error,
                     Toast.LENGTH_SHORT).show();
+            return;
         }
 
         if (expenseName.equals("") || expenseCategory.equals("") || expenseSum.equals("")
@@ -229,8 +229,8 @@ public class MainActivity extends AppCompatActivity
                     expenseComment, expenseDate, expenseAddTime);
             DataBaseHelper.addDataToLastActions(finRef, "Трата", expenseName, expenseSum);
 
-            Toast.makeText(getApplicationContext(),
-                    getString(R.string.expense) + " " + expenseName + " успешно добавлена",
+            Toast.makeText(getApplicationContext(), getString(R.string.expense) + " " +
+                            expenseName + " " + getString(R.string.successful_added),
                     Toast.LENGTH_SHORT).show();
 
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -455,6 +455,18 @@ public class MainActivity extends AppCompatActivity
         Date curDate = new Date();
         String incomeAddTime = curDate.toString();
 
+        Date incDate = parseDate(incomeDate);
+        if (incDate == null) {
+            return;
+        }
+
+        if (incDate.compareTo(curDate) > 0) {
+            Toast.makeText(getApplicationContext(),
+                    R.string.end_after_current_date_error,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (incomeDate.equals("") || incomeName.equals("") || incomeSum.equals("")) {
             cancel = true;
         }
@@ -469,7 +481,7 @@ public class MainActivity extends AppCompatActivity
             DataBaseHelper.addDataToLastActions(finRef, "Доход ", incomeName, incomeSum);
 
             Toast.makeText(getApplicationContext(),
-                    getString(R.string.income) + incomeName + " успешно добавлен",
+                    getString(R.string.income) + " " + incomeName + " успешно добавлен",
                     Toast.LENGTH_SHORT).show();
 
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
