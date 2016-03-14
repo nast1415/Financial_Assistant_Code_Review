@@ -3,14 +3,11 @@ package ru.spbau.mit.starlab.financialassistant;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentResolver;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -26,27 +23,17 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 
-/**
- * A login screen that offers login via email/password.
- */
 public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-    private UserLoginTask mAuthTask = null;
+    SignUpTask mAuthTask = null;
 
-    // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    AutoCompleteTextView mEmailView;
+    EditText mPasswordView;
+    View mProgressView;
+    View mLoginFormView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +71,6 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     private void populateAutoComplete() {
         getLoaderManager().initLoader(0, null, this);
     }
-
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -139,7 +125,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new SignUpTask(this, email, password);
             mAuthTask.execute((Void) null);
         }
     }
@@ -210,7 +196,6 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
     }
 
     private interface ProfileQuery {
@@ -222,91 +207,11 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         int ADDRESS = 0;
     }
 
-
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter = new ArrayAdapter<>(SignUpActivity.this,
                 android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-        private final String mEmail;
-        private final String mPassword;
-        private boolean isRegister = true;
-        private FirebaseError error = null;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com");
-            final CountDownLatch done = new CountDownLatch(1);
-            ref.createUser(mEmail, mPassword,
-                    new Firebase.ValueResultHandler<Map<String, Object>>() {
-                        @Override
-                        public void onSuccess(Map<String, Object> result) {
-                            done.countDown();
-                        }
-
-                        @Override
-                        public void onError(FirebaseError firebaseError) {
-                            error = firebaseError;
-                            isRegister = false;
-                            done.countDown();
-                        }
-                    });
-
-            try {
-                done.await();
-            } catch (InterruptedException e) {
-                return false;
-            }
-            return isRegister;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                if (error == null) {
-                    Toast.makeText(getApplicationContext(),
-                            getString(R.string.message_error), Toast.LENGTH_SHORT).show();
-                } else {
-                    switch (error.getCode()) {
-                        case FirebaseError.EMAIL_TAKEN:
-                            mEmailView.setError(getString(
-                                    R.string.error_incorrect_registration));
-                            break;
-                        case FirebaseError.NETWORK_ERROR:
-                            Toast.makeText(getApplicationContext(),
-                                    getString(R.string.error_network), Toast.LENGTH_SHORT).show();
-                            break;
-                        default:
-                            Toast.makeText(getApplicationContext(),
-                                    getString(R.string.message_error), Toast.LENGTH_SHORT).show();
-                    }
-                }
-                mEmailView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
     }
 }

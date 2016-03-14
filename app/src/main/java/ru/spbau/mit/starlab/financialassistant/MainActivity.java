@@ -25,6 +25,7 @@ import java.util.Date;
 
 import ru.spbau.mit.starlab.financialassistant.fragments.CalculationsForStatistics;
 import ru.spbau.mit.starlab.financialassistant.fragments.CreditsFragment;
+import ru.spbau.mit.starlab.financialassistant.fragments.DatePicker;
 import ru.spbau.mit.starlab.financialassistant.fragments.ExpensesFragment;
 import ru.spbau.mit.starlab.financialassistant.fragments.IncomesFragment;
 import ru.spbau.mit.starlab.financialassistant.fragments.InformationFragment;
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity
     //Function for our datePickerDialog
     public void showDatePickerDialog(View v) {
         DialogFragment newFragment =
-                new ru.spbau.mit.starlab.financialassistant.fragments.DatePicker();
+                new DatePicker();
         Bundle args = new Bundle();
         args.putInt("txtDateId", v.getId());
         newFragment.setArguments(args);
