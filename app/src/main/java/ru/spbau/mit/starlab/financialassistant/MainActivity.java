@@ -174,11 +174,11 @@ public class MainActivity extends AppCompatActivity
         Firebase.setAndroidContext(this);
     }
 
-        //Function, that add data from the ExpensesFragment to the Firebase DB
+    //Function, that add data from the ExpensesFragment to the Firebase DB
     //public void addNewExpense(View v) {
 
-        // где-то ранее мы объявили фрагмент
-        //expensesFragment.addNewExpense(v);
+    // где-то ранее мы объявили фрагмент
+    //expensesFragment.addNewExpense(v);
         /*//Get data from the view fields
         TextView category = (TextView) findViewById(R.id.eTxtExpCategory);
         String expenseCategory = category.getText().toString();
@@ -233,7 +233,7 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer1 = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer1.closeDrawer(GravityCompat.START);
   */
-  //  }
+    //  }
 
     //Function, that add data from the RegularExpensesFragment to the Firebase DB
     public void addNewRegExpense(View v) {
