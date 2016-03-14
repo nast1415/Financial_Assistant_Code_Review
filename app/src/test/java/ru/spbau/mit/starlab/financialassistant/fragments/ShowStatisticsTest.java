@@ -6,7 +6,9 @@ import org.junit.Test;
 
 import java.lang.String;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -27,7 +29,7 @@ public class ShowStatisticsTest {
         for (int i = 5; i < 10; i++) {
             dates[i] = "0" + (i - 4) + ".01.2016";
         }
-        Calendar resCal = CalculationsForStatistics.findMinDate(dates);
+        Calendar resCal = CalculationsForStatistics.findMinDate(Arrays.asList(dates));
         assertEquals(2016, resCal.get(Calendar.YEAR));
         assertEquals(0, resCal.get(Calendar.MONTH));
         assertEquals(1, resCal.get(Calendar.DATE));
@@ -39,8 +41,9 @@ public class ShowStatisticsTest {
         cal.set(2016, 0, 1, 0, 0, 0);
         cal.set(Calendar.MILLISECOND, 0);
         String[] dates = {"01.01.2016", "02.02.2016", "01.01.2016", "01.02.2016", "02.01.2016"};
-        double[] sums = {1, 2, 3, 4, 5};
-        assertEquals(4, CalculationsForStatistics.getSumOnDay(cal, dates, sums));
+        Double[] sums = {1.0, 2.0, 3.0, 4.0, 5.0};
+        assertEquals(4, CalculationsForStatistics.getSumOnDay(cal, Arrays.asList(dates),
+                Arrays.asList(sums)));
     }
 
     @Test
@@ -49,8 +52,9 @@ public class ShowStatisticsTest {
         cal.set(2016, 0, 1, 0, 0, 0);
         cal.set(Calendar.MILLISECOND, 0);
         String[] dates = {"01.01.2016", "02.02.2016", "01.01.2016", "01.02.2016", "02.01.2016"};
-        double[] sums = {1, 2, 3, 4, 5};
-        assertEquals(9, CalculationsForStatistics.getSumOnMonth(cal, dates, sums));
+        Double[] sums = {1.0, 2.0, 3.0, 4.0, 5.0};
+        assertEquals(9, CalculationsForStatistics.getSumOnMonth(cal, Arrays.asList(dates),
+                Arrays.asList(sums)));
     }
 
     @Test
@@ -59,9 +63,10 @@ public class ShowStatisticsTest {
         cal.set(2016, 0, 1, 0, 0, 0);
         cal.set(Calendar.MILLISECOND, 0);
         String[] dates = {"01.01.2016", "02.02.2016", "01.01.2016", "01.02.2016", "02.01.2016"};
-        double[] sums = {1, 2, 3, 4, 5};
+        Double[] sums = {1.0, 2.0, 3.0, 4.0, 5.0};
         String[] categories = {"cat1", "cat2", "cat3", "cat1", "cat1"};
-        assertEquals(6, CalculationsForStatistics.getSumCategoryOnMonth(cal, "cat1", categories, dates, sums));
+        assertEquals(6, CalculationsForStatistics.getSumCategoryOnMonth(cal, "cat1",
+                Arrays.asList(categories), Arrays.asList(dates), Arrays.asList(sums)));
     }
 
     @Test
@@ -99,11 +104,12 @@ public class ShowStatisticsTest {
         endCal.set(2016, 11, 1, 0, 0, 0);
         endCal.set(Calendar.MILLISECOND, 0);
         String[] dates = {"01.01.2015", "02.02.2016", "01.01.2016", "01.12.2016", "02.12.2016"};
-        double[] sums = {1, 2, 3, 4, 5};
+        Double[] sums = {1.0, 2.0, 3.0, 4.0, 5.0};
         String[] categories = {"cat1", "cat2", "cat3", "cat1", "cat1"};
         List<String> xs = new ArrayList<>();
         List<Entry> ys = new ArrayList<>();
-        fragment.calcStatisticsForPieChart(beginCal, endCal, categories, dates, sums, xs, ys);
+        fragment.calcStatisticsForPieChart(beginCal, endCal,
+                Arrays.asList(categories), Arrays.asList(dates), Arrays.asList(sums), xs, ys);
         assertTrue(xs.size() == 3);
         assertTrue(ys.size() == 3);
         assertTrue(xs.contains("cat1"));
@@ -120,10 +126,11 @@ public class ShowStatisticsTest {
         endCal.set(2016, 0, 3, 0, 0, 0);
         endCal.set(Calendar.MILLISECOND, 0);
         String[] dates = {"01.01.2015", "02.02.2016", "01.01.2016", "01.12.2016", "02.12.2016"};
-        double[] sums = {1, 2, 3, 4, 5};
+        Double[] sums = {1.0, 2.0, 3.0, 4.0, 5.0};
         List<String> xs = new ArrayList<>();
         List<Entry> ys = new ArrayList<>();
-        fragment.calcDaysStatisticsForLineChart(beginCal, endCal, dates, sums, xs, ys);
+        fragment.calcDaysStatisticsForLineChart(beginCal, endCal,
+                Arrays.asList(dates), Arrays.asList(sums), xs, ys);
         assertEquals(3, xs.size());
         assertEquals(3, ys.size());
         assertTrue(xs.contains("1янв"));
@@ -140,10 +147,11 @@ public class ShowStatisticsTest {
         endCal.set(2016, 0, 3, 0, 0, 0);
         endCal.set(Calendar.MILLISECOND, 0);
         String[] dates = {"01.01.2015", "02.02.2016", "01.01.2016", "01.12.2016", "02.12.2016"};
-        double[] sums = {1, 2, 3, 4, 5};
+        Double[] sums = {1.0, 2.0, 3.0, 4.0, 5.0};
         List<String> xs = new ArrayList<>();
         List<Entry> ys = new ArrayList<>();
-        fragment.calcMonthsStatisticsForLineChart(beginCal, endCal, dates, sums, xs, ys);
+        fragment.calcMonthsStatisticsForLineChart(beginCal, endCal,
+                Arrays.asList(dates), Arrays.asList(sums), xs, ys);
         assertEquals(1, xs.size());
         assertEquals(1, ys.size());
         assertTrue(xs.contains("янв"));
@@ -152,10 +160,10 @@ public class ShowStatisticsTest {
     @Test
     public void testCalcPredictionsForLineChart() throws Exception {
         String[] dates = {"01.01.2015", "02.02.2016", "01.01.2016", "01.12.2016", "02.12.2016"};
-        double[] sums = {1, 2, 3, 4, 5};
+        Double[] sums = {1.0, 2.0, 3.0, 4.0, 5.0};
         List<String> xs = new ArrayList<>();
         List<Entry> ys = new ArrayList<>();
-        fragment.calcPredictionsForLineChart(dates, sums, xs, ys);
+        fragment.calcPredictionsForLineChart(Arrays.asList(dates), Arrays.asList(sums), xs, ys);
         assertEquals(12, xs.size());
         assertEquals(12, ys.size());
         assertTrue(xs.contains("янв"));
