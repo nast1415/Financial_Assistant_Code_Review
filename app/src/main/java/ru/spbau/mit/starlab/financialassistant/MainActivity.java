@@ -162,66 +162,7 @@ public class MainActivity extends AppCompatActivity
         Firebase.setAndroidContext(this);
     }
 
-
-    public void addNewCredit(View v) {
-        //Get data from the view fields
-        TextView startPeriod = (TextView) findViewById(R.id.eTxtCreditStartPeriod);
-        String creditStartPeriod = startPeriod.getText().toString();
-
-        TextView endPeriod = (TextView) findViewById(R.id.eTxtCreditEndPeriod);
-        String creditEndPeriod = endPeriod.getText().toString();
-
-        TextView name = (TextView) findViewById(R.id.eTxtCreditName);
-        String creditName = name.getText().toString();
-
-        TextView percent = (TextView) findViewById(R.id.eTxtCreditPercent);
-        String creditPercent = percent.getText().toString();
-
-        TextView deposit = (TextView) findViewById(R.id.eTxtCreditDeposit);
-        String creditDeposit = deposit.getText().toString();
-
-        TextView sum = (TextView) findViewById(R.id.eTxtCreditSum);
-        String creditSum = sum.getText().toString();
-
-        Date curDate = new Date();
-        String creditAddTime = curDate.toString();
-
-        Date start = parseDate(creditStartPeriod);
-        Date end = parseDate(creditEndPeriod);
-        if (start == null || end == null) {
-            return;
-        }
-
-        if (checkPeriods(start, end) != 0) {
-            return;
-        }
-
-        if (creditName.equals("") || creditPercent.equals("") || creditDeposit.equals("")
-                || creditSum.equals("") || creditStartPeriod.equals("")
-                || creditEndPeriod.equals("")) {
-            Toast.makeText(getApplicationContext(), R.string.empty_data_error,
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        DataBaseHelper.addDataToCredits(finRef, creditStartPeriod, creditEndPeriod,
-                creditName, creditPercent, creditDeposit, creditSum, creditAddTime);
-        DataBaseHelper.addDataToLastActions(finRef, getString(R.string.credit), creditName,
-                creditSum);
-
-        Toast.makeText(getApplicationContext(), getString(R.string.credit) + " " +
-                        creditName + " " + getString(R.string.successful_added),
-                Toast.LENGTH_SHORT).show();
-
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.container, informationFragment);
-        fragmentTransaction.commit();
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-    }
-
-    //Function, that add data from the IncomesFragment to the Firebase DB
+//Function, that add data from the IncomesFragment to the Firebase DB
     public void addNewIncome(View v) {
         //Get data from the view fields
         TextView name = (TextView) findViewById(R.id.eTxtIncName);
@@ -273,7 +214,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    @Override
+   @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {

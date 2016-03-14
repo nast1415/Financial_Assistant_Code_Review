@@ -103,7 +103,7 @@ public class CreditsFragment extends Fragment implements View.OnClickListener{
             return;
         }
 
-        DataBaseHelper.addDataToRegularExpenses(finRef, creditStartPeriod, creditEndPeriod,
+        DataBaseHelper.addDataToCredits(finRef, creditStartPeriod, creditEndPeriod,
                 creditName, creditPercent, creditDeposit, creditSum, creditAddTime);
         DataBaseHelper.addDataToLastActions(finRef, getString(R.string.regExpense), creditName,
                 creditSum);
