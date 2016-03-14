@@ -19,7 +19,7 @@ import ru.spbau.mit.starlab.financialassistant.DataBaseHelper;
 import ru.spbau.mit.starlab.financialassistant.MainActivity;
 import ru.spbau.mit.starlab.financialassistant.R;
 
-public class IncomesFragment extends Fragment implements View.OnClickListener{
+public class IncomesFragment extends Fragment implements View.OnClickListener {
     private InformationFragment informationFragment = new InformationFragment();
     TextView name, sum, comment, date;
 
@@ -41,7 +41,7 @@ public class IncomesFragment extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View income = inflater.inflate(R.layout.fragment_incomes, container, false);
 
-        Button btnAddIncome= (Button) income.findViewById(R.id.btnAddIncome);
+        Button btnAddIncome = (Button) income.findViewById(R.id.btnAddIncome);
         btnAddIncome.setOnClickListener(this);
 
         name = (TextView) income.findViewById(R.id.eTxtIncName);
@@ -86,11 +86,10 @@ public class IncomesFragment extends Fragment implements View.OnClickListener{
             return;
         }
 
-        DataBaseHelper.addDataToIncomes(financialAssistanceDataBaseRef, incomeName, incomeSum, incomeComment,
-                incomeDate, incomeAddTime);
-        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseRef, getString(R.string.income),
-                incomeName, incomeSum);
-
+        DataBaseHelper.addDataToIncomes(financialAssistanceDataBaseRef, incomeName, incomeSum,
+                incomeComment, incomeDate, incomeAddTime);
+        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseRef,
+                getString(R.string.income), incomeName, incomeSum);
 
         Toast.makeText(getActivity(), getString(R.string.income) + " " +
                         incomeName + " " + getString(R.string.successful_added_2),
