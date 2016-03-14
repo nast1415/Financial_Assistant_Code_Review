@@ -1,6 +1,5 @@
 package ru.spbau.mit.starlab.financialassistant.fragments;
 
-import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -20,11 +19,10 @@ import java.text.ParseException;
 import java.util.Date;
 
 import ru.spbau.mit.starlab.financialassistant.DataBaseHelper;
-import ru.spbau.mit.starlab.financialassistant.MainActivity;
+
 import ru.spbau.mit.starlab.financialassistant.R;
 
 public class ExpensesFragment extends Fragment implements View.OnClickListener {
-    private InformationFragment informationFragment;
     String expenseCategory;
     String expenseName;
     String expenseSum;
@@ -93,7 +91,6 @@ public class ExpensesFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
-
         if (myDate.compareTo(curDate) > 0) {
             Toast.makeText(getActivity(),
                     R.string.end_after_current_date_error,
@@ -111,7 +108,8 @@ public class ExpensesFragment extends Fragment implements View.OnClickListener {
 
         DataBaseHelper.addDataToExpenses(finRef, expenseCategory, expenseName, expenseSum,
                 expenseComment, expenseDate, expenseAddTime);
-        DataBaseHelper.addDataToLastActions(finRef, "Трата", expenseName, expenseSum);
+        DataBaseHelper.addDataToLastActions(finRef, getString(R.string.expense),
+                expenseName, expenseSum);
 
 
         Toast.makeText(getActivity(), getString(R.string.expense) + " " +
@@ -119,7 +117,7 @@ public class ExpensesFragment extends Fragment implements View.OnClickListener {
                 Toast.LENGTH_SHORT).show();
 
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.container, informationFragment);
+        fragmentTransaction.replace(R.id.container, new InformationFragment());
         fragmentTransaction.commit();
 
         DrawerLayout drawer1 = (DrawerLayout) v.findViewById(R.id.drawer_layout);
