@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity
         return myDate;
     }
 
-    public void checkPeriods(Date start, Date end) {
+    boolean checkPeriods(Date start, Date end) {
         Date curDate = new Date();
 
         if (start == null || end == null) {
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity
                     getString(R.string.empty_fields_error),
                     Toast.LENGTH_SHORT);
             toast.show();
-            return;
+            return false;
         }
 
         if (end.compareTo(start) < 0) {
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity
                     getString(R.string.order_of_periods_error),
                     Toast.LENGTH_SHORT);
             toast.show();
-            return;
+            return false;
         }
 
         if (end.compareTo(curDate) > 0) {
@@ -103,7 +103,9 @@ public class MainActivity extends AppCompatActivity
                     getString(R.string.end_after_current_date_error),
                     Toast.LENGTH_SHORT);
             toast.show();
+            return false;
         }
+        return true;
     }
 
     //Function for statistics
@@ -131,7 +133,9 @@ public class MainActivity extends AppCompatActivity
             args.putString("dateBegin", startPeriod);
             args.putString("dateEnd", endPeriod);
 
-            checkPeriods(start, end);
+            if (!checkPeriods(start, end)) {
+                return;
+            }
         }
         fragment.setArguments(args);
         fragment.show(getFragmentManager(), "showStatistics");
@@ -271,7 +275,9 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        checkPeriods(start, end);
+        if (!checkPeriods(start, end)) {
+            return;
+        }
 
         if (regExpName.equals("") || regExpCategory.equals("") || regExpSum.equals("")
                 || regExpStartPeriod.equals("") || regExpEndPeriod.equals("")) {
@@ -330,7 +336,9 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        checkPeriods(start, end);
+        if (!checkPeriods(start, end)) {
+            return;
+        }
 
 
         if (regIncName.equals("") || regIncSum.equals("")
@@ -393,7 +401,9 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        checkPeriods(start, end);
+        if (!checkPeriods(start, end)) {
+            return;
+        }
 
 
         if (creditName.equals("") || creditPercent.equals("") || creditDeposit.equals("")
