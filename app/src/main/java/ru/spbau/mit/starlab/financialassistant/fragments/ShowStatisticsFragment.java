@@ -208,7 +208,7 @@ public class ShowStatisticsFragment extends DialogFragment {
         LineDataSet dataSet = new LineDataSet(values, name);
         dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 
-        ArrayList<LineDataSet> dataSets = new ArrayList<>();
+        List<LineDataSet> dataSets = new ArrayList<>();
         dataSets.add(dataSet);
 
         LineData data = new LineData(xValues, dataSets);

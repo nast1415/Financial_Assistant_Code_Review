@@ -55,8 +55,6 @@ public class DataBaseHelper {
         public LastActions() {
         }
 
-        ;
-
         public double getSumLA() {
             return sumLA;
         }
@@ -68,7 +66,6 @@ public class DataBaseHelper {
         public String getCategoryLA() {
             return categoryLA;
         }
-
     }
 
     public static void addDataToExpenses(Firebase ref, String category, String expenseName,
