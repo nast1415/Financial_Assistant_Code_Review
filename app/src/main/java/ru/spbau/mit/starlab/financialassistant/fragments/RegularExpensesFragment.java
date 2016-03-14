@@ -28,7 +28,8 @@ public class RegularExpensesFragment extends Fragment implements View.OnClickLis
     AuthData authData = ref.getAuth();
     String uid = authData.getUid();
 
-    Firebase financialAssistanceDataBaseRef = new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
+    Firebase financialAssistanceDataBaseRef =
+            new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
 
     public RegularExpensesFragment() {
         // Required empty public constructor
@@ -38,7 +39,8 @@ public class RegularExpensesFragment extends Fragment implements View.OnClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View regularExpense = inflater.inflate(R.layout.fragment_regular_expenses, container, false);
+        View regularExpense = inflater.inflate(R.layout.fragment_regular_expenses,
+                container, false);
 
         Button btnAddRegExpense = (Button) regularExpense.findViewById(R.id.btnAddRegExpence);
         btnAddRegExpense.setOnClickListener(this);
@@ -93,19 +95,21 @@ public class RegularExpensesFragment extends Fragment implements View.OnClickLis
                 break;
         }
 
-        if (regularExpenseName.equals("") || regularExpenseCategory.equals("") || regularExpenseSum.equals("")
-                || regularExpenseStartPeriod.equals("") || regularExpenseEndPeriod.equals("")) {
+        if (regularExpenseName.equals("") || regularExpenseCategory.equals("")
+                || regularExpenseSum.equals("") || regularExpenseStartPeriod.equals("")
+                || regularExpenseEndPeriod.equals("")) {
             Toast.makeText(getActivity(),
                     getString(R.string.empty_data_error),
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
-        DataBaseHelper.addDataToRegularExpenses(financialAssistanceDataBaseRef, regularExpenseStartPeriod, regularExpenseEndPeriod,
+        DataBaseHelper.addDataToRegularExpenses(financialAssistanceDataBaseRef,
+                regularExpenseStartPeriod, regularExpenseEndPeriod,
                 regularExpenseCategory, regularExpenseName, regularExpenseSum,
                 regularExpenseComment, regularExpenseAddTime);
-        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseRef, getString(R.string.regExpense), regularExpenseName,
-                regularExpenseSum);
+        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseRef, getString(R.string.regExpense),
+                regularExpenseName, regularExpenseSum);
 
         Toast.makeText(getActivity(),
                 getString(R.string.regExpense) + " " + regularExpenseName + " "

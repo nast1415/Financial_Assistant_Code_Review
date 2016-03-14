@@ -91,8 +91,8 @@ public class RegularIncomesFragment extends Fragment implements View.OnClickList
                 break;
         }
 
-        if (regularIncomeName.equals("") || regularIncomeSum.equals("") || regularIncomeStartPeriod.equals("")
-                || regularIncomeEndPeriod.equals("")) {
+        if (regularIncomeName.equals("") || regularIncomeSum.equals("")
+                || regularIncomeStartPeriod.equals("") || regularIncomeEndPeriod.equals("")) {
             Toast.makeText(getActivity(),
                     getString(R.string.empty_data_error),
                     Toast.LENGTH_SHORT).show();
@@ -100,8 +100,8 @@ public class RegularIncomesFragment extends Fragment implements View.OnClickList
         }
 
         DataBaseHelper.addDataToRegularIncome(financialAssistanceDataBaseRef,
-                regularIncomeStartPeriod, regularIncomeEndPeriod, regularIncomeName, regularIncomeSum,
-                regularIncomeComment, regularIncomeAddTime);
+                regularIncomeStartPeriod, regularIncomeEndPeriod, regularIncomeName,
+                regularIncomeSum, regularIncomeComment, regularIncomeAddTime);
         DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseRef,
                 getString(R.string.regIncome), regularIncomeName, regularIncomeSum);
 
