@@ -1,8 +1,6 @@
 package ru.spbau.mit.starlab.financialassistant.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,32 +11,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.AuthData;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
-import ru.spbau.mit.starlab.financialassistant.DataBaseHelper;
 import ru.spbau.mit.starlab.financialassistant.EditActionActivity;
 import ru.spbau.mit.starlab.financialassistant.R;
-import ru.spbau.mit.starlab.financialassistant.multicolumnlistview.ListViewAdapter;
-
-import static ru.spbau.mit.starlab.financialassistant.multicolumnlistview.Constants.FIRST_COLUMN;
-import static ru.spbau.mit.starlab.financialassistant.multicolumnlistview.Constants.SECOND_COLUMN;
-import static ru.spbau.mit.starlab.financialassistant.multicolumnlistview.Constants.THIRD_COLUMN;
-
 
 public class RecentActionsFragment extends Fragment {
-    public ArrayList<HashMap<String, String>> recentActionsList;
-    public ListView lv;
-
-    private ProgressDialog pDialog;
+    public ListView listView;
 
     public RecentActionsFragment() {
         // Required empty public constructor
@@ -48,10 +25,10 @@ public class RecentActionsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View ll = inflater.inflate(R.layout.fragment_recent_actions, container, false);
-        lv = (ListView) ll.findViewById(R.id.listView1);
-        new ActionsLoader().execute();
+        listView = (ListView) ll.findViewById(R.id.listView1);
+        new ActionsLoader(listView, getActivity()).execute();
 
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
@@ -73,75 +50,5 @@ public class RecentActionsFragment extends Fragment {
         });
 
         return ll;
-    }
-
-    class ActionsLoader extends AsyncTask<Void, Void, Boolean> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            recentActionsList = new ArrayList<>();
-            pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage(getString(R.string.loading_actions));
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        protected Boolean doInBackground(Void... args) {
-            Firebase finRef = new Firebase("https://luminous-heat-4027.firebaseio.com/");
-            AuthData authData = finRef.getAuth();
-            String uid = authData.getUid();
-
-            Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid
-                    + "/LastActions");
-            final CountDownLatch done = new CountDownLatch(1);
-            // Attach an listener to read the data at our last actions
-            ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    for (DataSnapshot actionSnapshot : snapshot.getChildren()) {
-                        DataBaseHelper.LastActions action = actionSnapshot.getValue(
-                                DataBaseHelper.LastActions.class);
-
-                        HashMap<String, String> temp = new HashMap<>();
-                        temp.put(FIRST_COLUMN, action.getCategoryLA());
-                        temp.put(SECOND_COLUMN, action.getNameLA());
-                        temp.put(THIRD_COLUMN, String.valueOf(action.getSumLA()));
-                        recentActionsList.add(temp);
-                    }
-                    done.countDown();
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    done.countDown();
-                }
-            });
-
-            try {
-                if (!done.await(2, TimeUnit.SECONDS)) {
-                    return false;
-                }
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            return true;
-        }
-
-        protected void onPostExecute(final Boolean success) {
-            pDialog.dismiss();
-            getActivity().runOnUiThread(new Runnable() {
-                public void run() {
-                    ListViewAdapter adapter = new ListViewAdapter(getActivity(), recentActionsList);
-                    lv.setAdapter(adapter);
-                }
-            });
-            if (!success) {
-                Toast.makeText(getActivity().getApplicationContext(),
-                        R.string.message_error, Toast.LENGTH_SHORT).show();
-            }
-        }
-
     }
 }
