@@ -24,13 +24,8 @@ import ru.spbau.mit.starlab.financialassistant.MainActivity;
 import ru.spbau.mit.starlab.financialassistant.R;
 
 public class ExpensesFragment extends Fragment implements View.OnClickListener {
-    private InformationFragment informationFragment;
-    String expenseCategory;
-    String expenseName;
-    String expenseSum;
-    String expenseComment;
-    String expenseDate;
-    String expenseAddTime;
+    private InformationFragment informationFragment = new InformationFragment();
+    TextView category, name, sum, comment, date;
 
     //The data for our app will be stored at this Firebase reference
     Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/");
@@ -52,47 +47,35 @@ public class ExpensesFragment extends Fragment implements View.OnClickListener {
         Button btnAddExpense = (Button) expense.findViewById(R.id.btnAddExpense);
         btnAddExpense.setOnClickListener(this);
 
-        TextView category = (TextView) expense.findViewById(R.id.eTxtExpCategory);
-        expenseCategory = category.getText().toString();
-        System.err.println("Категория: " + expenseCategory);
-
-        TextView name = (TextView) expense.findViewById(R.id.eTxtExpName);
-        expenseName = name.getText().toString();
-        System.err.println("Имя " + expenseName);
-
-        TextView sum = (TextView) expense.findViewById(R.id.eTxtExpSum);
-        expenseSum = sum.getText().toString();
-
-        TextView comment = (TextView) expense.findViewById(R.id.eTxtExpComment);
-        expenseComment = comment.getText().toString();
-
-        TextView date = (TextView) expense.findViewById(R.id.eTxtExpDate);
-        expenseDate = date.getText().toString();
-        System.err.println("Дата " + expenseDate + "вот такая");
-
-        Date curDate = new Date();
-        expenseAddTime = curDate.toString();
+        category = (TextView) expense.findViewById(R.id.eTxtExpCategory);
+        name = (TextView) expense.findViewById(R.id.eTxtExpName);
+        sum = (TextView) expense.findViewById(R.id.eTxtExpSum);
+        comment = (TextView) expense.findViewById(R.id.eTxtExpComment);
+        date = (TextView) expense.findViewById(R.id.eTxtExpDate);
 
         return expense;
     }
 
     @Override
     public void onClick(View v) {
-        Date curDate = new Date();
+        String expenseCategory = category.getText().toString();
+        String expenseName = name.getText().toString();
+        String expenseSum = sum.getText().toString();
+        String expenseComment = comment.getText().toString();
+        String expenseDate = date.getText().toString();
 
-        Date myDate = null;
-        try {
-            myDate = CalculationsForStatistics.sdf.parse(expenseDate);
-        } catch (ParseException e) {
+        Date curDate = new Date();
+        String expenseAddTime = curDate.toString();
+
+
+        Date myDate = MainActivity.parseDate(expenseDate);
+
+        if (myDate == null) {
             Toast.makeText(getActivity(),
                     getString(R.string.format_error),
                     Toast.LENGTH_SHORT).show();
-        }
-
-        if (myDate == null) {
             return;
         }
-
 
         if (myDate.compareTo(curDate) > 0) {
             Toast.makeText(getActivity(),
@@ -122,12 +105,5 @@ public class ExpensesFragment extends Fragment implements View.OnClickListener {
         fragmentTransaction.replace(R.id.container, informationFragment);
         fragmentTransaction.commit();
 
-        DrawerLayout drawer1 = (DrawerLayout) v.findViewById(R.id.drawer_layout);
-        drawer1.closeDrawer(GravityCompat.START);
     }
-
-
 }
-
-
-

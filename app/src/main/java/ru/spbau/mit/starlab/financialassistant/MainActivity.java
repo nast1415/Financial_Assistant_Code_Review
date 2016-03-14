@@ -65,43 +65,31 @@ public class MainActivity extends AppCompatActivity
         newFragment.show(getFragmentManager(), "datePicker");
     }
 
-    public Date parseDate(String date) {
+    public static Date parseDate(String date) {
         Date myDate;
         try {
             myDate = CalculationsForStatistics.sdf.parse(date);
         } catch (ParseException e) {
-            Toast.makeText(getApplicationContext(),
-                    getString(R.string.format_error),
-                    Toast.LENGTH_SHORT).show();
             return null;
         }
         return myDate;
     }
 
-    boolean checkPeriods(Date start, Date end) {
+    public static int checkPeriods(Date start, Date end) {
         Date curDate = new Date();
 
         if (start == null || end == null) {
-            Toast.makeText(getApplicationContext(),
-                    getString(R.string.empty_fields_error),
-                    Toast.LENGTH_SHORT).show();
-            return false;
+            return 1;
         }
 
         if (end.compareTo(start) < 0) {
-            Toast.makeText(getApplicationContext(),
-                    getString(R.string.order_of_periods_error),
-                    Toast.LENGTH_SHORT).show();
-            return false;
+            return 2;
         }
 
         if (end.compareTo(curDate) > 0) {
-            Toast.makeText(getApplicationContext(),
-                    getString(R.string.end_after_current_date_error),
-                    Toast.LENGTH_SHORT).show();
-            return false;
+            return 3;
         }
-        return true;
+        return 0;
     }
 
     //Function for statistics
@@ -128,7 +116,7 @@ public class MainActivity extends AppCompatActivity
             args.putString("dateBegin", startPeriod);
             args.putString("dateEnd", endPeriod);
 
-            if (!checkPeriods(start, end)) {
+            if (checkPeriods(start, end) != 0) {
                 return;
             }
         }
@@ -174,127 +162,8 @@ public class MainActivity extends AppCompatActivity
         Firebase.setAndroidContext(this);
     }
 
-        //Function, that add data from the ExpensesFragment to the Firebase DB
-    //public void addNewExpense(View v) {
 
-        // где-то ранее мы объявили фрагмент
-        //expensesFragment.addNewExpense(v);
-        /*//Get data from the view fields
-        TextView category = (TextView) findViewById(R.id.eTxtExpCategory);
-        String expenseCategory = category.getText().toString();
 
-        TextView name = (TextView) findViewById(R.id.eTxtExpName);
-        String expenseName = name.getText().toString();
-
-        TextView sum = (TextView) findViewById(R.id.eTxtExpSum);
-        String expenseSum = sum.getText().toString();
-
-        TextView comment = (TextView) findViewById(R.id.eTxtExpComment);
-        String expenseComment = comment.getText().toString();
-
-        TextView date = (TextView) findViewById(R.id.eTxtExpDate);
-        String expenseDate = date.getText().toString();
-
-        Date curDate = new Date();
-        String expenseAddTime = curDate.toString();
-
-        Date expDate = parseDate(expenseDate);
-        if (expDate == null) {
-            return;
-        }
-
-        if (expDate.compareTo(curDate) > 0) {
-            Toast.makeText(getApplicationContext(),
-                    R.string.end_after_current_date_error,
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (expenseName.equals("") || expenseCategory.equals("") || expenseSum.equals("")
-                || expenseDate.equals("")) {
-            Toast.makeText(getApplicationContext(),
-                    getString(R.string.empty_data_error),
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        DataBaseHelper.addDataToExpenses(finRef, expenseCategory, expenseName, expenseSum,
-                expenseComment, expenseDate, expenseAddTime);
-        DataBaseHelper.addDataToLastActions(finRef, "Трата", expenseName, expenseSum);
-
-        Toast.makeText(getApplicationContext(), getString(R.string.expense) + " " +
-                        expenseName + " " + getString(R.string.successful_added),
-                Toast.LENGTH_SHORT).show();
-
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.container, informationFragment);
-        fragmentTransaction.commit();
-
-        DrawerLayout drawer1 = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer1.closeDrawer(GravityCompat.START);
-  */
-  //  }
-
-    //Function, that add data from the RegularExpensesFragment to the Firebase DB
-    public void addNewRegExpense(View v) {
-        //Get data from the view fields
-        TextView startPeriod = (TextView) findViewById(R.id.eTxtRegExpStartPeriod);
-        String regExpStartPeriod = startPeriod.getText().toString();
-
-        TextView endPeriod = (TextView) findViewById(R.id.eTxtRegExpEndPeriod);
-        String regExpEndPeriod = endPeriod.getText().toString();
-
-        TextView category = (TextView) findViewById(R.id.eTxtRegExpCategory);
-        String regExpCategory = category.getText().toString();
-
-        TextView name = (TextView) findViewById(R.id.eTxtRegExpName);
-        String regExpName = name.getText().toString();
-
-        TextView sum = (TextView) findViewById(R.id.eTxtRegExpSum);
-        String regExpSum = sum.getText().toString();
-
-        TextView comment = (TextView) findViewById(R.id.eTxtRegExpComment);
-        String regExpComment = comment.getText().toString();
-
-        Date curDate = new Date();
-        String regExpAddTime = curDate.toString();
-
-        Date start = parseDate(regExpStartPeriod);
-        Date end = parseDate(regExpEndPeriod);
-        if (start == null || end == null) {
-            return;
-        }
-
-        if (!checkPeriods(start, end)) {
-            return;
-        }
-
-        if (regExpName.equals("") || regExpCategory.equals("") || regExpSum.equals("")
-                || regExpStartPeriod.equals("") || regExpEndPeriod.equals("")) {
-            Toast.makeText(getApplicationContext(),
-                    getString(R.string.empty_data_error),
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        DataBaseHelper.addDataToRegularExpenses(finRef, regExpStartPeriod, regExpEndPeriod,
-                regExpCategory, regExpName, regExpSum,
-                regExpComment, regExpAddTime);
-        DataBaseHelper.addDataToLastActions(finRef, getString(R.string.regExpense), regExpName,
-                regExpSum);
-
-        Toast.makeText(getApplicationContext(),
-                getString(R.string.regExpense) + " " + regExpName + " "
-                        + getString(R.string.successful_added),
-                Toast.LENGTH_SHORT).show();
-
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.container, informationFragment);
-        fragmentTransaction.commit();
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-    }
 
     public void addNewRegIncome(View v) {
         //Get data from the view fields
@@ -322,7 +191,7 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        if (!checkPeriods(start, end)) {
+        if (checkPeriods(start, end) != 0) {
             return;
         }
 
@@ -381,7 +250,7 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        if (!checkPeriods(start, end)) {
+        if (checkPeriods(start, end) != 0) {
             return;
         }
 
