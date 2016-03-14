@@ -3,26 +3,16 @@ package ru.spbau.mit.starlab.financialassistant;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentResolver;
 import android.content.CursorLoader;
-import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -33,27 +23,17 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.firebase.client.AuthData;
-import com.firebase.client.Config;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-
-import ru.spbau.mit.starlab.financialassistant.fragments.ExpensesFragment;
 
 public class SignInActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-    private UserLoginTask mAuthTask = null;
+    SignInTask mAuthTask = null;
 
-    // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    AutoCompleteTextView mEmailView;
+    EditText mPasswordView;
+    View mProgressView;
+    View mLoginFormView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +125,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new SignInTask(this, email, password);
             mAuthTask.execute((Void) null);
         }
     }
@@ -216,7 +196,6 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
     }
 
     private interface ProfileQuery {
@@ -228,98 +207,11 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         int ADDRESS = 0;
     }
 
-
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter = new ArrayAdapter<>(SignInActivity.this,
                 android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-        private final String mEmail;
-        private final String mPassword;
-        private boolean isAuthorize = true;
-        private FirebaseError error = null;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com");
-            final CountDownLatch done = new CountDownLatch(1);
-            ref.authWithPassword(mEmail, mPassword, new Firebase.AuthResultHandler() {
-                @Override
-                public void onAuthenticated(AuthData authData) {
-                    done.countDown();
-                }
-
-                @Override
-                public void onAuthenticationError(FirebaseError firebaseError) {
-                    error = firebaseError;
-                    isAuthorize = false;
-                    done.countDown();
-                }
-            });
-
-            try {
-                done.await();
-            } catch (InterruptedException e) {
-                return false;
-            }
-            return isAuthorize;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-
-                Intent myIntent = new Intent(SignInActivity.this, MainActivity.class);
-                SignInActivity.this.startActivity(myIntent);
-            } else {
-                if (error == null) {
-                    Toast.makeText(getApplicationContext(),
-                            getString(R.string.message_error), Toast.LENGTH_SHORT).show();
-                } else {
-                    switch (error.getCode()) {
-                        case FirebaseError.USER_DOES_NOT_EXIST:
-                            mEmailView.setError(getString(
-                                    R.string.error_incorrect_authorization));
-                            mEmailView.requestFocus();
-                            break;
-                        case FirebaseError.INVALID_PASSWORD:
-                            mPasswordView.setError(getString(R.string.error_incorrect_password));
-                            mPasswordView.requestFocus();
-                            break;
-                        case FirebaseError.NETWORK_ERROR:
-                            Toast.makeText(getApplicationContext(),
-                                    getString(R.string.error_network), Toast.LENGTH_SHORT).show();
-                            break;
-                        default:
-                            Toast.makeText(getApplicationContext(),
-                                    getString(R.string.message_error), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
     }
 }
