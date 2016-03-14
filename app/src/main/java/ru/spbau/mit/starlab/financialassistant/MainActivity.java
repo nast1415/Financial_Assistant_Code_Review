@@ -17,7 +17,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 
 import java.text.ParseException;
@@ -47,13 +46,6 @@ public class MainActivity extends AppCompatActivity
     private RegularExpensesFragment regularExpensesFragment;
     private RegularIncomesFragment regularIncomesFragment;
     private CreditsFragment creditsFragment;
-
-    //The data for our app will be stored at this Firebase reference
-    Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/");
-    AuthData authData = ref.getAuth();
-    String uid = authData.getUid();
-
-    Firebase finRef = new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
 
     //Function for our datePickerDialog
     public void showDatePickerDialog(View v) {

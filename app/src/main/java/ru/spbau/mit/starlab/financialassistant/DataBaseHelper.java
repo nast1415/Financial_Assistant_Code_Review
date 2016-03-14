@@ -8,6 +8,7 @@ import java.util.Map;
 
 //Class for creating queries to DB
 public class DataBaseHelper {
+
     //Class for Expenses deserialization
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Expense {
@@ -69,8 +70,8 @@ public class DataBaseHelper {
     }
 
     public static void addDataToExpenses(Firebase ref, String category, String expenseName,
-                                         String expenseSum, String expenseComment, String expenseDate,
-                                         String expenseAddTime) {
+                                         String expenseSum, String expenseComment,
+                                         String expenseDate, String expenseAddTime) {
 
         Firebase expRef = ref.child("Expenses");
         Firebase newExp = expRef.push();
@@ -86,8 +87,9 @@ public class DataBaseHelper {
 
     }
 
-    public static void addDataToIncomes(Firebase ref, String incomeName, String incomeSum, String incomeComment,
-                                        String incomeDate, String incomeAddTime) {
+    public static void addDataToIncomes(Firebase ref, String incomeName, String incomeSum,
+                                        String incomeComment, String incomeDate,
+                                        String incomeAddTime) {
 
         Firebase incRef = ref.child("Incomes");
         Firebase newInc = incRef.push();
@@ -135,8 +137,8 @@ public class DataBaseHelper {
     }
 
     public static void addDataToCredits(Firebase ref, String startPeriod, String endPeriod,
-                                              String name, String percent, String deposit,
-                                              String sum, String addTime) {
+                                        String name, String percent, String deposit,
+                                        String sum, String addTime) {
         Firebase creditRef = ref.child("Credits");
         Firebase newCreditRef = creditRef.push();
 
@@ -151,7 +153,8 @@ public class DataBaseHelper {
         newCreditRef.setValue(credit);
     }
 
-    public static void addDataToLastActions(Firebase ref, String category, String name, String sum) {
+    public static void addDataToLastActions(Firebase ref, String category, String name,
+                                            String sum) {
         Firebase lastActionsRef = ref.child("LastActions");
         Firebase newAction = lastActionsRef.push();
 
