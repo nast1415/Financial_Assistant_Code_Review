@@ -28,7 +28,8 @@ public class RegularIncomesFragment extends Fragment implements View.OnClickList
     AuthData authData = ref.getAuth();
     String uid = authData.getUid();
 
-    Firebase financialAssistanceDataBaseRef = new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
+    Firebase financialAssistanceDataBaseRef = 
+            new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
 
     public RegularIncomesFragment() {
         // Required empty public constructor
@@ -38,33 +39,33 @@ public class RegularIncomesFragment extends Fragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View regIncome = inflater.inflate(R.layout.fragment_regular_incomes, container, false);
+        View regularIncome = inflater.inflate(R.layout.fragment_regular_incomes, container, false);
 
-        Button btnAddRegIncome = (Button) regIncome.findViewById(R.id.btnAddRegIncome);
+        Button btnAddRegIncome = (Button) regularIncome.findViewById(R.id.btnAddRegIncome);
         btnAddRegIncome.setOnClickListener(this);
 
-        startPeriod = (TextView) regIncome.findViewById(R.id.eTxtRegIncStartPeriod);
-        endPeriod = (TextView) regIncome.findViewById(R.id.eTxtRegIncEndPeriod);
-        name = (TextView) regIncome.findViewById(R.id.eTxtRegIncName);
-        sum = (TextView) regIncome.findViewById(R.id.eTxtRegIncSum);
-        comment = (TextView) regIncome.findViewById(R.id.eTxtRegIncComment);
+        startPeriod = (TextView) regularIncome.findViewById(R.id.eTxtRegIncStartPeriod);
+        endPeriod = (TextView) regularIncome.findViewById(R.id.eTxtRegIncEndPeriod);
+        name = (TextView) regularIncome.findViewById(R.id.eTxtRegIncName);
+        sum = (TextView) regularIncome.findViewById(R.id.eTxtRegIncSum);
+        comment = (TextView) regularIncome.findViewById(R.id.eTxtRegIncComment);
 
-        return regIncome;
+        return regularIncome;
     }
 
     @Override
     public void onClick(View v) {
-        String regIncStartPeriod = startPeriod.getText().toString();
-        String regIncEndPeriod = endPeriod.getText().toString();
-        String regIncName = name.getText().toString();
-        String regIncSum = sum.getText().toString();
-        String regIncComment = comment.getText().toString();
+        String regularIncomeStartPeriod = startPeriod.getText().toString();
+        String regularIncomeEndPeriod = endPeriod.getText().toString();
+        String regularIncomeName = name.getText().toString();
+        String regularIncomeSum = sum.getText().toString();
+        String regularIncomeComment = comment.getText().toString();
 
         Date curDate = new Date();
-        String regIncAddTime = curDate.toString();
+        String regularIncomeAddTime = curDate.toString();
 
-        Date start = MainActivity.parseDate(regIncStartPeriod);
-        Date end = MainActivity.parseDate(regIncEndPeriod);
+        Date start = MainActivity.parseDate(regularIncomeStartPeriod);
+        Date end = MainActivity.parseDate(regularIncomeEndPeriod);
 
         if (start == null || end == null) {
             Toast.makeText(getActivity(),
@@ -90,22 +91,22 @@ public class RegularIncomesFragment extends Fragment implements View.OnClickList
                 break;
         }
 
-        if (regIncName.equals("") || regIncSum.equals("") || regIncStartPeriod.equals("")
-                || regIncEndPeriod.equals("")) {
+        if (regularIncomeName.equals("") || regularIncomeSum.equals("") || regularIncomeStartPeriod.equals("")
+                || regularIncomeEndPeriod.equals("")) {
             Toast.makeText(getActivity(),
                     getString(R.string.empty_data_error),
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
-        DataBaseHelper.addDataToRegularIncome(financialAssistanceDataBaseRef, regIncStartPeriod, regIncEndPeriod,
-                regIncName, regIncSum,
-                regIncComment, regIncAddTime);
-        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseRef, getString(R.string.regIncome), regIncName,
-                regIncSum);
+        DataBaseHelper.addDataToRegularIncome(financialAssistanceDataBaseRef,
+                regularIncomeStartPeriod, regularIncomeEndPeriod, regularIncomeName, regularIncomeSum,
+                regularIncomeComment, regularIncomeAddTime);
+        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseRef,
+                getString(R.string.regIncome), regularIncomeName, regularIncomeSum);
 
         Toast.makeText(getActivity(),
-                getString(R.string.regIncome) + " " + regIncName + " "
+                getString(R.string.regIncome) + " " + regularIncomeName + " "
                         + getString(R.string.successful_added_2),
                 Toast.LENGTH_SHORT).show();
 

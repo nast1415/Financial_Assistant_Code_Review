@@ -38,36 +38,36 @@ public class RegularExpensesFragment extends Fragment implements View.OnClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View regExpense = inflater.inflate(R.layout.fragment_regular_expenses, container, false);
+        View regularExpense = inflater.inflate(R.layout.fragment_regular_expenses, container, false);
 
-        Button btnAddRegExpense = (Button) regExpense.findViewById(R.id.btnAddRegExpence);
+        Button btnAddRegExpense = (Button) regularExpense.findViewById(R.id.btnAddRegExpence);
         btnAddRegExpense.setOnClickListener(this);
 
-        startPeriod = (TextView) regExpense.findViewById(R.id.eTxtRegExpStartPeriod);
-        endPeriod = (TextView) regExpense.findViewById(R.id.eTxtRegExpEndPeriod);
-        category = (TextView) regExpense.findViewById(R.id.eTxtRegExpCategory);
-        name = (TextView) regExpense.findViewById(R.id.eTxtRegExpName);
-        sum = (TextView) regExpense.findViewById(R.id.eTxtRegExpSum);
-        comment = (TextView) regExpense.findViewById(R.id.eTxtRegExpComment);
+        startPeriod = (TextView) regularExpense.findViewById(R.id.eTxtRegExpStartPeriod);
+        endPeriod = (TextView) regularExpense.findViewById(R.id.eTxtRegExpEndPeriod);
+        category = (TextView) regularExpense.findViewById(R.id.eTxtRegExpCategory);
+        name = (TextView) regularExpense.findViewById(R.id.eTxtRegExpName);
+        sum = (TextView) regularExpense.findViewById(R.id.eTxtRegExpSum);
+        comment = (TextView) regularExpense.findViewById(R.id.eTxtRegExpComment);
 
-        return regExpense;
+        return regularExpense;
     }
 
 
     @Override
     public void onClick(View v) {
-        String regExpStartPeriod = startPeriod.getText().toString();
-        String regExpEndPeriod = endPeriod.getText().toString();
-        String regExpCategory = category.getText().toString();
-        String regExpName = name.getText().toString();
-        String regExpSum = sum.getText().toString();
-        String regExpComment = comment.getText().toString();
+        String regularExpenseStartPeriod = startPeriod.getText().toString();
+        String regularExpenseEndPeriod = endPeriod.getText().toString();
+        String regularExpenseCategory = category.getText().toString();
+        String regularExpenseName = name.getText().toString();
+        String regularExpenseSum = sum.getText().toString();
+        String regularExpenseComment = comment.getText().toString();
 
         Date curDate = new Date();
-        String regExpAddTime = curDate.toString();
+        String regularExpenseAddTime = curDate.toString();
 
-        Date start = MainActivity.parseDate(regExpStartPeriod);
-        Date end = MainActivity.parseDate(regExpEndPeriod);
+        Date start = MainActivity.parseDate(regularExpenseStartPeriod);
+        Date end = MainActivity.parseDate(regularExpenseEndPeriod);
 
         if (start == null || end == null) {
             Toast.makeText(getActivity(),
@@ -93,22 +93,22 @@ public class RegularExpensesFragment extends Fragment implements View.OnClickLis
                 break;
         }
 
-        if (regExpName.equals("") || regExpCategory.equals("") || regExpSum.equals("")
-                || regExpStartPeriod.equals("") || regExpEndPeriod.equals("")) {
+        if (regularExpenseName.equals("") || regularExpenseCategory.equals("") || regularExpenseSum.equals("")
+                || regularExpenseStartPeriod.equals("") || regularExpenseEndPeriod.equals("")) {
             Toast.makeText(getActivity(),
                     getString(R.string.empty_data_error),
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
-        DataBaseHelper.addDataToRegularExpenses(financialAssistanceDataBaseRef, regExpStartPeriod, regExpEndPeriod,
-                regExpCategory, regExpName, regExpSum,
-                regExpComment, regExpAddTime);
-        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseRef, getString(R.string.regExpense), regExpName,
-                regExpSum);
+        DataBaseHelper.addDataToRegularExpenses(financialAssistanceDataBaseRef, regularExpenseStartPeriod, regularExpenseEndPeriod,
+                regularExpenseCategory, regularExpenseName, regularExpenseSum,
+                regularExpenseComment, regularExpenseAddTime);
+        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseRef, getString(R.string.regExpense), regularExpenseName,
+                regularExpenseSum);
 
         Toast.makeText(getActivity(),
-                getString(R.string.regExpense) + " " + regExpName + " "
+                getString(R.string.regExpense) + " " + regularExpenseName + " "
                         + getString(R.string.successful_added),
                 Toast.LENGTH_SHORT).show();
 
