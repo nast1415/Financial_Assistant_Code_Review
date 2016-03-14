@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity
 
     Firebase finRef = new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
 
-
     //Function for our datePickerDialog
     public void showDatePickerDialog(View v) {
         DialogFragment newFragment =
@@ -70,10 +69,9 @@ public class MainActivity extends AppCompatActivity
         try {
             myDate = CalculationsForStatistics.sdf.parse(date);
         } catch (ParseException e) {
-            Toast toast = Toast.makeText(getApplicationContext(),
+            Toast.makeText(getApplicationContext(),
                     getString(R.string.format_error),
-                    Toast.LENGTH_SHORT);
-            toast.show();
+                    Toast.LENGTH_SHORT).show();
             return null;
         }
         return myDate;
@@ -83,26 +81,23 @@ public class MainActivity extends AppCompatActivity
         Date curDate = new Date();
 
         if (start == null || end == null) {
-            Toast toast = Toast.makeText(getApplicationContext(),
+            Toast.makeText(getApplicationContext(),
                     getString(R.string.empty_fields_error),
-                    Toast.LENGTH_SHORT);
-            toast.show();
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (end.compareTo(start) < 0) {
-            Toast toast = Toast.makeText(getApplicationContext(),
+            Toast.makeText(getApplicationContext(),
                     getString(R.string.order_of_periods_error),
-                    Toast.LENGTH_SHORT);
-            toast.show();
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (end.compareTo(curDate) > 0) {
-            Toast toast = Toast.makeText(getApplicationContext(),
+            Toast.makeText(getApplicationContext(),
                     getString(R.string.end_after_current_date_error),
-                    Toast.LENGTH_SHORT);
-            toast.show();
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -138,7 +133,6 @@ public class MainActivity extends AppCompatActivity
         }
         fragment.setArguments(args);
         fragment.show(getFragmentManager(), "showStatistics");
-
     }
 
     @Override
@@ -158,7 +152,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
         expensesFragment = new ExpensesFragment();
         incomesFragment = new IncomesFragment();
         statisticsFragment = new StatisticsFragment();
@@ -167,7 +160,6 @@ public class MainActivity extends AppCompatActivity
         regularExpensesFragment = new RegularExpensesFragment();
         regularIncomesFragment = new RegularIncomesFragment();
         creditsFragment = new CreditsFragment();
-
 
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.container, informationFragment);
@@ -183,8 +175,6 @@ public class MainActivity extends AppCompatActivity
 
     //Function, that add data from the ExpensesFragment to the Firebase DB
     public void addNewExpense(View v) {
-        boolean cancel = false;
-
         //Get data from the view fields
         TextView category = (TextView) findViewById(R.id.eTxtExpCategory);
         String expenseCategory = category.getText().toString();
@@ -218,35 +208,30 @@ public class MainActivity extends AppCompatActivity
 
         if (expenseName.equals("") || expenseCategory.equals("") || expenseSum.equals("")
                 || expenseDate.equals("")) {
-            cancel = true;
-        }
-        if (cancel) {
             Toast.makeText(getApplicationContext(),
                     getString(R.string.empty_data_error),
                     Toast.LENGTH_SHORT).show();
-        } else {
-            DataBaseHelper.addDataToExpenses(finRef, expenseCategory, expenseName, expenseSum,
-                    expenseComment, expenseDate, expenseAddTime);
-            DataBaseHelper.addDataToLastActions(finRef, "Трата", expenseName, expenseSum);
-
-            Toast.makeText(getApplicationContext(), getString(R.string.expense) + " " +
-                            expenseName + " " + getString(R.string.successful_added),
-                    Toast.LENGTH_SHORT).show();
-
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.container, informationFragment);
-            fragmentTransaction.commit();
-
-            DrawerLayout drawer1 = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer1.closeDrawer(GravityCompat.START);
+            return;
         }
 
+        DataBaseHelper.addDataToExpenses(finRef, expenseCategory, expenseName, expenseSum,
+                expenseComment, expenseDate, expenseAddTime);
+        DataBaseHelper.addDataToLastActions(finRef, "Трата", expenseName, expenseSum);
+
+        Toast.makeText(getApplicationContext(), getString(R.string.expense) + " " +
+                        expenseName + " " + getString(R.string.successful_added),
+                Toast.LENGTH_SHORT).show();
+
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.container, informationFragment);
+        fragmentTransaction.commit();
+
+        DrawerLayout drawer1 = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer1.closeDrawer(GravityCompat.START);
     }
 
     //Function, that add data from the RegularExpensesFragment to the Firebase DB
     public void addNewRegExpense(View v) {
-        boolean cancel = false;
-
         //Get data from the view fields
         TextView startPeriod = (TextView) findViewById(R.id.eTxtRegExpStartPeriod);
         String regExpStartPeriod = startPeriod.getText().toString();
@@ -281,36 +266,32 @@ public class MainActivity extends AppCompatActivity
 
         if (regExpName.equals("") || regExpCategory.equals("") || regExpSum.equals("")
                 || regExpStartPeriod.equals("") || regExpEndPeriod.equals("")) {
-            cancel = true;
-        }
-        if (cancel) {
             Toast.makeText(getApplicationContext(),
                     getString(R.string.empty_data_error),
                     Toast.LENGTH_SHORT).show();
-        } else {
-            DataBaseHelper.addDataToRegularExpenses(finRef, regExpStartPeriod, regExpEndPeriod,
-                    regExpCategory, regExpName, regExpSum,
-                    regExpComment, regExpAddTime);
-            DataBaseHelper.addDataToLastActions(finRef, getString(R.string.regExpense), regExpName,
-                    regExpSum);
-
-            Toast.makeText(getApplicationContext(),
-                    getString(R.string.regExpense) + " " + regExpName + " "
-                            + getString(R.string.successful_added),
-                    Toast.LENGTH_SHORT).show();
-
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.container, informationFragment);
-            fragmentTransaction.commit();
-
-            DrawerLayout drawer1 = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer1.closeDrawer(GravityCompat.START);
+            return;
         }
+
+        DataBaseHelper.addDataToRegularExpenses(finRef, regExpStartPeriod, regExpEndPeriod,
+                regExpCategory, regExpName, regExpSum,
+                regExpComment, regExpAddTime);
+        DataBaseHelper.addDataToLastActions(finRef, getString(R.string.regExpense), regExpName,
+                regExpSum);
+
+        Toast.makeText(getApplicationContext(),
+                getString(R.string.regExpense) + " " + regExpName + " "
+                        + getString(R.string.successful_added),
+                Toast.LENGTH_SHORT).show();
+
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.container, informationFragment);
+        fragmentTransaction.commit();
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
     }
 
     public void addNewRegIncome(View v) {
-        boolean cancel = false;
-
         //Get data from the view fields
         TextView startPeriod = (TextView) findViewById(R.id.eTxtRegIncStartPeriod);
         String regIncStartPeriod = startPeriod.getText().toString();
@@ -340,39 +321,33 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-
         if (regIncName.equals("") || regIncSum.equals("")
                 || regIncStartPeriod.equals("") || regIncEndPeriod.equals("")) {
-            cancel = true;
-        }
-        if (cancel) {
-            Toast.makeText(getApplicationContext(),
-                    getString(R.string.empty_data_error),
+            Toast.makeText(getApplicationContext(), R.string.empty_data_error,
                     Toast.LENGTH_SHORT).show();
-        } else {
-            DataBaseHelper.addDataToRegularIncome(finRef, regIncStartPeriod, regIncEndPeriod,
-                    regIncName, regIncSum,
-                    regIncComment, regIncAddTime);
-            DataBaseHelper.addDataToLastActions(finRef, getString(R.string.regIncome), regIncName,
-                    regIncSum);
-
-            Toast.makeText(getApplicationContext(),
-                    getString(R.string.regIncome) + " " + regIncName + " "
-                            + getString(R.string.successful_added),
-                    Toast.LENGTH_SHORT).show();
-
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.container, informationFragment);
-            fragmentTransaction.commit();
-
-            DrawerLayout drawer1 = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer1.closeDrawer(GravityCompat.START);
+            return;
         }
+
+        DataBaseHelper.addDataToRegularIncome(finRef, regIncStartPeriod, regIncEndPeriod,
+                regIncName, regIncSum,
+                regIncComment, regIncAddTime);
+        DataBaseHelper.addDataToLastActions(finRef, getString(R.string.regIncome), regIncName,
+                regIncSum);
+
+        Toast.makeText(getApplicationContext(),
+                getString(R.string.regIncome) + " " + regIncName + " "
+                        + getString(R.string.successful_added),
+                Toast.LENGTH_SHORT).show();
+
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.container, informationFragment);
+        fragmentTransaction.commit();
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
     }
 
     public void addNewCredit(View v) {
-        boolean cancel = false;
-
         //Get data from the view fields
         TextView startPeriod = (TextView) findViewById(R.id.eTxtCreditStartPeriod);
         String creditStartPeriod = startPeriod.getText().toString();
@@ -405,40 +380,33 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-
         if (creditName.equals("") || creditPercent.equals("") || creditDeposit.equals("")
                 || creditSum.equals("") || creditStartPeriod.equals("")
                 || creditEndPeriod.equals("")) {
-            cancel = true;
-        }
-        if (cancel) {
-            Toast.makeText(getApplicationContext(),
-                    getString(R.string.empty_data_error),
+            Toast.makeText(getApplicationContext(), R.string.empty_data_error,
                     Toast.LENGTH_SHORT).show();
-        } else {
-            DataBaseHelper.addDataToCredits(finRef, creditStartPeriod, creditEndPeriod,
-                    creditName, creditPercent, creditDeposit, creditSum, creditAddTime);
-            DataBaseHelper.addDataToLastActions(finRef, getString(R.string.credit), creditName,
-                    creditSum);
-
-            Toast.makeText(getApplicationContext(),
-                    getString(R.string.credit) + " " + creditName + " "
-                            + getString(R.string.successful_added),
-                    Toast.LENGTH_SHORT).show();
-
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.container, informationFragment);
-            fragmentTransaction.commit();
-
-            DrawerLayout drawer1 = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer1.closeDrawer(GravityCompat.START);
+            return;
         }
+
+        DataBaseHelper.addDataToCredits(finRef, creditStartPeriod, creditEndPeriod,
+                creditName, creditPercent, creditDeposit, creditSum, creditAddTime);
+        DataBaseHelper.addDataToLastActions(finRef, getString(R.string.credit), creditName,
+                creditSum);
+
+        Toast.makeText(getApplicationContext(), getString(R.string.credit) + " " +
+                        creditName + " " + getString(R.string.successful_added),
+                Toast.LENGTH_SHORT).show();
+
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.container, informationFragment);
+        fragmentTransaction.commit();
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
     }
 
     //Function, that add data from the IncomesFragment to the Firebase DB
     public void addNewIncome(View v) {
-        boolean cancel = false;
-
         //Get data from the view fields
         TextView name = (TextView) findViewById(R.id.eTxtIncName);
         String incomeName = name.getText().toString();
@@ -461,36 +429,32 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (incDate.compareTo(curDate) > 0) {
-            Toast.makeText(getApplicationContext(),
-                    R.string.end_after_current_date_error,
+            Toast.makeText(getApplicationContext(), R.string.end_after_current_date_error,
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (incomeDate.equals("") || incomeName.equals("") || incomeSum.equals("")) {
-            cancel = true;
+            Toast.makeText(getApplicationContext(), R.string.error_not_all_filled,
+                    Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        if (cancel) {
-            Toast.makeText(getApplicationContext(),
-                    R.string.error_not_all_filled,
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            DataBaseHelper.addDataToIncomes(finRef, incomeName, incomeSum, incomeComment,
-                    incomeDate, incomeAddTime);
-            DataBaseHelper.addDataToLastActions(finRef, "Доход ", incomeName, incomeSum);
+        DataBaseHelper.addDataToIncomes(finRef, incomeName, incomeSum, incomeComment,
+                incomeDate, incomeAddTime);
+        DataBaseHelper.addDataToLastActions(finRef, "Доход ", incomeName, incomeSum);
 
-            Toast.makeText(getApplicationContext(),
-                    getString(R.string.income) + " " + incomeName + " успешно добавлен",
-                    Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getString(R.string.income) + " " +
+                        incomeName + " " + getString(R.string.successful_added),
+                Toast.LENGTH_SHORT).show();
 
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.container, informationFragment);
-            fragmentTransaction.commit();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.container, informationFragment);
+        fragmentTransaction.commit();
 
-            DrawerLayout drawer1 = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer1.closeDrawer(GravityCompat.START);
-        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+
     }
 
     @Override
