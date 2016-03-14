@@ -19,16 +19,16 @@ import ru.spbau.mit.starlab.financialassistant.DataBaseHelper;
 import ru.spbau.mit.starlab.financialassistant.MainActivity;
 import ru.spbau.mit.starlab.financialassistant.R;
 
-public class CreditsFragment extends Fragment implements View.OnClickListener{
+public class CreditsFragment extends Fragment implements View.OnClickListener {
     private InformationFragment informationFragment = new InformationFragment();
     TextView startPeriod, endPeriod, name, percent, deposit, sum;
 
     //The data for our app will be stored at this Firebase reference
-    Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/");
-    AuthData authData = ref.getAuth();
+    Firebase reference = new Firebase("https://luminous-heat-4027.firebaseio.com/");
+    AuthData authData = reference.getAuth();
     String uid = authData.getUid();
 
-    Firebase financialAssistanceDataBaseRef =
+    Firebase financialAssistanceDataBaseReference =
             new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
 
     public CreditsFragment() {
@@ -104,10 +104,11 @@ public class CreditsFragment extends Fragment implements View.OnClickListener{
             return;
         }
 
-        DataBaseHelper.addDataToCredits(financialAssistanceDataBaseRef, creditStartPeriod, creditEndPeriod,
-                creditName, creditPercent, creditDeposit, creditSum, creditAddTime);
-        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseRef, getString(R.string.credit), creditName,
-                creditSum);
+        DataBaseHelper.addDataToCredits(financialAssistanceDataBaseReference, creditStartPeriod,
+                creditEndPeriod, creditName, creditPercent, creditDeposit, creditSum,
+                creditAddTime);
+        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseReference, getString(R.string.credit),
+                creditName, creditSum);
 
         Toast.makeText(getActivity(),
                 getString(R.string.credit) + " " + creditName + " "

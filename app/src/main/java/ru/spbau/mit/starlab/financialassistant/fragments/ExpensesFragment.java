@@ -24,11 +24,11 @@ public class ExpensesFragment extends Fragment implements View.OnClickListener {
     TextView category, name, sum, comment, date;
 
     //The data for our app will be stored at this Firebase reference
-    Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/");
-    AuthData authData = ref.getAuth();
+    Firebase reference = new Firebase("https://luminous-heat-4027.firebaseio.com/");
+    AuthData authData = reference.getAuth();
     String uid = authData.getUid();
 
-    Firebase financialAssistanceDataBaseRef =
+    Firebase financialAssistanceDataBaseReference =
             new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
 
     public ExpensesFragment() {
@@ -89,10 +89,10 @@ public class ExpensesFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
-        DataBaseHelper.addDataToExpenses(financialAssistanceDataBaseRef, expenseCategory,
+        DataBaseHelper.addDataToExpenses(financialAssistanceDataBaseReference, expenseCategory,
                 expenseName, expenseSum,
                 expenseComment, expenseDate, expenseAddTime);
-        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseRef,
+        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseReference,
                 getString(R.string.expense),
                 expenseName, expenseSum);
 

@@ -24,11 +24,11 @@ public class RegularExpensesFragment extends Fragment implements View.OnClickLis
     TextView startPeriod, endPeriod, category, name, sum, comment;
 
     //The data for our app will be stored at this Firebase reference
-    Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/");
-    AuthData authData = ref.getAuth();
+    Firebase reference = new Firebase("https://luminous-heat-4027.firebaseio.com/");
+    AuthData authData = reference.getAuth();
     String uid = authData.getUid();
 
-    Firebase financialAssistanceDataBaseRef =
+    Firebase financialAssistanceDataBaseReference =
             new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
 
     public RegularExpensesFragment() {
@@ -104,12 +104,12 @@ public class RegularExpensesFragment extends Fragment implements View.OnClickLis
             return;
         }
 
-        DataBaseHelper.addDataToRegularExpenses(financialAssistanceDataBaseRef,
+        DataBaseHelper.addDataToRegularExpenses(financialAssistanceDataBaseReference,
                 regularExpenseStartPeriod, regularExpenseEndPeriod,
                 regularExpenseCategory, regularExpenseName, regularExpenseSum,
                 regularExpenseComment, regularExpenseAddTime);
-        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseRef, getString(R.string.regExpense),
-                regularExpenseName, regularExpenseSum);
+        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseReference,
+                getString(R.string.regExpense), regularExpenseName, regularExpenseSum);
 
         Toast.makeText(getActivity(),
                 getString(R.string.regExpense) + " " + regularExpenseName + " "

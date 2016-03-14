@@ -24,11 +24,11 @@ public class IncomesFragment extends Fragment implements View.OnClickListener {
     TextView name, sum, comment, date;
 
     //The data for our app will be stored at this Firebase reference
-    Firebase ref = new Firebase("https://luminous-heat-4027.firebaseio.com/");
-    AuthData authData = ref.getAuth();
+    Firebase reference = new Firebase("https://luminous-heat-4027.firebaseio.com/");
+    AuthData authData = reference.getAuth();
     String uid = authData.getUid();
 
-    Firebase financialAssistanceDataBaseRef =
+    Firebase financialAssistanceDataBaseReference =
             new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
 
     public IncomesFragment() {
@@ -86,9 +86,9 @@ public class IncomesFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
-        DataBaseHelper.addDataToIncomes(financialAssistanceDataBaseRef, incomeName, incomeSum,
+        DataBaseHelper.addDataToIncomes(financialAssistanceDataBaseReference, incomeName, incomeSum,
                 incomeComment, incomeDate, incomeAddTime);
-        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseRef,
+        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseReference,
                 getString(R.string.income), incomeName, incomeSum);
 
         Toast.makeText(getActivity(), getString(R.string.income) + " " +
