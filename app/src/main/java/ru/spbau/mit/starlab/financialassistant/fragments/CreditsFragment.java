@@ -28,7 +28,7 @@ public class CreditsFragment extends Fragment implements View.OnClickListener{
     AuthData authData = ref.getAuth();
     String uid = authData.getUid();
 
-    Firebase finRef = new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
+    Firebase financialAssistanceDataBaseRef = new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
 
     public CreditsFragment() {
         // Required empty public constructor
@@ -103,9 +103,9 @@ public class CreditsFragment extends Fragment implements View.OnClickListener{
             return;
         }
 
-        DataBaseHelper.addDataToCredits(finRef, creditStartPeriod, creditEndPeriod,
+        DataBaseHelper.addDataToCredits(financialAssistanceDataBaseRef, creditStartPeriod, creditEndPeriod,
                 creditName, creditPercent, creditDeposit, creditSum, creditAddTime);
-        DataBaseHelper.addDataToLastActions(finRef, getString(R.string.credit), creditName,
+        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseRef, getString(R.string.credit), creditName,
                 creditSum);
 
         Toast.makeText(getActivity(),

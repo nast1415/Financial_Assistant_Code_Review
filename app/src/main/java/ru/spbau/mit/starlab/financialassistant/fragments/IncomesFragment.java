@@ -28,7 +28,7 @@ public class IncomesFragment extends Fragment implements View.OnClickListener{
     AuthData authData = ref.getAuth();
     String uid = authData.getUid();
 
-    Firebase finRef = new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
+    Firebase financialAssistanceDataBaseRef = new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
 
     public IncomesFragment() {
         // Required empty public constructor
@@ -85,9 +85,9 @@ public class IncomesFragment extends Fragment implements View.OnClickListener{
             return;
         }
 
-        DataBaseHelper.addDataToIncomes(finRef, incomeName, incomeSum, incomeComment,
+        DataBaseHelper.addDataToIncomes(financialAssistanceDataBaseRef, incomeName, incomeSum, incomeComment,
                 incomeDate, incomeAddTime);
-        DataBaseHelper.addDataToLastActions(finRef, getString(R.string.income),
+        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseRef, getString(R.string.income),
                 incomeName, incomeSum);
 
 

@@ -28,7 +28,7 @@ public class RegularIncomesFragment extends Fragment implements View.OnClickList
     AuthData authData = ref.getAuth();
     String uid = authData.getUid();
 
-    Firebase finRef = new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
+    Firebase financialAssistanceDataBaseRef = new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
 
     public RegularIncomesFragment() {
         // Required empty public constructor
@@ -98,10 +98,10 @@ public class RegularIncomesFragment extends Fragment implements View.OnClickList
             return;
         }
 
-        DataBaseHelper.addDataToRegularIncome(finRef, regIncStartPeriod, regIncEndPeriod,
+        DataBaseHelper.addDataToRegularIncome(financialAssistanceDataBaseRef, regIncStartPeriod, regIncEndPeriod,
                 regIncName, regIncSum,
                 regIncComment, regIncAddTime);
-        DataBaseHelper.addDataToLastActions(finRef, getString(R.string.regIncome), regIncName,
+        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseRef, getString(R.string.regIncome), regIncName,
                 regIncSum);
 
         Toast.makeText(getActivity(),

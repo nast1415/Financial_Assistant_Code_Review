@@ -28,7 +28,8 @@ public class ExpensesFragment extends Fragment implements View.OnClickListener {
     AuthData authData = ref.getAuth();
     String uid = authData.getUid();
 
-    Firebase finRef = new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
+    Firebase financialAssistanceDataBaseRef =
+            new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
 
     public ExpensesFragment() {
         // Required empty public constructor
@@ -88,9 +89,11 @@ public class ExpensesFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
-        DataBaseHelper.addDataToExpenses(finRef, expenseCategory, expenseName, expenseSum,
+        DataBaseHelper.addDataToExpenses(financialAssistanceDataBaseRef, expenseCategory,
+                expenseName, expenseSum,
                 expenseComment, expenseDate, expenseAddTime);
-        DataBaseHelper.addDataToLastActions(finRef, getString(R.string.expense),
+        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseRef,
+                getString(R.string.expense),
                 expenseName, expenseSum);
 
 

@@ -28,7 +28,7 @@ public class RegularExpensesFragment extends Fragment implements View.OnClickLis
     AuthData authData = ref.getAuth();
     String uid = authData.getUid();
 
-    Firebase finRef = new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
+    Firebase financialAssistanceDataBaseRef = new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
 
     public RegularExpensesFragment() {
         // Required empty public constructor
@@ -101,10 +101,10 @@ public class RegularExpensesFragment extends Fragment implements View.OnClickLis
             return;
         }
 
-        DataBaseHelper.addDataToRegularExpenses(finRef, regExpStartPeriod, regExpEndPeriod,
+        DataBaseHelper.addDataToRegularExpenses(financialAssistanceDataBaseRef, regExpStartPeriod, regExpEndPeriod,
                 regExpCategory, regExpName, regExpSum,
                 regExpComment, regExpAddTime);
-        DataBaseHelper.addDataToLastActions(finRef, getString(R.string.regExpense), regExpName,
+        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseRef, getString(R.string.regExpense), regExpName,
                 regExpSum);
 
         Toast.makeText(getActivity(),
