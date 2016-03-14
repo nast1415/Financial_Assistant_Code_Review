@@ -69,8 +69,6 @@ public class RegularExpensesFragment extends Fragment implements View.OnClickLis
         Date curDate = new Date();
         String regExpAddTime = curDate.toString();
 
-        DrawerLayout drawer;
-
         Date start = MainActivity.parseDate(regExpStartPeriod);
         Date end = MainActivity.parseDate(regExpEndPeriod);
 
@@ -94,11 +92,6 @@ public class RegularExpensesFragment extends Fragment implements View.OnClickLis
                         getString(R.string.order_of_periods_error),
                         Toast.LENGTH_SHORT).show();
                 return;
-            case 3:
-                break;/*Toast.makeText(getActivity(),
-                        getString(R.string.end_after_current_date_error),
-                        Toast.LENGTH_SHORT).show();
-                return;*/
             default:
                 break;
         }

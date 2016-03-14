@@ -163,64 +163,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-
-    public void addNewRegIncome(View v) {
-        //Get data from the view fields
-        TextView startPeriod = (TextView) findViewById(R.id.eTxtRegIncStartPeriod);
-        String regIncStartPeriod = startPeriod.getText().toString();
-
-        TextView endPeriod = (TextView) findViewById(R.id.eTxtRegIncEndPeriod);
-        String regIncEndPeriod = endPeriod.getText().toString();
-
-        TextView name = (TextView) findViewById(R.id.eTxtRegIncName);
-        String regIncName = name.getText().toString();
-
-        TextView sum = (TextView) findViewById(R.id.eTxtRegIncSum);
-        String regIncSum = sum.getText().toString();
-
-        TextView comment = (TextView) findViewById(R.id.eTxtRegIncComment);
-        String regIncComment = comment.getText().toString();
-
-        Date curDate = new Date();
-        String regIncAddTime = curDate.toString();
-
-        Date start = parseDate(regIncStartPeriod);
-        Date end = parseDate(regIncEndPeriod);
-        if (start == null || end == null) {
-            return;
-        }
-
-        if (checkPeriods(start, end) != 0) {
-            return;
-        }
-
-        if (regIncName.equals("") || regIncSum.equals("")
-                || regIncStartPeriod.equals("") || regIncEndPeriod.equals("")) {
-            Toast.makeText(getApplicationContext(), R.string.empty_data_error,
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        DataBaseHelper.addDataToRegularIncome(finRef, regIncStartPeriod, regIncEndPeriod,
-                regIncName, regIncSum,
-                regIncComment, regIncAddTime);
-        DataBaseHelper.addDataToLastActions(finRef, getString(R.string.regIncome), regIncName,
-                regIncSum);
-
-        Toast.makeText(getApplicationContext(),
-                getString(R.string.regIncome) + " " + regIncName + " "
-                        + getString(R.string.successful_added),
-                Toast.LENGTH_SHORT).show();
-
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.container, informationFragment);
-        fragmentTransaction.commit();
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-    }
-
     public void addNewCredit(View v) {
         //Get data from the view fields
         TextView startPeriod = (TextView) findViewById(R.id.eTxtCreditStartPeriod);
