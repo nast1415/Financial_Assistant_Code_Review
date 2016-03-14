@@ -105,12 +105,12 @@ public class CreditsFragment extends Fragment implements View.OnClickListener{
 
         DataBaseHelper.addDataToCredits(finRef, creditStartPeriod, creditEndPeriod,
                 creditName, creditPercent, creditDeposit, creditSum, creditAddTime);
-        DataBaseHelper.addDataToLastActions(finRef, getString(R.string.regExpense), creditName,
+        DataBaseHelper.addDataToLastActions(finRef, getString(R.string.credit), creditName,
                 creditSum);
 
         Toast.makeText(getActivity(),
-                getString(R.string.regExpense) + " " + creditName + " "
-                        + getString(R.string.successful_added),
+                getString(R.string.credit) + " " + creditName + " "
+                        + getString(R.string.successful_added_2),
                 Toast.LENGTH_SHORT).show();
 
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();

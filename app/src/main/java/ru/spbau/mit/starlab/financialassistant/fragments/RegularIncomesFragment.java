@@ -102,12 +102,12 @@ public class RegularIncomesFragment extends Fragment implements View.OnClickList
         DataBaseHelper.addDataToRegularIncome(finRef, regIncStartPeriod, regIncEndPeriod,
                 regIncName, regIncSum,
                 regIncComment, regIncAddTime);
-        DataBaseHelper.addDataToLastActions(finRef, getString(R.string.regExpense), regIncName,
+        DataBaseHelper.addDataToLastActions(finRef, getString(R.string.regIncome), regIncName,
                 regIncSum);
 
         Toast.makeText(getActivity(),
                 getString(R.string.regIncome) + " " + regIncName + " "
-                        + getString(R.string.successful_added),
+                        + getString(R.string.successful_added_2),
                 Toast.LENGTH_SHORT).show();
 
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();

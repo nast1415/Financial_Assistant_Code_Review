@@ -110,14 +110,29 @@ public class MainActivity extends AppCompatActivity
         if (radioButton.isChecked()) {
             Date start = parseDate(startPeriod);
             Date end = parseDate(endPeriod);
-            if (start == null || end == null) {
-                return;
-            }
+
             args.putString("dateBegin", startPeriod);
             args.putString("dateEnd", endPeriod);
 
-            if (checkPeriods(start, end) != 0) {
-                return;
+            int checkResult = checkPeriods(start, end);
+            switch (checkResult) {
+                case 1:
+                    Toast.makeText(getApplicationContext(),
+                            getString(R.string.empty_fields_error),
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                case 2:
+                    Toast.makeText(getApplicationContext(),
+                            getString(R.string.order_of_periods_error),
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                case 3:
+                    Toast.makeText(getApplicationContext(),
+                            getString(R.string.end_after_current_date_error),
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                default:
+                    break;
             }
         }
         fragment.setArguments(args);
@@ -162,59 +177,7 @@ public class MainActivity extends AppCompatActivity
         Firebase.setAndroidContext(this);
     }
 
-//Function, that add data from the IncomesFragment to the Firebase DB
-    public void addNewIncome(View v) {
-        //Get data from the view fields
-        TextView name = (TextView) findViewById(R.id.eTxtIncName);
-        String incomeName = name.getText().toString();
-
-        TextView sum = (TextView) findViewById(R.id.eTxtIncSum);
-        String incomeSum = sum.getText().toString();
-
-        TextView comment = (TextView) findViewById(R.id.eTxtIncComment);
-        String incomeComment = comment.getText().toString();
-
-        TextView date = (TextView) findViewById(R.id.eTxtIncDate);
-        String incomeDate = date.getText().toString();
-
-        Date curDate = new Date();
-        String incomeAddTime = curDate.toString();
-
-        Date incDate = parseDate(incomeDate);
-        if (incDate == null) {
-            return;
-        }
-
-        if (incDate.compareTo(curDate) > 0) {
-            Toast.makeText(getApplicationContext(), R.string.end_after_current_date_error,
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (incomeDate.equals("") || incomeName.equals("") || incomeSum.equals("")) {
-            Toast.makeText(getApplicationContext(), R.string.error_not_all_filled,
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        DataBaseHelper.addDataToIncomes(finRef, incomeName, incomeSum, incomeComment,
-                incomeDate, incomeAddTime);
-        DataBaseHelper.addDataToLastActions(finRef, "Доход ", incomeName, incomeSum);
-
-        Toast.makeText(getApplicationContext(), getString(R.string.income) + " " +
-                        incomeName + " " + getString(R.string.successful_added),
-                Toast.LENGTH_SHORT).show();
-
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.container, informationFragment);
-        fragmentTransaction.commit();
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-
-    }
-
-   @Override
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {

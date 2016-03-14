@@ -105,6 +105,7 @@
     <string name="credit">Кредит</string>
     <string name="income">Доход</string>
     <string name="successful_added">успешно добавлена</string>
+    <string name="successful_added_2">успешно добавлен</string>
     <string name="loading_actions">Подождите…</string>
     <string name="error_not_all_filled">Все поля, кроме комментария, обязательны для заполнения</string>
 </resources>

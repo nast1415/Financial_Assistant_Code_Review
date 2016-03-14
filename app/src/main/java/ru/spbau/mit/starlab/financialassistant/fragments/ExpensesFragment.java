@@ -94,7 +94,8 @@ public class ExpensesFragment extends Fragment implements View.OnClickListener {
 
         DataBaseHelper.addDataToExpenses(finRef, expenseCategory, expenseName, expenseSum,
                 expenseComment, expenseDate, expenseAddTime);
-        DataBaseHelper.addDataToLastActions(finRef, "Трата", expenseName, expenseSum);
+        DataBaseHelper.addDataToLastActions(finRef, getString(R.string.expense),
+                expenseName, expenseSum);
 
 
         Toast.makeText(getActivity(), getString(R.string.expense) + " " +
@@ -104,6 +105,5 @@ public class ExpensesFragment extends Fragment implements View.OnClickListener {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.container, informationFragment);
         fragmentTransaction.commit();
-
     }
 }
