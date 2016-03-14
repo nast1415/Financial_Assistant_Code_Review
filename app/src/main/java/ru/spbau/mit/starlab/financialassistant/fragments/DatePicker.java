@@ -9,14 +9,11 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
-import ru.spbau.mit.starlab.financialassistant.R;
-
 public class DatePicker extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
     private int pYear;
     private int pMonth;
     private int pDay;
-    private int txtDateId;
     private static TextView pDisplayDate;
 
 
@@ -33,7 +30,7 @@ public class DatePicker extends DialogFragment implements DatePickerDialog.OnDat
     }
 
     public void onDateSet(android.widget.DatePicker view, int year, int month, int day) {
-        txtDateId = getArguments().getInt("txtDateId", 0);
+        int txtDateId = getArguments().getInt("txtDateId", 0);
         pDisplayDate = (TextView) getActivity().findViewById(txtDateId);
 
         pYear = year;
