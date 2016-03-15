@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_info"
+            android:checkable="true"
+            android:icon="@android:drawable/ic_menu_info_details"
+            android:title="@string/info_fragment" />
+        <item
+            android:id="@+id/nav_expenses"
+            android:checkable="true"
+            android:icon="@android:drawable/ic_menu_edit"
+            android:title="@string/expenses_fragment" />
+        <item
+            android:id="@+id/nav_incomes"
+            android:icon="@android:drawable/ic_menu_add"
+            android:title="@string/incomes_fragment" />
+        <item
+            android:id="@+id/nav_statistics"
+            android:icon="@android:drawable/ic_menu_info_details"
+            android:title="@string/statistics_fragment" />
+        <item
+            android:id="@+id/nav_recent_actions"
+            android:icon="@android:drawable/ic_menu_recent_history"
+            android:title="@string/recent_actions_fragment" />
+    </group>
+
+    <item android:title="Настройки">
+        <menu>
+            <item
+                android:id="@+id/nav_tools"
+                android:icon="@android:drawable/ic_menu_manage"
+                android:title="@string/tools_fragment" />
+        </menu>
+    </item>
+
+
+</menu>

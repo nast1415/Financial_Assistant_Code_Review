@@ -1,0 +1,89 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppTheme.NoBar" parent="AppTheme">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@color/colorPrimaryDark</item>
+    </style>
+
+    <!-- Design fragment content -->
+
+    <style name="FragmentHeader">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="TextBoxesStyle">
+        <item name="android:layout_width">400dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/edit_text_design</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:ems">10</item>
+    </style>
+
+    <style name="SmallTextBoxesStyle" parent="TextBoxesStyle">
+        <item name="android:layout_width">150dp</item>
+    </style>
+
+    <style name="CommentBoxStyle">
+        <item name="android:layout_width">400dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:background">@drawable/edit_text_design</item>
+        <item name="android:ems">10</item>
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:minLines">3</item>
+    </style>
+
+    <style name="ScrollViewStyle">
+        <item name="android:layout_width">400dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+    <style name="UsualTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="SecondHeaderTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginTop">100dp</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="ButtonStyle" parent="@style/Base.TextAppearance.AppCompat.Medium">
+        <item name="android:layout_width">150dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginBottom">30dp</item>
+    </style>
+</resources>

@@ -1,0 +1,141 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ru.spbau.mit.starlab.financialassistant.fragments.RegularExpensesFragment">
+    <!-- TODO: Update blank fragment layout -->
+
+    <Button
+        android:id="@+id/btnAddRegExpence"
+        style="@style/ButtonStyle"
+        android:onClick="addNewRegExpense"
+        android:text="@string/add" />
+
+
+    <TextView
+        android:id="@+id/txtRegularExpense"
+        style="@style/FragmentHeader"
+        android:text="@string/add_regular_exp" />
+
+
+    <TextView
+        android:id="@+id/txtRegExpPeriod"
+        style="@style/UsualTextStyle"
+        android:layout_below="@+id/txtRegularExpense"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/period" />
+
+    <TextView
+        android:id="@+id/txtRegExpName"
+        style="@style/UsualTextStyle"
+        android:layout_alignLeft="@id/txtRegExpPeriod"
+        android:layout_alignStart="@+id/txtRegExpPeriod"
+        android:layout_below="@+id/txtRegExpPeriod"
+        android:layout_marginTop="40dp"
+        android:text="@string/name" />
+
+    <TextView
+        android:id="@+id/txtRegExpCategory"
+        style="@style/UsualTextStyle"
+        android:layout_alignLeft="@id/txtRegExpPeriod"
+        android:layout_alignStart="@+id/txtRegExpPeriod"
+        android:layout_below="@+id/txtRegExpPeriod"
+        android:layout_marginTop="105dp"
+        android:text="@string/category" />
+
+    <TextView
+        android:id="@+id/txtRegExpSum"
+        style="@style/UsualTextStyle"
+        android:layout_alignLeft="@id/txtRegExpPeriod"
+        android:layout_alignStart="@+id/txtRegExpPeriod"
+        android:layout_below="@+id/txtRegExpPeriod"
+        android:layout_marginTop="170dp"
+        android:text="@string/sum" />
+
+    <TextView
+        android:id="@+id/eTxtRegExpStartPeriod"
+        style="@style/SmallTextBoxesStyle"
+        android:layout_below="@id/txtRegExpPeriod"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:onClick="showDatePickerDialog"
+        android:hint="@string/startDate"
+        android:layout_marginTop="5dp"
+        android:inputType="none" />
+
+    <TextView
+        android:id="@+id/eTxtRegExpEndPeriod"
+        style="@style/SmallTextBoxesStyle"
+        android:layout_below="@id/txtRegExpPeriod"
+        android:hint="@string/endDate"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        android:onClick="showDatePickerDialog"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="170dp"
+        android:layout_marginStart="170dp"
+        android:inputType="date" />
+
+    <EditText
+        android:id="@+id/eTxtRegExpName"
+        style="@style/TextBoxesStyle"
+        android:layout_alignLeft="@+id/txtRegExpPeriod"
+        android:layout_alignStart="@+id/txtRegExpPeriod"
+        android:layout_below="@id/txtRegExpName"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/eTxtRegExpCategory"
+        style="@style/TextBoxesStyle"
+        android:layout_alignLeft="@+id/txtRegExpPeriod"
+        android:layout_alignStart="@+id/txtRegExpPeriod"
+        android:layout_below="@id/txtRegExpCategory"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/eTxtRegExpSum"
+        style="@style/TextBoxesStyle"
+        android:layout_alignLeft="@+id/txtRegExpPeriod"
+        android:layout_alignStart="@+id/txtRegExpPeriod"
+        android:layout_below="@id/txtRegExpSum"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/txtRegExpComment"
+        style="@style/UsualTextStyle"
+        android:layout_alignLeft="@id/txtRegExpPeriod"
+        android:layout_alignStart="@+id/txtRegExpPeriod"
+        android:layout_below="@+id/txtRegExpPeriod"
+        android:layout_marginTop="235dp"
+        android:text="@string/comment" />
+
+    <ScrollView
+        style="@style/ScrollViewStyle"
+        android:layout_alignLeft="@+id/txtRegExpPeriod"
+        android:layout_alignStart="@+id/txtRegExpPeriod"
+        android:layout_below="@+id/txtRegExpComment"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:id="@+id/regExpScrollView">
+
+        <EditText
+            android:id="@+id/eTxtRegExpComment"
+            style="@style/CommentBoxStyle"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp" />
+    </ScrollView>
+
+
+</RelativeLayout>
