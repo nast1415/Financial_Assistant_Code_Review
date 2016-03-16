@@ -1,95 +1,108 @@
 package ru.spbau.mit.starlab.financialassistant.fragments;
 
-import android.app.Activity;
-import android.net.Uri;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.client.AuthData;
+import com.firebase.client.Firebase;
+
+import java.util.Date;
+
+import ru.spbau.mit.starlab.financialassistant.DataBaseHelper;
+import ru.spbau.mit.starlab.financialassistant.MainActivity;
 import ru.spbau.mit.starlab.financialassistant.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ExpensesFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ExpensesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ExpensesFragment extends Fragment {
-    private static final String ARG_PARAM1 = "dateTextView";
+public class ExpensesFragment extends Fragment implements View.OnClickListener {
+    private InformationFragment informationFragment = new InformationFragment();
+    TextView category, name, sum, comment, date;
 
-    private String date;
+    //The data for our app will be stored at this Firebase reference
+    Firebase reference = new Firebase("https://luminous-heat-4027.firebaseio.com/");
+    AuthData authData = reference.getAuth();
+    String uid = authData.getUid();
 
-
-    private OnFragmentInteractionListener mListener;
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @return A new instance of fragment ExpensesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ExpensesFragment newInstance(String param1) {
-        ExpensesFragment fragment = new ExpensesFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-
-        fragment.setArguments(args);
-        return fragment;
-    }
+    Firebase financialAssistanceDataBaseReference =
+            new Firebase("https://luminous-heat-4027.firebaseio.com/" + uid);
 
     public ExpensesFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            date = getArguments().getString(ARG_PARAM1);
-        }
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_expenses, container, false);
-    }
+        View expense = inflater.inflate(R.layout.fragment_expenses, container, false);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        Button btnAddExpense = (Button) expense.findViewById(R.id.btnAddExpense);
+        btnAddExpense.setOnClickListener(this);
+
+        category = (TextView) expense.findViewById(R.id.eTxtExpCategory);
+        name = (TextView) expense.findViewById(R.id.eTxtExpName);
+        sum = (TextView) expense.findViewById(R.id.eTxtExpSum);
+        comment = (TextView) expense.findViewById(R.id.eTxtExpComment);
+        date = (TextView) expense.findViewById(R.id.eTxtExpDate);
+
+        return expense;
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+    public void onClick(View v) {
+        String expenseCategory = category.getText().toString();
+        String expenseName = name.getText().toString();
+        String expenseSum = sum.getText().toString();
+        String expenseComment = comment.getText().toString();
+        String expenseDate = date.getText().toString();
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }
+        Date curDate = new Date();
+        String expenseAddTime = curDate.toString();
 
+
+        Date myDate = MainActivity.parseDate(expenseDate);
+
+        if (myDate == null) {
+            Toast.makeText(getActivity(),
+                    getString(R.string.format_error),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (myDate.compareTo(curDate) > 0) {
+            Toast.makeText(getActivity(),
+                    R.string.end_after_current_date_error,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (expenseName.equals("") || expenseCategory.equals("") || expenseSum.equals("")
+                || expenseDate.equals("")) {
+            Toast.makeText(getActivity(),
+                    getString(R.string.empty_data_error),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        DataBaseHelper.addDataToExpenses(financialAssistanceDataBaseReference, expenseCategory,
+                expenseName, expenseSum,
+                expenseComment, expenseDate, expenseAddTime);
+        DataBaseHelper.addDataToLastActions(financialAssistanceDataBaseReference,
+                getString(R.string.expense),
+                expenseName, expenseSum);
+
+
+        Toast.makeText(getActivity(), getString(R.string.expense) + " " +
+                        expenseName + " " + getString(R.string.successful_added),
+                Toast.LENGTH_SHORT).show();
+
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.container, informationFragment);
+        fragmentTransaction.commit();
+    }
 }

@@ -6,6 +6,12 @@
 
     <string name="action_settings">Settings</string>
 
+    <!-- Strings related to error messages -->
+    <string name="message_not_implemented">Сожалеем, функция пока в разработке</string>
+    <string name="message_incorrect_data">Некорректные данные</string>
+    <string name="message_error">Произошла ошибка</string>
+    <string name="error_network">Проверьте подключение к сети</string>
+
     <!-- Strings related to fragments' names -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="expenses_fragment">Траты</string>
@@ -55,6 +61,19 @@
     <string name="percent">Ставка</string>
     <string name="first">Первый взнос</string>
     <string name="view">Вид</string>
+    <string name="statistics">Статистика</string>
+    <string name="predictions">Прогнозы</string>
+
+    <!-- Strings related to errors -->
+    <string name="field_err">Это поле должно быть заполнено</string>
+    <string name="order_of_periods_error">Дата начала периода должна идти раньше даты окончания</string>
+    <string name="format_error">Формат даты некорректен</string>
+    <string name="start_period_error">Формат даты в поле "Начало периода" некорректен</string>
+    <string name="end_period_error">Формат даты в поле "Конец периода" некорректен</string>
+    <string name="empty_fields_error">Заполните поля начала и окончания периода статистики</string>
+    <string name="end_after_current_date_error">Дата окончания периода не может быть позже текущей</string>
+    <string name="date_after_current_date_error">Дата не может быть позже текущей</string>
+    <string name="empty_data_error">Все поля, кроме комментария, обязательны для заполнения</string>
 
 
     <!-- Strings related to login -->
@@ -65,6 +84,8 @@
     <string name="error_invalid_email">Адрес электронной почты некорректен</string>
     <string name="error_invalid_password">Пароль слишком короткий</string>
     <string name="error_incorrect_password">Неверный пароль</string>
+    <string name="error_incorrect_registration">Пользователь с таким e-mail уже зарегистрирован</string>
+    <string name="error_incorrect_authorization">Проверьте правильность вводимых данных</string>
     <string name="error_field_required">Поля не должны быть пустыми</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
@@ -76,4 +97,16 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_edit_action">edit</string>
+    <string name="expenses_by_days">расходы по дням</string>
+    <string name="expenses_by_months">расходы по месяцам</string>
+    <string name="expenses_predictions_by_months">прогноз расходов по месяцам</string>
+    <string name="expense">Трата</string>
+    <string name="regExpense">Регулярная трата</string>
+    <string name="regIncome">Регулярный доход</string>
+    <string name="credit">Кредит</string>
+    <string name="income">Доход</string>
+    <string name="successful_added">успешно добавлена</string>
+    <string name="successful_added_2">успешно добавлен</string>
+    <string name="loading_actions">Подождите…</string>
+    <string name="error_not_all_filled">Все поля, кроме комментария, обязательны для заполнения</string>
 </resources>

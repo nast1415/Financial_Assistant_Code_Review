@@ -7,7 +7,6 @@
     <Button
         android:id="@+id/btnAddExpense"
         style="@style/ButtonStyle"
-        android:onClick="addNewExpense"
         android:text="Записать" />
 
 

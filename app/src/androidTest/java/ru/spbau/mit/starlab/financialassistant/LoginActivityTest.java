@@ -19,9 +19,10 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
 
     public void testTransitionToSignIn() {
         LoginActivity activity = getActivity();
-        Button button = (Button) activity.findViewById(R.id.btnSignIn);
-        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(SignInActivity.class.getName(), null, false);
-        TouchUtils.clickView(this, button);
+        Button signInButton = (Button) activity.findViewById(R.id.btnSignIn);
+        Instrumentation.ActivityMonitor monitor =
+                getInstrumentation().addMonitor(SignInActivity.class.getName(), null, false);
+        TouchUtils.clickView(this, signInButton);
         Activity currentActivity = getInstrumentation().waitForMonitorWithTimeout(monitor, 5);
         assertNotNull(currentActivity);
         assertEquals(SignInActivity.class, currentActivity.getClass());
@@ -29,9 +30,10 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
 
     public void testTransitionToSignUp() {
         LoginActivity activity = getActivity();
-        Button button = (Button) activity.findViewById(R.id.btnSignUp);
-        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(SignUpActivity.class.getName(), null, false);
-        TouchUtils.clickView(this, button);
+        Button signUpButton = (Button) activity.findViewById(R.id.btnSignUp);
+        Instrumentation.ActivityMonitor monitor =
+                getInstrumentation().addMonitor(SignUpActivity.class.getName(), null, false);
+        TouchUtils.clickView(this, signUpButton);
         Activity currentActivity = getInstrumentation().waitForMonitorWithTimeout(monitor, 5);
         assertNotNull(currentActivity);
         assertEquals(SignUpActivity.class, currentActivity.getClass());
